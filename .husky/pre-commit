@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh" 2>/dev/null || true
+
+# Pre-commit hook: formato y lint sobre archivos staged
+# Para skipear (uso excepcional): git commit --no-verify
+echo "🔍 Verificando formato y lint con Biome..."
+pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true --staged

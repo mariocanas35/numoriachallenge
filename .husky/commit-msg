@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh" 2>/dev/null || true
+
+# Valida que el mensaje de commit siga Conventional Commits
+pnpm exec commitlint --edit "$1"

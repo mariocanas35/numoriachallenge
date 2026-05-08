@@ -1,0 +1,6 @@
+# Numoria Challenge — pnpm workspaces
+# Documentación: https://pnpm.io/pnpm-workspace_yaml
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "services/*"

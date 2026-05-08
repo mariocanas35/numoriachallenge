@@ -1,0 +1,28 @@
+# Numoria Challenge — gitattributes
+# Forzar LF en todos los archivos texto, evitar problemas Windows/Unix.
+
+* text=auto eol=lf
+
+# Scripts Windows: CRLF obligatorio
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binarios — no normalizar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.mp3 binary
+*.mp4 binary
+*.webm binary
