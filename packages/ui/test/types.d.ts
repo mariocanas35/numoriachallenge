@@ -1,8 +1,12 @@
 /**
- * Augmentación de matchers de Vitest con jest-axe.
+ * Augmentación de matchers de Vitest:
+ * - jest-dom: toBeInTheDocument, toHaveClass, toHaveAttribute, etc.
+ * - jest-axe: toHaveNoViolations
  *
- * Permite que `expect(results).toHaveNoViolations()` esté tipada correctamente.
+ * Sin esto, TypeScript no reconoce los matchers extra que `expect.extend`
+ * registra en runtime desde test/setup.ts.
  */
+import type { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
 import 'vitest';
 
 interface AxeMatchers<R = unknown> {
@@ -11,6 +15,7 @@ interface AxeMatchers<R = unknown> {
 
 declare module 'vitest' {
   // biome-ignore lint/suspicious/noExplicitAny: required by Vitest matcher augmentation pattern
-  interface Assertion<T = any> extends AxeMatchers<T> {}
-  interface AsymmetricMatchersContaining extends AxeMatchers {}
+  interface Assertion<T = any> extends TestingLibraryMatchers<T, void>, AxeMatchers<T> {}
+  // biome-ignore lint/suspicious/noExplicitAny: required by Vitest matcher augmentation pattern
+  interface AsymmetricMatchersContaining extends TestingLibraryMatchers<any, void>, AxeMatchers {}
 }

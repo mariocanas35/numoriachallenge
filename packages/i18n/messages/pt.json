@@ -1,0 +1,97 @@
+{
+  "_TODO": "PT messages — estructura preparada, traducciones pendientes para Fase 2-post (Brasil). Mantener mismas keys que es.json y en.json. NO importar este archivo en runtime hasta completar.",
+  "brand": {
+    "name": "Numoria Challenge",
+    "short": "Numoria",
+    "tagline": "",
+    "mascotName": "Numa"
+  },
+  "landing": {
+    "hero": {
+      "title": "",
+      "subtitle": "",
+      "ctaPrimary": "",
+      "ctaSecondary": ""
+    },
+    "freeBadge": "",
+    "howItWorks": {
+      "title": "",
+      "step1": { "title": "", "description": "" },
+      "step2": { "title": "", "description": "" },
+      "step3": { "title": "", "description": "" }
+    },
+    "schools": {
+      "title": "",
+      "subtitle": ""
+    }
+  },
+  "auth": {
+    "login": "",
+    "register": "",
+    "logout": "",
+    "email": "",
+    "password": "",
+    "name": "",
+    "forgotPassword": "",
+    "noAccount": "",
+    "hasAccount": "",
+    "continueWithGoogle": "",
+    "continueWithEmail": "",
+    "or": "",
+    "magicLink": "",
+    "magicLinkSent": "",
+    "magicLinkExpired": "",
+    "checkEmail": "",
+    "iAmStudent": "",
+    "iAmParent": "",
+    "iAmTeacher": "",
+    "selectRole": ""
+  },
+  "common": {
+    "loading": "",
+    "save": "",
+    "cancel": "",
+    "delete": "",
+    "edit": "",
+    "back": "",
+    "next": "",
+    "previous": "",
+    "submit": "",
+    "confirm": "",
+    "yes": "",
+    "no": "",
+    "search": "",
+    "language": "",
+    "country": "",
+    "close": "",
+    "skip": ""
+  },
+  "errors": {
+    "generic": "",
+    "network": "",
+    "notFound": "",
+    "unauthorized": "",
+    "tryAgain": "",
+    "validation": {
+      "required": "",
+      "email": "",
+      "minLength": "",
+      "maxLength": "",
+      "passwordMatch": ""
+    }
+  },
+  "footer": {
+    "copyright": "",
+    "privacy": "",
+    "terms": "",
+    "contact": "",
+    "about": "",
+    "help": "",
+    "blog": "",
+    "careers": ""
+  },
+  "metadata": {
+    "title": "",
+    "description": ""
+  }
+}

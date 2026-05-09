@@ -208,6 +208,56 @@ Ninguno. Esperando aprobación de founder para arrancar Fase 1.
 
 ---
 
+### 2026-05-08 — Sesión 2 (continuación) — Chunk 1.4: `packages/i18n`
+
+**Lo que pasó:**
+- Creado package `@numoria/i18n` zero-dependency (todo con `Intl` nativo).
+- Modelados 22 países LatAm + anglo + portugués con config completa.
+- Implementados pricing y datetime con conversión de monedas y timezones.
+- Resueltos issues durante el chunk: type augmentation correcta de Vitest con TestingLibraryMatchers + jest-axe; expectations de tests corregidas (BRL conversion, CLP digits, regex de relative time CLDR-tolerant).
+
+**Archivos creados (chunk 1.4) — 18 total:**
+
+Configuración del package:
+- `packages/i18n/package.json`, `tsconfig.json`, `vitest.config.ts`, `README.md`
+
+Source code (zero deps, solo Intl):
+- `src/config.ts` — locales, defaultLocale, BRAND_NAME, helpers de validación, cookies names, display names + flags
+- `src/country-config.ts` — 22 países (HN, GT, SV, NI, CR, PA, MX, CO, PE, EC, CL, AR, UY, PY, BO, VE, DO, PR, CU, BR, PT, US, GB, CA, AU) con `{locale, currency, symbol, timezone, flag, name(es|en|pt)}` + DEFAULT fallback
+- `src/pricing.ts` — `formatPrice()` (USD cents → moneda local con tasa), `formatLocalCurrency()`, `convertUsdCents()`, manejo correcto de monedas sin decimales (CLP, PYG, COP, JPY, KRW, VND, IDR)
+- `src/datetime.ts` — `formatDate`, `formatTime`, `formatDateTime`, `formatRelativeTime`, `formatDuration` (timer estilo MM:SS / HH:MM:SS para competencias)
+- `src/detect.ts` — `detectLocale()` con prioridad cookie > country > Accept-Language > default; `parseAcceptLanguage()`
+- `src/index.ts` — barrel export
+
+Mensajes traducidos:
+- `messages/es.json` — completo: brand, landing, auth, common, errors, footer, metadata
+- `messages/en.json` — completo: mismas keys traducidas
+- `messages/pt.json` — estructura preparada con keys vacías + marcador TODO (Brasil Fase 2-post)
+
+Tests (73 totales, todos pasando):
+- `src/config.test.ts` — 8 tests
+- `src/country-config.test.ts` — 17 tests (Honduras, Brasil, USA, dolarizados, fallback, case insensitivity, integridad)
+- `src/pricing.test.ts` — 12 tests (HNL, BRL, CLP sin decimales, USD dolarizados, fallback)
+- `src/datetime.test.ts` — 16 tests (timezones, relative time ES/EN, duration)
+- `src/detect.test.ts` — 16 tests (prioridad fuentes, casos reales HN/USA/expat)
+- Plus integridad: `parseAcceptLanguage` cubierto
+
+**Archivos modificados:**
+- `packages/ui/test/types.d.ts` — augmentación correcta de Vitest con `TestingLibraryMatchers` (resolvió errores TS de `toBeInTheDocument`, `toHaveClass`, etc.)
+- `packages/ui/src/components/NumaAvatar.test.tsx` — refactor a `screen.getByRole('img')` en lugar de `container.firstChild` (mejor práctica + tipo `HTMLElement`)
+
+**Verificaciones pasadas:**
+- ✅ `pnpm install` registra `@numoria/i18n` (4 workspaces total)
+- ✅ `pnpm format:check` clean (41 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm -r --filter=./packages/* typecheck` clean (i18n + ui)
+- ✅ `pnpm -r --filter=./packages/* test` — **96/96 tests pasan** (73 i18n + 23 ui)
+
+**Próximos pasos:**
+- Chunk 1.5: `apps/web` con Next.js 15 + Tailwind 4 + middleware i18n + estructura de rutas localizadas.
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).

@@ -30,24 +30,25 @@ describe('NumaAvatar', () => {
   });
 
   it('applies the requested size class', () => {
-    const { container } = render(<NumaAvatar size="2xl" />);
-    expect(container.firstChild).toHaveClass('w-40');
-    expect(container.firstChild).toHaveClass('h-40');
+    render(<NumaAvatar size="2xl" />);
+    const avatar = screen.getByRole('img');
+    expect(avatar).toHaveClass('w-40');
+    expect(avatar).toHaveClass('h-40');
   });
 
   it('applies bounce-in animation class when animateIn=true', () => {
-    const { container } = render(<NumaAvatar animateIn />);
-    expect(container.firstChild).toHaveClass('animate-numa-bounce-in');
+    render(<NumaAvatar animateIn />);
+    expect(screen.getByRole('img')).toHaveClass('animate-numa-bounce-in');
   });
 
   it('does not apply animation class when animateIn is omitted', () => {
-    const { container } = render(<NumaAvatar />);
-    expect(container.firstChild).not.toHaveClass('animate-numa-bounce-in');
+    render(<NumaAvatar />);
+    expect(screen.getByRole('img')).not.toHaveClass('animate-numa-bounce-in');
   });
 
   it('merges custom className', () => {
-    const { container } = render(<NumaAvatar className="custom-class" />);
-    expect(container.firstChild).toHaveClass('custom-class');
+    render(<NumaAvatar className="custom-class" />);
+    expect(screen.getByRole('img')).toHaveClass('custom-class');
   });
 
   it('has no a11y violations across all poses', async () => {

@@ -1,0 +1,105 @@
+{
+  "brand": {
+    "name": "Numoria Challenge",
+    "short": "Numoria",
+    "tagline": "Olimpiadas matemáticas para mentes curiosas",
+    "mascotName": "Numa"
+  },
+  "landing": {
+    "hero": {
+      "title": "Olimpiadas matemáticas, reinventadas",
+      "subtitle": "Compite, aprende y diviértete con problemas reales de competencias internacionales. Para estudiantes de 8 a 14 años.",
+      "ctaPrimary": "Empieza gratis",
+      "ctaSecondary": "Soy profesor"
+    },
+    "freeBadge": "3 competencias gratis sin tarjeta",
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "step1": {
+        "title": "Regístrate gratis",
+        "description": "En menos de 2 minutos. Sin tarjeta de crédito, sin compromisos."
+      },
+      "step2": {
+        "title": "Resuelve problemas",
+        "description": "Practica con cientos de problemas o únete a una competencia oficial."
+      },
+      "step3": {
+        "title": "Gana medallas",
+        "description": "Descarga tu certificado, súbete al ranking y muéstralo al mundo."
+      }
+    },
+    "schools": {
+      "title": "Escuelas que ya confían en Numoria",
+      "subtitle": "Únete a las primeras instituciones que están transformando la enseñanza de matemáticas en Latinoamérica."
+    }
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "continueWithGoogle": "Continuar con Google",
+    "continueWithEmail": "Continuar con correo",
+    "or": "o",
+    "magicLink": "Enviar enlace mágico",
+    "magicLinkSent": "Te enviamos un enlace a {email}. Revisa tu bandeja de entrada y haz clic para entrar.",
+    "magicLinkExpired": "Este enlace ya expiró. Solicita uno nuevo.",
+    "checkEmail": "Revisa tu correo",
+    "iAmStudent": "Soy estudiante",
+    "iAmParent": "Soy padre o madre",
+    "iAmTeacher": "Soy profesor",
+    "selectRole": "¿Quién eres?"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "search": "Buscar",
+    "language": "Idioma",
+    "country": "País",
+    "close": "Cerrar",
+    "skip": "Saltar"
+  },
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo.",
+    "network": "Error de conexión. Revisa tu internet.",
+    "notFound": "No encontramos lo que buscas.",
+    "unauthorized": "No tienes permiso para esto.",
+    "tryAgain": "Intentar de nuevo",
+    "validation": {
+      "required": "Este campo es requerido",
+      "email": "Ingresa un correo válido",
+      "minLength": "Mínimo {min} caracteres",
+      "maxLength": "Máximo {max} caracteres",
+      "passwordMatch": "Las contraseñas no coinciden"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Numoria Challenge. Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos de servicio",
+    "contact": "Contacto",
+    "about": "Acerca de",
+    "help": "Ayuda",
+    "blog": "Blog",
+    "careers": "Trabaja con nosotros"
+  },
+  "metadata": {
+    "title": "Numoria Challenge — Olimpiadas matemáticas online",
+    "description": "Plataforma de olimpiadas matemáticas para estudiantes de 8 a 14 años. Compite, practica y gana medallas. 3 competencias gratis sin tarjeta."
+  }
+}
