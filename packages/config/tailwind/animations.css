@@ -1,0 +1,178 @@
+/**
+ * Numoria Challenge — Animaciones del design system
+ *
+ * Define keyframes globales y utility classes (@utility) accesibles
+ * con clases tipo `animate-streak-flame`, `animate-confetti`, etc.
+ *
+ * Importar después de tokens.css (ver tailwind/index.css).
+ */
+
+/* ============================================
+ * KEYFRAMES
+ * ============================================ */
+
+@keyframes numoria-streak-flame {
+  0%,
+  100% {
+    transform: scale(1) rotate(-1deg);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes numoria-confetti-drop {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes numoria-medal-shine {
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgb(255 200 0 / 0.6);
+  }
+  50% {
+    box-shadow: 0 0 28px rgb(255 200 0 / 0.95);
+  }
+}
+
+@keyframes numoria-numa-bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes numoria-shake-error {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes numoria-pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes numoria-xp-fill {
+  from {
+    width: var(--xp-fill-from, 0%);
+  }
+  to {
+    width: var(--xp-fill-to, 100%);
+  }
+}
+
+@keyframes numoria-level-up-glow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(206 130 255 / 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 16px rgb(206 130 255 / 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(206 130 255 / 0);
+  }
+}
+
+@keyframes numoria-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+ * UTILITY CLASSES — uso directo en JSX/HTML
+ * ============================================ */
+
+@utility animate-streak-flame {
+  animation: numoria-streak-flame 2s ease-in-out infinite;
+}
+
+@utility animate-confetti {
+  animation: numoria-confetti-drop 2s ease-in forwards;
+}
+
+@utility animate-medal-shine {
+  animation: numoria-medal-shine 1.5s ease-in-out infinite;
+}
+
+@utility animate-numa-bounce-in {
+  animation: numoria-numa-bounce-in 0.6s var(--ease-bounce, cubic-bezier(0.68, -0.55, 0.265, 1.55));
+}
+
+@utility animate-shake-error {
+  animation: numoria-shake-error 0.4s ease-in-out;
+}
+
+@utility animate-pulse-soft {
+  animation: numoria-pulse-soft 2s ease-in-out infinite;
+}
+
+@utility animate-xp-fill {
+  animation: numoria-xp-fill 0.6s var(--ease-out-strong, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+@utility animate-level-up {
+  animation: numoria-level-up-glow 1s var(--ease-out-strong, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+@utility animate-fade-in-up {
+  animation: numoria-fade-in-up 0.4s var(--ease-out-strong, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* ============================================
+ * REDUCED MOTION — respeto al usuario
+ * ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

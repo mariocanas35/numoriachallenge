@@ -1,0 +1,9 @@
+/**
+ * Numoria Challenge — Tailwind 4 entry combinado
+ *
+ * Importa tokens + animaciones en una sola línea:
+ *   @import "@numoria/config/tailwind/index.css";
+ */
+
+@import "./tokens.css";
+@import "./animations.css";

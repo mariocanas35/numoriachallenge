@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Numoria — Base (re-export de tsconfig.base.json raíz)",
+  "extends": "../../../tsconfig.base.json"
+}

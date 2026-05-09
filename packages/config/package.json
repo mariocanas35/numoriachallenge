@@ -1,0 +1,17 @@
+{
+  "name": "@numoria/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Configuración compartida del monorepo — TypeScript configs y Tailwind 4 design tokens (Numoria design system).",
+  "type": "module",
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig/library.json": "./tsconfig/library.json",
+    "./tsconfig/node.json": "./tsconfig/node.json",
+    "./tailwind/tokens.css": "./tailwind/tokens.css",
+    "./tailwind/animations.css": "./tailwind/animations.css",
+    "./tailwind/index.css": "./tailwind/index.css"
+  },
+  "files": ["tsconfig", "tailwind", "README.md"]
+}

@@ -139,6 +139,39 @@ Ninguno. Esperando aprobación de founder para arrancar Fase 1.
 
 ---
 
+### 2026-05-08 — Sesión 2 (continuación) — Chunk 1.2: `packages/config`
+
+**Lo que pasó:**
+- Founder regresó tras descanso y pidió continuar.
+- Commit pendiente de PROGRESS.md (Sesión 2 chunk 1.1) cerrado en `31e8566`.
+- Creado package `@numoria/config` con TypeScript presets + Tailwind 4 design tokens.
+- Limpiado warning de Husky v10 (eliminado `source husky.sh` deprecado en pre-commit/commit-msg).
+
+**Archivos creados (chunk 1.2):**
+- `packages/config/package.json` — workspace `@numoria/config`, exports JSON + CSS
+- `packages/config/README.md` — guía de uso para los 4 TS presets y 3 CSS files
+- `packages/config/tsconfig/base.json` — re-export del `tsconfig.base.json` raíz
+- `packages/config/tsconfig/nextjs.json` — preset para `apps/web`, `apps/admin`
+- `packages/config/tsconfig/library.json` — preset para packages internos (transpilePackages)
+- `packages/config/tsconfig/node.json` — preset para scripts/services TS
+- `packages/config/tailwind/tokens.css` — design tokens en `@theme` Tailwind 4 (paleta Numoria, tipografía Fraunces+Plus Jakarta+JetBrains, radii, shadows, easing)
+- `packages/config/tailwind/animations.css` — keyframes y `@utility` (streak-flame, confetti, medal-shine, numa-bounce-in, shake-error, pulse-soft, xp-fill, level-up, fade-in-up) + respeto a `prefers-reduced-motion`
+- `packages/config/tailwind/index.css` — entry combinado (tokens + animations)
+
+**Archivos modificados:**
+- `.husky/pre-commit`, `.husky/commit-msg` — eliminada línea `source` deprecada (compat. con Husky v10)
+
+**Verificaciones pasadas:**
+- ✅ `pnpm install` registra workspace `@numoria/config`
+- ✅ `pnpm format:check` clean (13 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm -r ls --depth=-1` lista 2 workspaces (root + config)
+
+**Próximos pasos:**
+- Chunk 1.3: `packages/ui` con shadcn/ui base + componente Button + NumaAvatar placeholder.
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).

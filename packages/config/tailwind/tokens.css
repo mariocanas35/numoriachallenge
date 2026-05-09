@@ -1,0 +1,120 @@
+/**
+ * Numoria Challenge — Design Tokens
+ *
+ * Tailwind CSS v4 @theme syntax. Define todos los tokens como CSS custom
+ * properties que Tailwind expone automáticamente como utilidades:
+ *   --color-numoria-blue → bg-numoria-blue, text-numoria-blue, border-numoria-blue
+ *   --font-display       → font-display
+ *   --radius-lg          → rounded-lg
+ *
+ * Importar en cada app:
+ *   @import "tailwindcss";
+ *   @import "@numoria/config/tailwind/tokens.css";
+ */
+
+@theme {
+  /* ============================================
+   * BRAND COLORS — paleta vibrante (estilo Duolingo)
+   * ============================================ */
+  --color-numoria-blue: #1cb0f6;
+  --color-numoria-blue-hover: #0090d4;
+  --color-numoria-orange: #f97316;
+  --color-numoria-orange-hover: #d65f0e;
+  --color-numoria-yellow: #ffc800;
+  --color-numoria-yellow-hover: #e0af00;
+  --color-numoria-green: #58cc02;
+  --color-numoria-green-hover: #46a302;
+  --color-numoria-red: #ff4b4b;
+  --color-numoria-red-hover: #d83a3a;
+  --color-numoria-purple: #ce82ff;
+  --color-numoria-purple-hover: #b35ee0;
+
+  /* ============================================
+   * SEMANTIC COLORS — feedback de UI
+   * ============================================ */
+  --color-success: #58cc02;
+  --color-success-bg: #e7ffe0;
+  --color-error: #ff4b4b;
+  --color-error-bg: #ffe0e0;
+  --color-warning: #ffc800;
+  --color-warning-bg: #fff4d6;
+  --color-info: #1cb0f6;
+  --color-info-bg: #e0f4ff;
+
+  /* ============================================
+   * MEDAL TIERS — gradientes para certificados/badges
+   * ============================================ */
+  --color-medal-gold-from: #ffd700;
+  --color-medal-gold-to: #ffa500;
+  --color-medal-silver-from: #e5e5e5;
+  --color-medal-silver-to: #b8b8b8;
+  --color-medal-bronze-from: #cd7f32;
+  --color-medal-bronze-to: #8b4513;
+  --color-medal-platinum-from: #e0e7ff;
+  --color-medal-platinum-to: #818cf8;
+
+  /* ============================================
+   * NEUTRALS
+   * ============================================ */
+  --color-numoria-ink: #2b2d42;
+  --color-numoria-mid: #6b7280;
+  --color-numoria-gray: #e5e7eb;
+  --color-numoria-cloud: #f3f4f6;
+  --color-numoria-white: #ffffff;
+  --color-numoria-overlay: rgb(43 45 66 / 0.5);
+
+  /* ============================================
+   * TYPOGRAPHY
+   * Display: Fraunces (títulos, hero, marca)
+   * Sans:    Plus Jakarta Sans (UI / body)
+   * Mono:    JetBrains Mono (matemáticas, código)
+   * ============================================ */
+  --font-display: "Fraunces", "Recoleta", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", "Nunito", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
+
+  /* Tamaños custom para hero matemático */
+  --text-display-2xl: 4.5rem;
+  --text-display-2xl--line-height: 1.05;
+  --text-display-xl: 3.75rem;
+  --text-display-xl--line-height: 1.1;
+  --text-display-lg: 3rem;
+  --text-display-lg--line-height: 1.15;
+
+  /* ============================================
+   * RADII — más redondeado de lo común (vibe friendly para niños)
+   * ============================================ */
+  --radius-xs: 0.25rem; /* 4px */
+  --radius-sm: 0.375rem; /* 6px */
+  --radius-md: 0.625rem; /* 10px */
+  --radius-lg: 1rem; /* 16px */
+  --radius-xl: 1.5rem; /* 24px */
+  --radius-2xl: 2rem; /* 32px */
+  --radius-3xl: 3rem; /* 48px */
+  --radius-full: 9999px;
+
+  /* ============================================
+   * SHADOWS — suaves, sin drop-shadows duros
+   * ============================================ */
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-card: 0 2px 6px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-card-hover: 0 8px 20px rgb(0 0 0 / 0.1), 0 2px 4px rgb(0 0 0 / 0.06);
+  --shadow-modal: 0 20px 50px rgb(0 0 0 / 0.15);
+  --shadow-glow-blue: 0 0 24px rgb(28 176 246 / 0.4);
+  --shadow-glow-orange: 0 0 24px rgb(249 115 22 / 0.4);
+  --shadow-glow-gold: 0 0 24px rgb(255 200 0 / 0.5);
+
+  /* ============================================
+   * EASING — animaciones con personalidad
+   * ============================================ */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-out-strong: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ============================================
+   * BREAKPOINTS — mobile-first absoluto
+   * Default Tailwind: sm 640, md 768, lg 1024, xl 1280, 2xl 1536
+   * Numoria sobrescribe ninguno por ahora — usa los defaults
+   * ============================================ */
+}
