@@ -99,6 +99,46 @@ Ninguno. Esperando aprobación de founder para arrancar Fase 1.
 
 ---
 
+### 2026-05-08 — Sesión 2 (Fase 1 — Chunk 1.1: Monorepo + Git)
+
+**Lo que pasó:**
+- Founder confirmó: "Sí, procede" + GitHub repo: `https://github.com/mariocanas35/numoriachallenge.git` (cuenta personal)
+- Instalé pnpm 10.33.4 vía installer oficial Windows (Corepack falló por permisos en Program Files)
+- Configuré Git local (user.name, user.email, core.autocrlf=false, core.eol=lf)
+- Inicialicé repo Git con branch principal `main`
+- Creé monorepo skeleton completo y commit inicial (`447bc0c`, 20 archivos, 2187 líneas)
+
+**Archivos creados en este chunk:**
+- `package.json` (root del monorepo, pnpm@10.33.4, Node ≥20)
+- `pnpm-workspace.yaml` (workspaces: apps/*, packages/*, services/*)
+- `turbo.json` (pipeline: build, dev, lint, test, typecheck, clean)
+- `tsconfig.base.json` (TypeScript 5.7 estricto, noUncheckedIndexedAccess, etc.)
+- `biome.json` (Biome 1.9: linter + formatter unificados, reemplaza ESLint+Prettier)
+- `commitlint.config.cjs` (Conventional Commits con tipos y scopes documentados)
+- `.husky/pre-commit` y `.husky/commit-msg` (hooks instalados via `pnpm install`)
+- `.gitattributes` (LF para texto, CRLF para .bat/.cmd/.ps1)
+- `.github/workflows/ci.yml` (lint + typecheck + test + build en GitHub Actions)
+
+**Verificaciones pasadas:**
+- ✅ `pnpm install` exit 0
+- ✅ `pnpm format:check` clean
+- ✅ `pnpm lint` clean
+- ✅ Husky hooks instalados en `.husky/_/`
+- ✅ Commit message validado por commitlint
+- ✅ `node_modules` y `.env.local` correctamente ignorados por Git
+
+**Pendiente del founder:**
+- 🔴 **Push manual a GitHub.** El push automático no funciona sin credenciales.
+  - Opción A: `gh auth login` (GitHub CLI) y luego `git push -u origin main`
+  - Opción B: Configurar Git Credential Manager para Windows
+  - Opción C: Crear personal access token en GitHub Settings → Developer Settings → PAT (classic, scope `repo`) y usarlo como password al pushear
+- 🟡 **Crear el repo en GitHub si no existe.** Ir a https://github.com/new → nombre `numoriachallenge` → privado → NO inicializar con README/LICENSE/gitignore (ya los tenemos local).
+
+**Próximos pasos:**
+- Si founder aprueba, continuar a Chunk 1.2: `packages/config` (configs compartidos para ESLint/TS/Tailwind entre apps/packages).
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).
