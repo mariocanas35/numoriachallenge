@@ -172,6 +172,42 @@ Ninguno. Esperando aprobación de founder para arrancar Fase 1.
 
 ---
 
+### 2026-05-08 — Sesión 2 (continuación) — Chunk 1.3: `packages/ui`
+
+**Lo que pasó:**
+- Creado package `@numoria/ui` con dependencias React 19 + CVA + tailwind-merge + Radix Slot.
+- Implementado `<Button />` con 7 variantes (primary, secondary, success, destructive, ghost, outline, link) y 5 tamaños (sm/md/lg/xl/icon), soporta `asChild` y `fullWidth`.
+- Implementado `<NumaAvatar />` con 4 poses inline SVG (wave, think, celebrate, sad) — placeholders simplificados, refinables después.
+- Setup de Vitest 2 con happy-dom + Testing Library + jest-axe para a11y testing.
+- Resueltos 3 issues durante el chunk: cleanup automático de Testing Library, tipos de jest-axe, augmentation de matchers Vitest.
+
+**Archivos creados (chunk 1.3):**
+- `packages/ui/package.json` — workspace `@numoria/ui` con peerDeps React 19
+- `packages/ui/tsconfig.json` — extiende `@numoria/config/tsconfig/library.json`
+- `packages/ui/vitest.config.ts` — happy-dom + setup files
+- `packages/ui/test/setup.ts` — matchers + auto cleanup
+- `packages/ui/test/types.d.ts` — augmentation de Vitest Assertion con `toHaveNoViolations`
+- `packages/ui/README.md` — guía de uso, pre-requisitos, scripts
+- `packages/ui/src/index.ts` — barrel export
+- `packages/ui/src/lib/cn.ts` — utility `cn()` (clsx + twMerge)
+- `packages/ui/src/components/Button.tsx` — Button con CVA, 7 variantes, "tarjeta empujable" estilo Duolingo
+- `packages/ui/src/components/Button.test.tsx` — 13 tests (interacciones, variants, refs, a11y)
+- `packages/ui/src/components/NumaAvatar.tsx` — 4 poses SVG inline + sizing + animateIn
+- `packages/ui/src/components/NumaAvatar.test.tsx` — 10 tests (poses, labels, animation, a11y)
+
+**Verificaciones pasadas:**
+- ✅ `pnpm install` registra `@numoria/ui` (3 workspaces total)
+- ✅ `pnpm format:check` clean (24 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm --filter=@numoria/ui typecheck` clean
+- ✅ `pnpm --filter=@numoria/ui test` — 23/23 tests pass
+- ✅ Cero violaciones de accesibilidad en Button (default + disabled) y NumaAvatar (4 poses)
+
+**Próximos pasos:**
+- Chunk 1.4: `packages/i18n` (ES/EN messages, country mapping HN→es/HNL etc., pricing helpers).
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).
