@@ -3,9 +3,12 @@
 > Plataforma global de olimpiadas matemáticas online para estudiantes de 8-14 años.
 > Mobile-first, multilingüe (ES/EN), foco inicial Latinoamérica.
 
-**Estado:** 🟡 Planificación / scaffolding (Pre-Fase 1)
+[![CI](https://github.com/mariocanas35/numoriachallenge/actions/workflows/ci.yml/badge.svg)](https://github.com/mariocanas35/numoriachallenge/actions/workflows/ci.yml)
+[![E2E](https://github.com/mariocanas35/numoriachallenge/actions/workflows/e2e.yml/badge.svg)](https://github.com/mariocanas35/numoriachallenge/actions/workflows/e2e.yml)
+
+**Estado:** 🟡 Fase 1 en curso (50% completo)
 **Versión actual:** 0.0.0
-**Última actualización:** 2026-05-08
+**Última actualización:** 2026-05-09
 
 ---
 

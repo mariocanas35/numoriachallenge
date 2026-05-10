@@ -1,0 +1,59 @@
+name: 💡 Solicitud de feature
+description: Sugiere una nueva funcionalidad o mejora
+labels: ['enhancement', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tu idea suma. Llena los campos para entender mejor qué propones y por qué.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Qué problema resuelve?
+      description: ¿Qué dolor o necesidad existe hoy?
+      placeholder: 'Como [estudiante/profesor/padre/admin], necesito X porque Y.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solución propuesta
+      description: ¿Cómo te imaginas que funcione?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: ¿Hay otras formas de resolverlo?
+
+  - type: dropdown
+    id: persona
+    attributes:
+      label: ¿A qué tipo de usuario afecta?
+      multiple: true
+      options:
+        - Estudiante (8-14 años)
+        - Padre / Madre
+        - Profesor / Coordinador escolar
+        - Admin (founder)
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad sugerida
+      options:
+        - 🔴 Crítica para MVP
+        - 🟡 Importante (Fase 2)
+        - 🟢 Nice to have (futuro)
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Contexto adicional
+      description: Mockups, links, referencias de competidores, etc.

@@ -1,0 +1,59 @@
+version: 2
+updates:
+  # Dependencias del monorepo (root + workspaces)
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'America/Tegucigalpa'
+    open-pull-requests-limit: 5
+    versioning-strategy: 'increase-if-necessary'
+    groups:
+      # Agrupar minor + patch del mismo ecosistema
+      next:
+        patterns:
+          - 'next'
+          - 'next-*'
+          - '@next/*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+      tailwind:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+      testing:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+          - '@testing-library/*'
+          - '@playwright/test'
+          - 'happy-dom'
+          - 'jest-axe'
+      types:
+        patterns:
+          - '@types/*'
+      tooling:
+        patterns:
+          - '@biomejs/*'
+          - 'turbo'
+          - 'husky'
+          - '@commitlint/*'
+          - 'commitlint'
+    labels:
+      - 'dependencies'
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    labels:
+      - 'dependencies'
+      - 'ci'

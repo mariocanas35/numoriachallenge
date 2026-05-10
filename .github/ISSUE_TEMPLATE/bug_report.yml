@@ -1,0 +1,85 @@
+name: 🐛 Reporte de bug
+description: Algo no funciona como debería
+labels: ['bug', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar un bug. Llena los campos para que podamos reproducirlo y arreglarlo rápido.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del bug
+      description: ¿Qué pasó? ¿Qué esperabas que pasara?
+      placeholder: 'Al hacer X, ocurre Y, pero esperaba Z.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      placeholder: |
+        1. Ir a '...'
+        2. Hacer click en '...'
+        3. Ver el error en '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afectada
+      options:
+        - Web (apps/web)
+        - Admin (apps/admin)
+        - Mobile (apps/mobile)
+        - UI components (@numoria/ui)
+        - i18n (@numoria/i18n)
+        - Database / Supabase
+        - Grader Python
+        - CI/CD
+        - Otro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad
+      options:
+        - Crítica — bloquea uso del producto
+        - Alta — afecta a muchos usuarios
+        - Media — workaround disponible
+        - Baja — cosmético
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Entorno (navegador / OS / device)
+      placeholder: 'Chrome 130 / Windows 11 / Pixel 7'
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Pega errores de consola o agrega screenshots si ayudan.
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Verificación
+      options:
+        - label: Busqué primero si ya existía un issue similar
+          required: true

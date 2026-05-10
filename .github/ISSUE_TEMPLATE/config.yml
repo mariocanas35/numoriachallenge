@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Preguntas generales
+    url: https://github.com/mariocanas35/numoriachallenge/discussions
+    about: Para preguntas sobre uso, planificación o discusión abierta — usa Discussions.
+  - name: 🔒 Reportes de seguridad
+    url: mailto:mimathonline@gmail.com
+    about: NO uses issues públicos para vulnerabilidades. Escribe directamente al admin.
