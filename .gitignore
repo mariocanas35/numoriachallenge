@@ -124,7 +124,8 @@ ios/Pods/
 *.local
 
 # --- Generated assets/types ---
-packages/database/src/types.gen.ts
+# Note: packages/database/src/types.gen.ts IS committed so CI can
+# typecheck without DB access. Regenerate on schema changes via `pnpm db:types`.
 
 # --- Debug certificates / local AI cache ---
 .claude/
