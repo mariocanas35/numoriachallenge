@@ -381,6 +381,79 @@ Tests E2E (Playwright):
 
 ---
 
+### 2026-05-09 — Sesión 3 (continuación) — Chunk 1.6: Supabase Cloud + migraciones + packages/database
+
+**Pivote estratégico:**
+- Docker Desktop falló con error WSL2 (`0x80070422`) en la PC del founder.
+- Después de evaluar alternativas (Cloudflare D1, Postgres nativo), pivotamos a **Supabase Cloud** sin Docker.
+- Founder creó proyecto `numoria-challenge-dev` región `us-east-1` (~80-120ms desde Honduras).
+- Free tier (50K MAU + 500MB DB) cubre con creces el MVP.
+
+**Lo que pasó:**
+- Agregamos Supabase CLI 2.98.2 como devDependency root (instalación clean vía npm postinstall, sin requerir admin/Program Files).
+- Escritas 5 migraciones SQL completas con tablas `profiles` y `schools`, índices, RLS policies, triggers, y funciones helper.
+- Creado package `@numoria/database` con clientes server/browser/middleware tipados usando `@supabase/ssr`.
+- Configurado `apps/web/.env.local` con la URL + publishable key del proyecto (founder llena secret key + DB password localmente).
+
+**Archivos creados (chunk 1.6) — 17 total:**
+
+Configuración Supabase:
+- `supabase/config.toml` — config CLI (project_id, auth, storage, realtime)
+- `supabase/seed.sql` — 3 escuelas demo
+
+Migrations SQL:
+- `0001_init.sql` — extensiones (uuid-ossp, citext, pg_trgm), enums (`user_role`, `school_division`), helpers (`set_updated_at`, `is_admin`, `is_teacher` con SECURITY DEFINER para evitar recursión RLS)
+- `0002_schools.sql` — tabla `schools` con slug, branding, verified flag, índices, trigger updated_at
+- `0003_profiles.sql` — tabla `profiles` 1:1 con `auth.users` (rol, locale, COPPA-friendly birth_year/month sin día, gamificación) + trigger `handle_new_user` para auto-crear profile en signup
+- `0004_rls_profiles.sql` — 6 policies: self view/edit, parent→hijos, teacher→escuela, admin todo. UPDATE WITH CHECK bloquea cambios a role/xp/level/streak (anti-cheat)
+- `0005_rls_schools.sql` — teachers crean (verified=false locked), update propios, admin verifica
+
+Package `@numoria/database`:
+- `package.json`, `tsconfig.json`, `README.md`
+- `src/server.ts` — `createServerClient()` (anon, RLS) + `createAdminClient()` (service_role)
+- `src/browser.ts` — singleton para Client Components
+- `src/middleware.ts` — `updateSession()` para refresh de tokens
+- `src/types.gen.ts` — placeholder (reemplazado al correr `pnpm db:types`)
+- `src/index.ts`, `src/types.ts`
+
+Monorepo:
+- Root `package.json` — agregado `supabase` CLI + scripts `db:login`, `db:link`, `db:push`, `db:reset`, `db:diff`, `db:types`
+- `pnpm.onlyBuiltDependencies` whitelist (supabase, biome, esbuild, sharp)
+- `apps/web/.env.local` (gitignored) con URL + publishable key
+
+**Resueltos durante el chunk:**
+- pnpm 10 bloquea postinstall scripts → whitelist en `package.json`
+- `next/server` y `next/headers` no resolvían tipos → `next` + `react` agregados como peerDependencies + devDependencies en `@numoria/database`
+- Implicit `any` en cookie callbacks → tipo explícito `CookieToSet`
+- Biome `useConst` lint en middleware → `let` → `const`
+
+**Verificaciones pasadas:**
+- ✅ 6 workspaces registrados (root + web + config + database + i18n + ui)
+- ✅ Supabase CLI 2.98.2 funcional
+- ✅ `pnpm format:check` clean (68 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm typecheck` clean en todos los packages
+- ✅ 96/96 unit tests pasando
+
+**Pendiente del founder ANTES de chunk 1.7:**
+1. Pegar `service_role` key en `apps/web/.env.local` (Dashboard → API Keys → Secret keys → 👁 Reveal → Copy)
+2. Pegar `DATABASE_URL` con DB password (Dashboard → Database → Connection string → Transaction pooler)
+3. Correr en terminal:
+   ```bash
+   pnpm db:login    # autentica CLI con cuenta Supabase via browser
+   pnpm db:link     # vincula al proyecto cloud (pide DB password)
+   pnpm db:push     # aplica las 5 migraciones
+   pnpm db:types    # regenera src/types.gen.ts desde schema real
+   ```
+4. Verificar en Supabase Dashboard → Table Editor que `profiles` y `schools` existen con RLS
+
+**Commit:** `432f179 feat(db): add Supabase Cloud setup with profiles and schools`
+
+**Próximos pasos:**
+- Chunk 1.7: Auth flow (email magic link + Google OAuth) usando `@numoria/database`
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).
