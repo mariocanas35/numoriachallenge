@@ -1,0 +1,46 @@
+# Numoria Challenge — Supabase project config
+# https://supabase.com/docs/guides/local-development/cli/config
+
+# Project ref (apunta a numoria-challenge-dev en Supabase Cloud)
+project_id = "biqxblpfgagzsjsflnhh"
+
+[api]
+# Schemas exposed to the API (REST + GraphQL).
+schemas = ["public", "graphql_public"]
+# Extra schemas to add to the search_path of every request.
+extra_search_path = ["public", "extensions"]
+
+[db]
+# Versión del Postgres usado en producción
+major_version = 17
+
+[auth]
+# Site URL — donde el usuario completa magic links / OAuth callbacks
+site_url = "http://localhost:3000"
+# Redirects permitidos después del callback de auth
+additional_redirect_urls = [
+  "http://localhost:3000/**",
+  "http://localhost:3000/api/auth/callback",
+]
+# Tiempo de vida de tokens
+jwt_expiry = 3600
+refresh_token_rotation_enabled = true
+# Confirmar email obligatorio antes de poder login
+enable_confirmations = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+# Templates de email — los manejaremos en código en Fase 5
+
+[auth.external.google]
+enabled = false # se activa en Chunk 1.7
+
+# Storage — buckets se definen via SQL o dashboard
+[storage]
+file_size_limit = "5MB"
+
+# Realtime — para leaderboards en vivo (Fase 4)
+[realtime]
+enabled = true
