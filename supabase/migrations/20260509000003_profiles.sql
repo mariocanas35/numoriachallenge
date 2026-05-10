@@ -10,15 +10,19 @@ create table public.profiles (
   -- Identidad
   role public.user_role not null,
   display_name text not null check (length(trim(display_name)) >= 1),
-  username citext unique check (username ~ '^[a-z0-9_-]{3,30}$'),
+  -- Username lowercase (regex enforce); usamos text en lugar de citext para
+  -- evitar requerir extensions en search_path en cada query.
+  username text unique check (username ~ '^[a-z0-9_-]{3,30}$'),
   avatar_url text,
 
   -- Localización
   country_code text check (length(country_code) = 2),
   locale text not null default 'es' check (locale in ('es', 'en', 'pt')),
 
-  -- Datos sensibles MENORES — solo mes/año, NUNCA día completo (privacidad COPPA/LGPD)
-  birth_year smallint check (birth_year between 1990 and extract(year from now())::smallint),
+  -- Datos sensibles MENORES — solo mes/año, NUNCA día completo (privacidad COPPA/LGPD).
+  -- Rangos hardcoded en lugar de extract(year from now()) — Postgres restringe
+  -- funciones volátiles en CHECK constraints.
+  birth_year smallint check (birth_year between 1990 and 2030),
   birth_month smallint check (birth_month between 1 and 12),
 
   -- Vínculos relacionales
