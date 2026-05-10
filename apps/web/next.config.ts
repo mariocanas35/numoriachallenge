@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   // Permitir consumir packages internos como TS source (sin build step propio)
-  transpilePackages: ['@numoria/ui', '@numoria/i18n', '@numoria/config'],
+  transpilePackages: ['@numoria/ui', '@numoria/i18n', '@numoria/config', '@numoria/database'],
 
   // Routes tipadas (movido de experimental en Next 15.5)
   typedRoutes: true,

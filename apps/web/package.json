@@ -15,12 +15,16 @@
     "playwright:install": "playwright install --with-deps chromium"
   },
   "dependencies": {
+    "@numoria/database": "workspace:*",
     "@numoria/i18n": "workspace:*",
     "@numoria/ui": "workspace:*",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.47.0",
     "next": "^15.1.4",
     "next-intl": "^3.26.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@numoria/config": "workspace:*",

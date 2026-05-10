@@ -45,7 +45,9 @@ export async function Hero() {
             <Link href="/register">{tHero('ctaPrimary')}</Link>
           </Button>
           <Button variant="outline" size="lg" asChild>
-            <Link href="/teacher">{tHero('ctaSecondary')}</Link>
+            <Link href={{ pathname: '/register', query: { role: 'teacher' } }}>
+              {tHero('ctaSecondary')}
+            </Link>
           </Button>
         </div>
       </div>

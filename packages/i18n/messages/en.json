@@ -35,11 +35,17 @@
   },
   "auth": {
     "login": "Log in",
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to continue your math adventure.",
     "register": "Sign up",
+    "registerTitle": "Start free",
+    "registerSubtitle": "No credit card required. The first 3 competitions are on us.",
     "logout": "Log out",
     "email": "Email",
+    "emailPlaceholder": "you@email.com",
     "password": "Password",
     "name": "Name",
+    "namePlaceholder": "What's your name?",
     "forgotPassword": "Forgot your password?",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
@@ -50,10 +56,24 @@
     "magicLinkSent": "We sent a link to {email}. Check your inbox and click to log in.",
     "magicLinkExpired": "This link has expired. Request a new one.",
     "checkEmail": "Check your email",
+    "checkEmailTitle": "Check your email!",
+    "checkEmailDescription": "We sent you a magic link. Click the button in the email to log in — you can close this window.",
+    "checkSpam": "Don't see it? Check your spam folder.",
+    "tryAgain": "Try a different email",
     "iAmStudent": "I'm a student",
     "iAmParent": "I'm a parent",
     "iAmTeacher": "I'm a teacher",
-    "selectRole": "Who are you?"
+    "selectRole": "Who are you?",
+    "termsAcceptance": "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "errors": {
+      "invalidEmail": "Enter a valid email",
+      "emailRequired": "Email is required",
+      "nameRequired": "Name is required",
+      "roleRequired": "Select who you are",
+      "callbackFailed": "We couldn't complete your sign-in. Please try again.",
+      "providerError": "The auth service had a hiccup. Try again in a few seconds.",
+      "rateLimit": "Too many attempts. Wait a moment before trying again."
+    }
   },
   "common": {
     "loading": "Loading...",

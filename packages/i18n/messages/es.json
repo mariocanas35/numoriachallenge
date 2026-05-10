@@ -35,11 +35,17 @@
   },
   "auth": {
     "login": "Iniciar sesión",
+    "loginTitle": "Bienvenido de vuelta",
+    "loginSubtitle": "Entra para continuar tu aventura matemática.",
     "register": "Crear cuenta",
+    "registerTitle": "Empieza gratis",
+    "registerSubtitle": "Sin tarjeta de crédito. Las primeras 3 competencias están en la casa.",
     "logout": "Cerrar sesión",
     "email": "Correo electrónico",
+    "emailPlaceholder": "tu@correo.com",
     "password": "Contraseña",
     "name": "Nombre",
+    "namePlaceholder": "¿Cómo te llamas?",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes cuenta?",
     "hasAccount": "¿Ya tienes cuenta?",
@@ -50,10 +56,24 @@
     "magicLinkSent": "Te enviamos un enlace a {email}. Revisa tu bandeja de entrada y haz clic para entrar.",
     "magicLinkExpired": "Este enlace ya expiró. Solicita uno nuevo.",
     "checkEmail": "Revisa tu correo",
+    "checkEmailTitle": "¡Revisa tu correo!",
+    "checkEmailDescription": "Te enviamos un enlace mágico. Haz clic en el botón del correo para entrar — puedes cerrar esta ventana.",
+    "checkSpam": "¿No lo ves? Revisa la carpeta de spam.",
+    "tryAgain": "Probar con otro correo",
     "iAmStudent": "Soy estudiante",
     "iAmParent": "Soy padre o madre",
     "iAmTeacher": "Soy profesor",
-    "selectRole": "¿Quién eres?"
+    "selectRole": "¿Quién eres?",
+    "termsAcceptance": "Al continuar aceptas los <terms>Términos</terms> y <privacy>Política de Privacidad</privacy>.",
+    "errors": {
+      "invalidEmail": "Ingresa un correo válido",
+      "emailRequired": "El correo es requerido",
+      "nameRequired": "El nombre es requerido",
+      "roleRequired": "Selecciona quién eres",
+      "callbackFailed": "No pudimos completar tu inicio de sesión. Inténtalo de nuevo.",
+      "providerError": "El servicio de autenticación tuvo un problema. Inténtalo en unos segundos.",
+      "rateLimit": "Demasiados intentos. Espera un momento antes de intentar de nuevo."
+    }
   },
   "common": {
     "loading": "Cargando...",
