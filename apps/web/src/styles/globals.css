@@ -1,0 +1,51 @@
+/**
+ * Numoria Challenge — Web app global styles
+ *
+ * Orden:
+ * 1. Tailwind 4 base + utilities
+ * 2. Numoria design tokens (paleta, tipografía, radii, sombras)
+ * 3. Numoria animations (streak-flame, confetti, etc.)
+ * 4. Sources que Tailwind 4 debe escanear (apps + packages internos)
+ */
+
+@import "tailwindcss";
+@import "@numoria/config/tailwind/tokens.css";
+@import "@numoria/config/tailwind/animations.css";
+
+/* Tailwind 4 escanea automáticamente la carpeta del proyecto.
+   Añadimos rutas a packages internos del monorepo para que detecte
+   las clases usadas en componentes compartidos. */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+/* Vincular variables de fuentes Next.js (next/font) a los tokens del DS */
+@theme {
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+/* Reset suave + defaults globales */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-numoria-cloud);
+  color: var(--color-numoria-ink);
+  min-height: 100dvh;
+}
+
+/* Selección visible con color de marca */
+::selection {
+  background-color: var(--color-numoria-yellow);
+  color: var(--color-numoria-ink);
+}
+
+/* Focus visible más prominente para accesibilidad */
+:focus-visible {
+  outline: 2px solid var(--color-numoria-blue);
+  outline-offset: 2px;
+}

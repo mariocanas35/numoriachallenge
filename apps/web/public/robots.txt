@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Sitemap se generará dinámicamente en Fase 6

@@ -1,0 +1,35 @@
+{
+  "name": "@numoria/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Numoria Challenge — Next.js 15 web app (PWA, multilingüe ES/EN).",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "biome lint .",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "playwright:install": "playwright install --with-deps chromium"
+  },
+  "dependencies": {
+    "@numoria/i18n": "workspace:*",
+    "@numoria/ui": "workspace:*",
+    "next": "^15.1.4",
+    "next-intl": "^3.26.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@numoria/config": "workspace:*",
+    "@playwright/test": "^1.49.1",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2"
+  }
+}

@@ -10,15 +10,19 @@ export const MASCOT_NAME = 'Numa' as const;
 export const locales = ['es', 'en', 'pt'] as const;
 export type Locale = (typeof locales)[number];
 
-/** Default si no podemos detectar nada. */
-export const defaultLocale: Locale = 'es';
-
 /**
  * Locales realmente activos en el MVP.
  * `pt` está estructurado pero sus mensajes son placeholders.
  */
 export const activeLocales = ['es', 'en'] as const satisfies readonly Locale[];
 export type ActiveLocale = (typeof activeLocales)[number];
+
+/**
+ * Default si no podemos detectar nada.
+ * Tipado como `ActiveLocale` (no `Locale`) porque siempre debe ser uno de
+ * los locales con mensajes funcionales — no podemos defaultear a `pt` aún.
+ */
+export const defaultLocale: ActiveLocale = 'es';
 
 export function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (locales as readonly string[]).includes(value);

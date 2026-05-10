@@ -258,6 +258,69 @@ Tests (73 totales, todos pasando):
 
 ---
 
+### 2026-05-09 — Sesión 3 — Chunk 1.5: `apps/web` (Next.js 15 + Tailwind 4 + i18n)
+
+**Lo que pasó:**
+- Creada la app web `@numoria/web` con Next.js 15 + Turbopack + App Router.
+- Tailwind 4 configurado con CSS-first (postcss + @import en globals.css).
+- next-intl 3.x integrado con routing localizado (`/es`, `/en`) y mensajes desde `@numoria/i18n`.
+- Middleware combinado: detecta locale custom (cookie > cf-ipcountry > Accept-Language) y delega a next-intl.
+- Layout root con next/font para Fraunces + Plus Jakarta Sans + JetBrains Mono — vinculadas a tokens del DS.
+- Landing page placeholder con NumaAvatar saludando + Button + traducciones (demuestra wiring completo).
+- Playwright configurado con tests para home + locale-detection (Chromium desktop + Pixel 5 mobile).
+- Resueltos 3 issues durante el chunk: tipo `defaultLocale` estrechado a `ActiveLocale`, `typedRoutes` movido fuera de experimental (Next 15.5), dynamic import de mensajes reemplazado por imports estáticos (mejor compat con Webpack monorepo).
+
+**Archivos creados (chunk 1.5) — 18 total:**
+
+Configuración:
+- `apps/web/package.json` — Next 15.5 + React 19 + next-intl 3.26 + Tailwind 4 + Playwright 1.49
+- `apps/web/tsconfig.json` — extiende `@numoria/config/tsconfig/nextjs.json` + path alias `@/*`
+- `apps/web/next.config.ts` — transpilePackages, typedRoutes, security headers, image domains
+- `apps/web/postcss.config.mjs` — `@tailwindcss/postcss`
+- `apps/web/playwright.config.ts` — Chromium desktop + Pixel 5 mobile, webServer auto-start
+- `apps/web/README.md` — guía completa
+- `apps/web/public/robots.txt`
+
+i18n setup:
+- `src/i18n/routing.ts` — defineRouting con localePrefix=always, localeDetection=false
+- `src/i18n/navigation.ts` — Link/redirect/usePathname localizados
+- `src/i18n/request.ts` — getRequestConfig con messages estáticos por locale
+
+Middleware + estilos:
+- `src/middleware.ts` — detección locale custom (prioridad cookie > geo > Accept-Language) + delegación a next-intl
+- `src/styles/globals.css` — Tailwind 4 + tokens Numoria + animations + @source para packages/ui
+
+Páginas:
+- `src/app/[locale]/layout.tsx` — html lang dinámico, NextIntlClientProvider, fonts vinculadas a CSS vars, metadata localizada con OpenGraph/Twitter
+- `src/app/[locale]/page.tsx` — landing placeholder con NumaAvatar + Button + i18n
+- `src/app/[locale]/not-found.tsx` — 404 localizado con Numa triste
+- `src/app/icon.svg` — favicon placeholder (N naranja sobre círculo)
+
+Tests E2E (Playwright):
+- `e2e/home.spec.ts` — 4 tests (ES default, EN, html lang, metadata)
+- `e2e/locale-detection.spec.ts` — 6 tests (default, Accept-Language, cookie override, cf-ipcountry HN/US, path preservation)
+
+**Archivos modificados:**
+- `packages/i18n/src/config.ts` — `defaultLocale` ahora tipado como `ActiveLocale` (no `Locale`), porque siempre debe ser un locale con mensajes funcionales
+
+**Verificaciones pasadas:**
+- ✅ `pnpm install` registra 5 workspaces (root + config + i18n + ui + **web**)
+- ✅ `pnpm format:check` clean (56 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm typecheck` clean en los 4 workspaces (i18n, ui, web)
+- ✅ `pnpm --filter=@numoria/web build` exitoso — prerendered /es y /en
+- ✅ Bundle First Load JS: **107KB** (bajo el budget de 150KB)
+- ✅ Middleware: 53.8KB
+- ✅ 96/96 unit tests siguen pasando (73 i18n + 23 ui)
+
+**Pendiente (no blocker):**
+- Correr Playwright E2E end-to-end requiere `pnpm exec playwright install chromium` (~150MB descarga). Se ejecutará en Chunk 1.10 (verificación final) cuando todas las features estén integradas.
+
+**Próximos pasos:**
+- Chunk 1.6: Supabase local + migrations iniciales (`profiles`, `schools`) + RLS policies + tipos generados.
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).
