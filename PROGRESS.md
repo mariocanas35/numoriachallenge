@@ -321,6 +321,66 @@ Tests E2E (Playwright):
 
 ---
 
+### 2026-05-09 — Sesión 3 (continuación) — Chunk 1.9: CI/CD + DX infrastructure
+
+**Lo que pasó:**
+- Founder eligió "avancemos en paralelo" mientras instala Docker para Chunk 1.6.
+- Mejorada la CI workflow existente (chunk 1.1 era mínima) con cache de Turborepo, Node 22 LTS, jobs paralelos con dependencias correctas, y un job de status final.
+- Agregado workflow E2E separado con cache de browsers Playwright.
+- Agregados templates de PR e issues, Dependabot config, workflow para issues stale, y CONTRIBUTING.md completo.
+
+**Archivos creados/modificados (chunk 1.9):**
+- `.github/workflows/ci.yml` — enhanced con cache turbo, status job, Node 22 LTS
+- `.github/workflows/e2e.yml` — Playwright con cache de browsers
+- `.github/workflows/stale.yml` — auto-close issues 60d/PRs 30d
+- `.github/PULL_REQUEST_TEMPLATE.md` — checklist completo
+- `.github/ISSUE_TEMPLATE/bug_report.yml` + `feature_request.yml` + `config.yml`
+- `.github/dependabot.yml` — actualizaciones agrupadas por ecosistema (next, react, tailwind, testing, types, tooling)
+- `CONTRIBUTING.md` — guía completa para contribuidores
+- `README.md` — agregadas badges de CI y E2E
+
+**Verificaciones:** format clean, lint clean, 96/96 tests siguen pasando.
+**Commit:** `0c4f715 ci: add full CI/CD infrastructure with GitHub Actions`
+
+---
+
+### 2026-05-09 — Sesión 3 (continuación) — Chunk 1.8: Landing page MVP
+
+**Lo que pasó:**
+- Creadas las 4 secciones de la landing definitiva: Hero refinado, HowItWorks con 3 pasos visuales, SchoolsSection con placeholders honestos, Footer con LocaleSwitcher.
+- LocaleSwitcher como client component con cookie persistence + navegación localizada vía next-intl.
+- Tests E2E ampliados: cobertura completa de las 4 secciones en ES y EN, switcher de locale, persistencia de cookie, viewport mobile.
+- Resuelto build worker crash en Windows (`exit code 3221226505`) — retry exitoso, era issue transitorio de access violation por concurrencia.
+
+**Archivos creados (chunk 1.8) — 7 total:**
+- `apps/web/src/components/LocaleSwitcher.tsx` — selector ES/EN con persistencia cookie
+- `apps/web/src/components/landing/Hero.tsx` — section con badge + Numa wave + CTAs (extraído de page.tsx, refinado con bg gradient + blobs decorativos)
+- `apps/web/src/components/landing/HowItWorks.tsx` — 3 pasos numerados con poses Numa diferentes (wave/think/celebrate) y colores Numoria
+- `apps/web/src/components/landing/SchoolsSection.tsx` — 6 escuelas placeholder (HN/GT/CR/MX/CO) con disclaimer honesto sobre piloto
+- `apps/web/src/components/landing/Footer.tsx` — branding + links + LocaleSwitcher + copyright dinámico
+
+**Archivos modificados:**
+- `apps/web/src/app/[locale]/page.tsx` — composición limpia de las 4 secciones (server component)
+- `apps/web/e2e/home.spec.ts` — ampliado a 8 tests (4 secciones × 2 locales + switcher × 2 + html lang + mobile viewport)
+
+**Verificaciones pasadas:**
+- ✅ `pnpm format:check` clean (61 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm typecheck` clean en los 3 packages + web
+- ✅ `pnpm --filter=@numoria/web build` exitoso
+- ✅ Bundle First Load JS: **128KB** (bajo el budget de 150KB) — incluye Hero+HowItWorks+Schools+Footer+LocaleSwitcher
+- ✅ Página `/[locale]`: 20.2KB de código específico de ruta (vs 166B placeholder anterior)
+- ✅ 96/96 unit tests siguen pasando
+
+**Pendiente:**
+- 🔴 **Chunk 1.6 (Supabase) bloqueado** — Docker Desktop falló al instalar (error "archivo ya existe" en `Docker.staging`). Founder está limpiando con PowerShell admin y reinstalando.
+
+**Próximos pasos:**
+- Cuando Docker esté listo: Chunk 1.6 (Supabase local + migrations + RLS + tipos generados)
+- Después: Chunk 1.7 (Auth flow) y Chunk 1.10 (verificación final + Playwright real run)
+
+---
+
 ## 🔗 Referencias rápidas
 
 - Brief maestro original: pegado en sesión 1 (ver historial de chat).
