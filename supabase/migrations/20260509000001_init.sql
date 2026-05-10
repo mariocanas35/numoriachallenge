@@ -42,34 +42,40 @@ end;
 $$;
 
 -- Verifica si el usuario actual es admin (usa SECURITY DEFINER para
--- evitar recursión con RLS en la tabla profiles)
+-- evitar recursión con RLS en la tabla profiles).
+-- Nota: language plpgsql en lugar de sql porque plpgsql difiere la validación
+-- del cuerpo, permitiendo crear esta función ANTES de que public.profiles exista.
 create or replace function public.is_admin()
 returns boolean
-language sql
+language plpgsql
 security definer
 stable
 set search_path = public
 as $$
-  select exists (
+begin
+  return exists (
     select 1
     from public.profiles
     where id = auth.uid()
       and role = 'admin'
   );
+end;
 $$;
 
 -- Verifica si el usuario actual es teacher
 create or replace function public.is_teacher()
 returns boolean
-language sql
+language plpgsql
 security definer
 stable
 set search_path = public
 as $$
-  select exists (
+begin
+  return exists (
     select 1
     from public.profiles
     where id = auth.uid()
       and role = 'teacher'
   );
+end;
 $$;
