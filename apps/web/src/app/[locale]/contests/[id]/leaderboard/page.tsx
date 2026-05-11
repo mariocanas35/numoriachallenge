@@ -89,7 +89,9 @@ export default async function ContestLeaderboardPage({
     status: t('table.status'),
     submitted: t('table.submitted'),
     inProgress: t('table.inProgress'),
-    gradeFormat: t('table.gradeFormat'),
+    // t.raw() devuelve el string sin validar interpolación — necesario porque
+    // la sustitución del {n} ocurre en LeaderboardTable per row, no aquí.
+    gradeFormat: t.raw('table.gradeFormat') as string,
   };
 
   // CSV download URL incluye el filter para que el export respete el filtrado UI
