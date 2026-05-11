@@ -32,13 +32,13 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
       <table className="w-full text-sm">
         <thead className="bg-numoria-cloud text-xs font-bold uppercase tracking-wider text-numoria-mid">
           <tr>
-            <th className="px-3 py-2 text-left">{labels.rank}</th>
+            <th className="whitespace-nowrap px-3 py-2 text-left">{labels.rank}</th>
             <th className="px-3 py-2 text-left">{labels.student}</th>
             <th className="px-3 py-2 text-left">{labels.team}</th>
-            <th className="px-3 py-2 text-right">{labels.score}</th>
-            <th className="px-3 py-2 text-right">{labels.correct}</th>
-            <th className="px-3 py-2 text-right">{labels.time}</th>
-            <th className="px-3 py-2 text-right">{labels.status}</th>
+            <th className="whitespace-nowrap px-3 py-2 text-right">{labels.score}</th>
+            <th className="whitespace-nowrap px-3 py-2 text-right">{labels.correct}</th>
+            <th className="whitespace-nowrap px-3 py-2 text-right">{labels.time}</th>
+            <th className="whitespace-nowrap px-3 py-2 text-right">{labels.status}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-numoria-niebla/20">
@@ -60,7 +60,7 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
                 key={e.studentId}
                 className={submitted ? 'hover:bg-numoria-cloud/50' : 'bg-numoria-cloud/30'}
               >
-                <td className="px-3 py-2 font-mono text-numoria-ink">
+                <td className="whitespace-nowrap px-3 py-2 font-mono text-numoria-ink">
                   {rankBadge ?? <span className="text-numoria-mid">#{e.rank}</span>}
                 </td>
                 <td className="px-3 py-2">
@@ -71,8 +71,8 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
                     </div>
                   )}
                 </td>
-                <td className="px-3 py-2 text-numoria-mid">{e.teamName}</td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 text-xs text-numoria-mid">{e.teamName}</td>
+                <td className="whitespace-nowrap px-3 py-2 text-right">
                   <span
                     className={`font-mono font-bold ${
                       submitted ? 'text-numoria-ink' : 'text-numoria-niebla'
@@ -82,15 +82,15 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
                     <span className="text-xs text-numoria-mid">/ {e.maxPossibleScore}</span>
                   </span>
                 </td>
-                <td className="px-3 py-2 text-right font-mono text-numoria-mid">
+                <td className="whitespace-nowrap px-3 py-2 text-right font-mono text-numoria-mid">
                   {submitted ? e.totalCorrect : '—'}
                 </td>
-                <td className="px-3 py-2 text-right font-mono text-numoria-mid">
+                <td className="whitespace-nowrap px-3 py-2 text-right font-mono text-numoria-mid">
                   {timeMin !== null && timeSec !== null
                     ? `${timeMin}:${String(timeSec).padStart(2, '0')}`
                     : '—'}
                 </td>
-                <td className="px-3 py-2 text-right">
+                <td className="whitespace-nowrap px-3 py-2 text-right">
                   {submitted ? (
                     <span className="inline-block rounded-full bg-numoria-teal/15 px-2 py-0.5 text-xs font-bold text-numoria-teal">
                       ✓ {labels.submitted}

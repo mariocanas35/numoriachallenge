@@ -26,7 +26,7 @@ export default async function ContestsLayout({ children }: { children: React.Rea
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8 sm:px-10 sm:py-12">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8 sm:px-10 sm:py-12">
         {children}
       </main>
     </div>
