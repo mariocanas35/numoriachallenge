@@ -108,6 +108,48 @@
       "passwordMatch": "Las contraseñas no coinciden"
     }
   },
+  "onboarding": {
+    "student": {
+      "title": "Cuéntanos sobre ti",
+      "subtitle": "Solo necesitamos algunos datos para personalizar tu experiencia matemática.",
+      "country": "¿De qué país eres?",
+      "countryHelp": "Detectamos tu país automáticamente, pero puedes cambiarlo.",
+      "birthDate": "¿Cuándo naciste?",
+      "birthDateHelp": "Solo necesitamos mes y año (no día completo, por tu privacidad).",
+      "birthYear": "Año",
+      "birthMonth": "Mes",
+      "grade": "¿En qué grado escolar estás?",
+      "gradeOption": "{grade}º grado",
+      "inviteCode": "Código de equipo (opcional)",
+      "inviteCodeHelp": "Si tu profesor te dio un código de 8 letras, ingrésalo. Si no, lo puedes hacer después.",
+      "inviteCodePlaceholder": "Ej: ABC12345",
+      "submit": "¡Empezar!",
+      "saving": "Guardando..."
+    },
+    "errors": {
+      "countryRequired": "Selecciona tu país",
+      "birthYearInvalid": "Selecciona un año válido",
+      "birthMonthInvalid": "Selecciona un mes válido",
+      "gradeInvalid": "Selecciona tu grado",
+      "inviteCodeInvalid": "Código de 8 caracteres (letras y números)",
+      "joinFailed": "No pudimos unirte al equipo: {message}",
+      "submitFailed": "No pudimos guardar tu información. Inténtalo de nuevo."
+    },
+    "months": {
+      "1": "Enero",
+      "2": "Febrero",
+      "3": "Marzo",
+      "4": "Abril",
+      "5": "Mayo",
+      "6": "Junio",
+      "7": "Julio",
+      "8": "Agosto",
+      "9": "Septiembre",
+      "10": "Octubre",
+      "11": "Noviembre",
+      "12": "Diciembre"
+    }
+  },
   "footer": {
     "copyright": "© {year} Numoria Challenge. Todos los derechos reservados.",
     "privacy": "Privacidad",

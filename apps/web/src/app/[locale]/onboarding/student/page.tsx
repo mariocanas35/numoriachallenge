@@ -1,12 +1,11 @@
-import { Button, NumaAvatar } from '@numoria/ui';
+import { StudentOnboardingForm } from '@/components/onboarding/StudentOnboardingForm';
+import { createServerClient } from '@numoria/database/server';
+import type { Tables } from '@numoria/database/types';
 import { setRequestLocale } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 
-/**
- * Shell del onboarding de estudiante.
- *
- * El flow real (edad, grado, país, escuela opcional) se construye en Chunk 2.3.
- * Por ahora es solo un placeholder visual que confirma que el router funciona.
- */
+type Profile = Tables<'profiles'>;
+
 export default async function StudentOnboardingPage({
   params,
 }: {
@@ -15,32 +14,24 @@ export default async function StudentOnboardingPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return (
-    <div className="flex flex-col items-center gap-6 text-center">
-      <NumaAvatar pose="wave" size="2xl" animateIn />
+  // Verificar que el user es realmente student (defensa en profundidad)
+  const supabase = await createServerClient();
+  const rpcResult = await supabase.rpc('get_my_profile');
+  const profile = rpcResult.data as Profile | null;
 
-      <h1 className="font-display text-3xl font-bold text-numoria-ink sm:text-4xl">
-        🎓 ¡Bienvenido, estudiante!
-      </h1>
+  if (!profile) {
+    redirect(`/${locale}/auth-error`);
+  }
+  if (profile.role !== 'student') {
+    // Si por alguna razón llegó aquí sin ser student, redirigir al router
+    redirect(`/${locale}/onboarding`);
+  }
+  if (profile.onboarding_completed) {
+    redirect(`/${locale}`);
+  }
 
-      <p className="max-w-md text-numoria-mid">
-        Vamos a personalizar tu experiencia. Te haremos unas preguntas rápidas sobre tu edad, grado
-        y país.
-      </p>
+  // country_code pre-existente del trigger (raw_user_meta_data) o fallback
+  const defaultCountry = profile.country_code ?? 'HN';
 
-      <div className="w-full rounded-xl border-2 border-dashed border-numoria-gray bg-numoria-cloud/50 p-6 text-left">
-        <p className="text-sm font-semibold text-numoria-ink">🚧 Próximamente (Chunk 2.3):</p>
-        <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-numoria-mid">
-          <li>Selección de país (auto-detectado)</li>
-          <li>Año y mes de nacimiento (no día completo)</li>
-          <li>Grado escolar (1-12)</li>
-          <li>Escuela opcional (selector o &quot;unirse después con código&quot;)</li>
-        </ul>
-      </div>
-
-      <Button variant="ghost" size="md" disabled>
-        Continuar (próximo chunk)
-      </Button>
-    </div>
-  );
+  return <StudentOnboardingForm defaultCountry={defaultCountry} />;
 }
