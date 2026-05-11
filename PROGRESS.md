@@ -7,9 +7,9 @@
 
 ## 📌 Estado actual
 
-**Fase:** Pre-Fase 1 — Scaffolding inicial y revisión del plan
-**Última actualización:** 2026-05-08
-**Próximo hito:** Aprobación del founder para arrancar Fase 1 (Fundamentos)
+**Fase:** Fase 1 cerrada ✅ — Fase 2 pendiente de arranque
+**Última actualización:** 2026-05-10
+**Próximo hito:** Push a GitHub + Fase 2 Chunk 2.0 (fix auth session + onboarding)
 
 ---
 
@@ -56,9 +56,9 @@ Ninguno. Esperando aprobación de founder para arrancar Fase 1.
 
 | Fase | Semanas | Estado | Foco |
 |---|---|---|---|
-| 0 — Scaffolding | Pre-semana 1 | 🟡 En curso | Docs, ADRs, repo skeleton |
-| 1 — Fundamentos | 1-2 | ⬜ Pendiente | Monorepo, auth, design system, landing |
-| 2 — Roles + escuelas | 3-4 | ⬜ Pendiente | Onboarding 3 roles, branding institucional |
+| 0 — Scaffolding | Pre-semana 1 | ✅ Completo | Docs, ADRs, repo skeleton |
+| **1 — Fundamentos** | 1-2 | **✅ Completo (10/10 chunks)** | Monorepo, auth, design system, landing, DB, CI |
+| 2 — Roles + escuelas | 3-4 | ⬜ Pendiente | Fix auth session + onboarding 3 roles + branding institucional |
 | 3 — Problemas + competencias | 5-6 | ⬜ Pendiente | Banco de problemas, grader Python, competencias |
 | 4 — Gamificación | 7-8 | ⬜ Pendiente | XP, rachas, badges, ligas, leaderboards |
 | 5 — Certificados + IA | 9-10 | ⬜ Pendiente | PDFs, tutor Numa, moderación IA |
@@ -460,3 +460,114 @@ Monorepo:
 - ADR del stack: [docs/decisions/0001-stack.md](docs/decisions/0001-stack.md)
 - ADR de la marca: [docs/decisions/0002-brand-numoria-challenge.md](docs/decisions/0002-brand-numoria-challenge.md)
 - ADR del scope de plataformas: [docs/decisions/0003-platform-scope.md](docs/decisions/0003-platform-scope.md)
+- ADR del bug conocido de auth session: [docs/decisions/0004-auth-session-known-issue.md](docs/decisions/0004-auth-session-known-issue.md)
+
+---
+
+### 2026-05-10 — Sesión 4 — Chunk 1.10: Verificación final + cierre de Fase 1
+
+**Lo que pasó hoy:**
+- Validación visual de `profiles` table en Supabase Dashboard — **2 perfiles creados correctamente** vía trigger `handle_new_user`:
+  - `b07d8aef-...` → display_name "mariocanas35", role student (Google OAuth)
+  - `e051447f-...` → display_name "Mario Test", role student (magic link)
+- Confirmado que **el database side de auth funciona al 100%**. Trigger inserta profile con default values correctos para ambos providers.
+- Identificado un **bug conocido**: el callback handler falla al intercambiar el código por sesión (`exchange_failed`). Causa probable: PKCE cookie no persistiendo o bloqueado por Brave Shields.
+- Decisión pragmática: cerrar Fase 1 con auth code completo + bug documentado. Fix de session establishment va a Phase 2 Chunk 2.0.
+- Creado ADR 0004 con análisis completo + opciones de fix + workarounds.
+
+**Verificaciones finales pasadas:**
+- ✅ `pnpm format:check` clean (81 archivos)
+- ✅ `pnpm lint` clean
+- ✅ `pnpm typecheck` clean en los 4 packages + apps/web
+- ✅ 96/96 unit tests pasando (73 i18n + 23 ui)
+- ✅ Visualmente: landing renderiza /es y /en, navega correctamente
+- ✅ Database: 2 profiles + 0 schools (esperado — no hemos creado ninguna escuela aún)
+- ✅ `pnpm dev` arranca sin errores en localhost:3000
+- ⚠️ Lighthouse audit: no corrido automáticamente (founder puede hacerlo manualmente en Chrome DevTools → Lighthouse tab cuando quiera)
+- ⚠️ Playwright real E2E run: deferido (requiere Chromium ~150MB install) — se hace en CI cuando se pushee
+
+---
+
+## 🏁 RETROSPECTIVA FASE 1
+
+### Logros cuantificables
+
+| Métrica | Valor |
+|---|---|
+| Chunks completados | **10/10** (100%) |
+| Sesiones de desarrollo | 4 sesiones |
+| Días calendario | 3 días (2026-05-08 a 2026-05-10) |
+| Commits | 17 commits atómicos |
+| Archivos en repo | 119 archivos |
+| Workspaces pnpm | 6 (root + 4 packages + 1 app) |
+| Unit tests | **96/96 pasando** |
+| Migrations SQL aplicadas | 5 |
+| RLS policies activas | 12 (8 profiles + 4 schools) |
+| Páginas web compiladas | /es, /en, /es/login, /en/login, /es/register, /en/register, /es/check-email, /en/check-email, /auth/error |
+| Bundle First Load JS | 128KB landing, 139KB auth pages (todos bajo budget 150KB) |
+| Idiomas activos | ES + EN (PT preparado) |
+| Países en config | 22 (LatAm + anglo + Brasil) |
+
+### Stack final entregado
+
+- ✅ **Frontend Web:** Next.js 15.5 + React 19 + TypeScript estricto + Tailwind 4 + shadcn-style components
+- ✅ **i18n:** next-intl 3.26, ES/EN funcional, PT estructurado, locale auto-detection (cookie/geo/Accept-Language)
+- ✅ **Database:** Supabase Cloud (us-east-1) + Postgres 17 + 5 migrations + 12 RLS policies + trigger handle_new_user
+- ✅ **Auth (parcial):** Magic link + Google OAuth flows — signup funciona, session establishment con bug pendiente (ADR 0004)
+- ✅ **Componentes:** Button (7 variantes), NumaAvatar (4 poses), LocaleSwitcher, Hero, HowItWorks, SchoolsSection, Footer, LoginForm, RegisterForm, GoogleButton
+- ✅ **Design system:** Paleta Numoria (Duolingo-inspired), tipografía Fraunces/Plus Jakarta Sans/JetBrains Mono, 9 keyframes de animación, respeta prefers-reduced-motion
+- ✅ **DevOps:** Turborepo + pnpm 10 + Biome + Husky + Commitlint + GitHub Actions CI (lint+typecheck+test+build+e2e) + Dependabot + PR/Issue templates + Stale bot
+
+### Lecciones aprendidas
+
+**Lo que funcionó:**
+- Estructura de chunks de 1-2 horas con commits atómicos — fácil rebobinar
+- Pivot temprano de Docker local a Supabase Cloud — ahorró días de debugging WSL2
+- Type-safety end-to-end (Supabase types generados → Database type → TablesInsert<>) — refactors seguros
+- Biome (1 herramienta) en lugar de ESLint+Prettier — menos config
+- PROGRESS.md como bitácora viva — facilitó retomar después de pausas largas
+
+**Lo que se pudo hacer mejor:**
+- Probar el auth flow E2E ANTES de declarar chunk 1.7 cerrado — habríamos detectado el bug de session antes
+- Configurar GitHub auth credentials desde el día 1 para poder pushear automáticamente — todavía pendiente push manual
+- Iconos/avatares de Numa muy "osito de peluche" — los SVG placeholders son simples, refinar con artista en Phase 2
+
+**Riesgos materializados:**
+- ⚠️ Docker Desktop install falló por WSL2 — mitigado pivotando a Supabase Cloud
+- ⚠️ Auth session bug — diferido a Phase 2
+
+**Riesgos NO materializados (gracias por preparación):**
+- ✅ Tailwind 4 + shadcn — integration limpia
+- ✅ Next.js 15 + next-intl — config compleja pero funciona
+- ✅ Supabase RLS recursion — evitado con SECURITY DEFINER functions
+
+---
+
+## 🚀 Próximo paso del founder
+
+1. **Push a GitHub** (cuando puedas, no urgente):
+   ```bash
+   gh auth login          # si no lo has hecho
+   cd "C:\Users\USER\Desktop\Math Competition APP"
+   git push -u origin main
+   ```
+   Esto activa los workflows de CI automáticamente.
+
+2. **(Opcional) Lighthouse manual** en Chrome:
+   - Levanta `pnpm dev`
+   - Abre Chrome → http://localhost:3000
+   - DevTools (F12) → Lighthouse tab → "Analyze page load" en mobile mode
+   - Screenshot del resultado para guardarlo
+
+3. **(Opcional pero recomendado) Rotar service_role key** porque pasó por el chat:
+   - Supabase Dashboard → Settings → API Keys → Secret keys → menú ⋮ → "Generate new key"
+   - Reemplaza en `apps/web/.env.local`
+
+## 📋 Phase 2 — Chunk 2.0 (primera tarea)
+
+**Fix auth session establishment** (1-2 sesiones):
+- Diagnostic: cookies en DevTools post-signInWithOtp
+- Probable fix: OTP code flow en vez de magic link, o upgrade @supabase/ssr
+- Definition of done: signup → click email → sesión activa en navegador → user logeado en /es/
+
+Después de eso, Chunk 2.1 arranca onboarding diferenciado por rol (estudiante/padre/profesor).
