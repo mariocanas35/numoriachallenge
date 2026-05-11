@@ -294,6 +294,23 @@
       "title": "Upcoming contests",
       "viewAll": "View all →",
       "noneActive": "No active contests right now. Check back soon."
+    },
+    "take": {
+      "answered": "{answered} / {total} answered",
+      "withCalc": "🧮 Calculator allowed",
+      "noCalc": "✏️ No calculator",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "submitError": "We couldn't submit your contest. Please try again.",
+      "confirmTitle": "Ready to submit?",
+      "confirmBody": "You answered {answered} out of {total} problems. Once submitted, you can't change your answers.",
+      "confirmCancel": "Go back",
+      "confirmSubmit": "Yes, submit"
+    },
+    "results": {
+      "title": "Results — {contestTitle}",
+      "comingSoon": "The detailed results page is coming in the next chunk. Your attempt is saved.",
+      "backToContests": "← Back to contests"
     }
   },
   "teams": {

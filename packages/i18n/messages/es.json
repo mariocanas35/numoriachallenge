@@ -294,6 +294,23 @@
       "title": "Próximos contests",
       "viewAll": "Ver todos →",
       "noneActive": "No hay contests activos ahora. Vuelve pronto."
+    },
+    "take": {
+      "answered": "{answered} / {total} respondidos",
+      "withCalc": "🧮 Calculadora permitida",
+      "noCalc": "✏️ Sin calculadora",
+      "submit": "Entregar",
+      "submitting": "Entregando...",
+      "submitError": "No pudimos entregar tu contest. Inténtalo de nuevo.",
+      "confirmTitle": "¿Listo para entregar?",
+      "confirmBody": "Respondiste {answered} de {total} problemas. Una vez entregado, no puedes cambiar las respuestas.",
+      "confirmCancel": "Volver",
+      "confirmSubmit": "Sí, entregar"
+    },
+    "results": {
+      "title": "Resultados — {contestTitle}",
+      "comingSoon": "La página de resultados detallados llega en el siguiente chunk. Por ahora tu attempt está guardado.",
+      "backToContests": "← Volver a contests"
     }
   },
   "teams": {
