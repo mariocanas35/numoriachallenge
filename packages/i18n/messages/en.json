@@ -261,6 +261,41 @@
       "viewTeam": "View details →"
     }
   },
+  "contests": {
+    "listTitle": "Numoria Challenge Contests",
+    "listSubtitle": "Compete with real problems. Earn points. Climb the ranking.",
+    "sections": {
+      "active": "🟢 Active now",
+      "upcoming": "🔵 Upcoming",
+      "past": "⚫ Past",
+      "empty": "No contests in this section yet."
+    },
+    "card": {
+      "contestNumber": "Contest #{number}",
+      "division": "Division {division}",
+      "divisionE": "Elementary",
+      "divisionM": "Middle",
+      "problemCount": "{count} problems",
+      "duration": "{min} minutes",
+      "withCalc": "🧮 Calculator allowed",
+      "noCalc": "✏️ No calculator",
+      "season": "Season {year}",
+      "ctaStart": "🚀 Start contest",
+      "ctaContinue": "▶️ Resume contest",
+      "ctaResults": "📊 View my results",
+      "ctaPreview": "👀 View details",
+      "expired": "Closed",
+      "yourScore": "Your score: {score} / {max}",
+      "scheduledFor": "Starts {date}",
+      "yourDivisionBadge": "Your division",
+      "otherDivision": "Other division"
+    },
+    "preview": {
+      "title": "Upcoming contests",
+      "viewAll": "View all →",
+      "noneActive": "No active contests right now. Check back soon."
+    }
+  },
   "teams": {
     "new": {
       "title": "Create your first team",

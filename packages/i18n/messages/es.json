@@ -261,6 +261,41 @@
       "viewTeam": "Ver detalles →"
     }
   },
+  "contests": {
+    "listTitle": "Contests Numoria Challenge",
+    "listSubtitle": "Compite con problemas reales. Gana puntos. Sube en el ranking.",
+    "sections": {
+      "active": "🟢 Activos ahora",
+      "upcoming": "🔵 Próximos",
+      "past": "⚫ Pasados",
+      "empty": "Aún no hay contests en esta sección."
+    },
+    "card": {
+      "contestNumber": "Contest #{number}",
+      "division": "División {division}",
+      "divisionE": "Primaria",
+      "divisionM": "Secundaria",
+      "problemCount": "{count} problemas",
+      "duration": "{min} minutos",
+      "withCalc": "🧮 Con calculadora",
+      "noCalc": "✏️ Sin calculadora",
+      "season": "Temporada {year}",
+      "ctaStart": "🚀 Empezar contest",
+      "ctaContinue": "▶️ Retomar contest",
+      "ctaResults": "📊 Ver mis resultados",
+      "ctaPreview": "👀 Ver detalles",
+      "expired": "Cerrado",
+      "yourScore": "Tu puntaje: {score} / {max}",
+      "scheduledFor": "Empieza {date}",
+      "yourDivisionBadge": "Tu división",
+      "otherDivision": "Otra división"
+    },
+    "preview": {
+      "title": "Próximos contests",
+      "viewAll": "Ver todos →",
+      "noneActive": "No hay contests activos ahora. Vuelve pronto."
+    }
+  },
   "teams": {
     "new": {
       "title": "Crea tu primer equipo",

@@ -14,6 +14,282 @@ export type Database = {
   }
   public: {
     Tables: {
+      contest_attempts: {
+        Row: {
+          contest_id: string
+          id: string
+          max_possible_score: number
+          started_at: string
+          student_id: string
+          submitted_at: string | null
+          time_spent_seconds: number | null
+          total_correct: number
+          total_score: number
+        }
+        Insert: {
+          contest_id: string
+          id?: string
+          max_possible_score?: number
+          started_at?: string
+          student_id: string
+          submitted_at?: string | null
+          time_spent_seconds?: number | null
+          total_correct?: number
+          total_score?: number
+        }
+        Update: {
+          contest_id?: string
+          id?: string
+          max_possible_score?: number
+          started_at?: string
+          student_id?: string
+          submitted_at?: string | null
+          time_spent_seconds?: number | null
+          total_correct?: number
+          total_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contest_attempts_contest_id_fkey"
+            columns: ["contest_id"]
+            isOneToOne: false
+            referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contest_attempts_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contest_problems: {
+        Row: {
+          contest_id: string
+          position: number
+          problem_id: string
+        }
+        Insert: {
+          contest_id: string
+          position: number
+          problem_id: string
+        }
+        Update: {
+          contest_id?: string
+          position?: number
+          problem_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contest_problems_contest_id_fkey"
+            columns: ["contest_id"]
+            isOneToOne: false
+            referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contest_problems_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contests: {
+        Row: {
+          calculator_allowed: boolean
+          contest_number: number
+          created_at: string
+          division: Database["public"]["Enums"]["school_division"]
+          duration_minutes: number
+          generated_by_ai: boolean
+          generation_metadata: Json | null
+          id: string
+          scheduled_at: string
+          season_year: number
+          slug: string
+          status: Database["public"]["Enums"]["contest_status"]
+          title_en: string
+          title_es: string
+          updated_at: string
+        }
+        Insert: {
+          calculator_allowed?: boolean
+          contest_number: number
+          created_at?: string
+          division: Database["public"]["Enums"]["school_division"]
+          duration_minutes?: number
+          generated_by_ai?: boolean
+          generation_metadata?: Json | null
+          id?: string
+          scheduled_at: string
+          season_year: number
+          slug: string
+          status?: Database["public"]["Enums"]["contest_status"]
+          title_en: string
+          title_es: string
+          updated_at?: string
+        }
+        Update: {
+          calculator_allowed?: boolean
+          contest_number?: number
+          created_at?: string
+          division?: Database["public"]["Enums"]["school_division"]
+          duration_minutes?: number
+          generated_by_ai?: boolean
+          generation_metadata?: Json | null
+          id?: string
+          scheduled_at?: string
+          season_year?: number
+          slug?: string
+          status?: Database["public"]["Enums"]["contest_status"]
+          title_en?: string
+          title_es?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      problem_attempts: {
+        Row: {
+          answer_submitted: string | null
+          answered_at: string | null
+          contest_attempt_id: string
+          id: string
+          is_correct: boolean | null
+          points_earned: number
+          problem_id: string
+          time_spent_seconds: number | null
+        }
+        Insert: {
+          answer_submitted?: string | null
+          answered_at?: string | null
+          contest_attempt_id: string
+          id?: string
+          is_correct?: boolean | null
+          points_earned?: number
+          problem_id: string
+          time_spent_seconds?: number | null
+        }
+        Update: {
+          answer_submitted?: string | null
+          answered_at?: string | null
+          contest_attempt_id?: string
+          id?: string
+          is_correct?: boolean | null
+          points_earned?: number
+          problem_id?: string
+          time_spent_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "problem_attempts_contest_attempt_id_fkey"
+            columns: ["contest_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "contest_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problem_attempts_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      problems: {
+        Row: {
+          answer_type: Database["public"]["Enums"]["answer_type"]
+          body_en: string
+          body_es: string
+          category: Database["public"]["Enums"]["problem_category"]
+          created_at: string
+          diagram_caption_en: string | null
+          diagram_caption_es: string | null
+          diagram_svg_url: string | null
+          division: Database["public"]["Enums"]["school_division"]
+          expected_answer: string
+          explanation_en: string
+          explanation_es: string
+          format_directive_en: string | null
+          format_directive_es: string | null
+          generated_by_ai: boolean
+          generation_metadata: Json | null
+          has_diagram: boolean
+          id: string
+          points: number
+          published: boolean
+          slug: string
+          source: string | null
+          source_year: number | null
+          stars: number
+          title_en: string
+          title_es: string
+          updated_at: string
+        }
+        Insert: {
+          answer_type: Database["public"]["Enums"]["answer_type"]
+          body_en: string
+          body_es: string
+          category: Database["public"]["Enums"]["problem_category"]
+          created_at?: string
+          diagram_caption_en?: string | null
+          diagram_caption_es?: string | null
+          diagram_svg_url?: string | null
+          division: Database["public"]["Enums"]["school_division"]
+          expected_answer: string
+          explanation_en: string
+          explanation_es: string
+          format_directive_en?: string | null
+          format_directive_es?: string | null
+          generated_by_ai?: boolean
+          generation_metadata?: Json | null
+          has_diagram?: boolean
+          id?: string
+          points?: number
+          published?: boolean
+          slug: string
+          source?: string | null
+          source_year?: number | null
+          stars: number
+          title_en: string
+          title_es: string
+          updated_at?: string
+        }
+        Update: {
+          answer_type?: Database["public"]["Enums"]["answer_type"]
+          body_en?: string
+          body_es?: string
+          category?: Database["public"]["Enums"]["problem_category"]
+          created_at?: string
+          diagram_caption_en?: string | null
+          diagram_caption_es?: string | null
+          diagram_svg_url?: string | null
+          division?: Database["public"]["Enums"]["school_division"]
+          expected_answer?: string
+          explanation_en?: string
+          explanation_es?: string
+          format_directive_en?: string | null
+          format_directive_es?: string | null
+          generated_by_ai?: boolean
+          generation_metadata?: Json | null
+          has_diagram?: boolean
+          id?: string
+          points?: number
+          published?: boolean
+          slug?: string
+          source?: string | null
+          source_year?: number | null
+          stars?: number
+          title_en?: string
+          title_es?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -328,8 +604,56 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      my_immutable_profile_fields: {
+        Args: never
+        Returns: {
+          current_streak: number
+          level: number
+          longest_streak: number
+          user_role: Database["public"]["Enums"]["user_role"]
+          xp_total: number
+        }[]
+      }
+      my_school_id: { Args: never; Returns: string }
+      profile_immutable_fields: {
+        Args: { p_id: string }
+        Returns: {
+          user_role: Database["public"]["Enums"]["user_role"]
+          xp_total: number
+        }[]
+      }
     }
     Enums: {
+      answer_type:
+        | "integer"
+        | "pair_integer"
+        | "pair_decimal"
+        | "fraction_simplified"
+        | "decimal_cents"
+        | "symbolic_pi"
+        | "with_units"
+        | "multiple_choice"
+      contest_status: "draft" | "scheduled" | "active" | "closed"
+      problem_category:
+        | "algebra"
+        | "number_theory"
+        | "plane_geometry"
+        | "counting_combinatorics"
+        | "probability"
+        | "ratios_proportions"
+        | "percentages"
+        | "rate_time_distance"
+        | "money"
+        | "statistics"
+        | "sequences_patterns"
+        | "logic"
+        | "fractions_decimals"
+        | "time_clocks"
+        | "mixtures"
+        | "sets_venn"
+        | "custom_operators"
+        | "geometry_3d"
+        | "pythagoras"
       school_division: "elementary" | "middle"
       user_role: "student" | "parent" | "teacher" | "admin"
     }
@@ -459,6 +783,38 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      answer_type: [
+        "integer",
+        "pair_integer",
+        "pair_decimal",
+        "fraction_simplified",
+        "decimal_cents",
+        "symbolic_pi",
+        "with_units",
+        "multiple_choice",
+      ],
+      contest_status: ["draft", "scheduled", "active", "closed"],
+      problem_category: [
+        "algebra",
+        "number_theory",
+        "plane_geometry",
+        "counting_combinatorics",
+        "probability",
+        "ratios_proportions",
+        "percentages",
+        "rate_time_distance",
+        "money",
+        "statistics",
+        "sequences_patterns",
+        "logic",
+        "fractions_decimals",
+        "time_clocks",
+        "mixtures",
+        "sets_venn",
+        "custom_operators",
+        "geometry_3d",
+        "pythagoras",
+      ],
       school_division: ["elementary", "middle"],
       user_role: ["student", "parent", "teacher", "admin"],
     },
