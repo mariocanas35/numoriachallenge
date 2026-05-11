@@ -7,9 +7,9 @@
 
 ## 📌 Estado actual
 
-**Fase:** Fase 1 cerrada ✅ — Fase 2 pendiente de arranque
-**Última actualización:** 2026-05-10
-**Próximo hito:** Push a GitHub + Fase 2 Chunk 2.0 (fix auth session + onboarding)
+**Fase:** Fase 2 cerrada ✅ — Fase 3 pendiente de arranque
+**Última actualización:** 2026-05-11
+**Próximo hito:** Push a GitHub (28 commits acumulados) + Fase 3 Chunk 3.1 (banco de problemas)
 
 ---
 
@@ -58,7 +58,7 @@ Ninguno. Esperando aprobación de founder para arrancar Fase 1.
 |---|---|---|---|
 | 0 — Scaffolding | Pre-semana 1 | ✅ Completo | Docs, ADRs, repo skeleton |
 | **1 — Fundamentos** | 1-2 | **✅ Completo (10/10 chunks)** | Monorepo, auth, design system, landing, DB, CI |
-| 2 — Roles + escuelas | 3-4 | ⬜ Pendiente | Fix auth session + onboarding 3 roles + branding institucional |
+| **2 — Roles + escuelas** | 3-4 | **✅ Completo (8/8 chunks)** | Onboarding 3 roles + escuelas + teams + dashboards + auth fix |
 | 3 — Problemas + competencias | 5-6 | ⬜ Pendiente | Banco de problemas, grader Python, competencias |
 | 4 — Gamificación | 7-8 | ⬜ Pendiente | XP, rachas, badges, ligas, leaderboards |
 | 5 — Certificados + IA | 9-10 | ⬜ Pendiente | PDFs, tutor Numa, moderación IA |
@@ -571,3 +571,201 @@ Monorepo:
 - Definition of done: signup → click email → sesión activa en navegador → user logeado en /es/
 
 Después de eso, Chunk 2.1 arranca onboarding diferenciado por rol (estudiante/padre/profesor).
+
+---
+
+### 2026-05-11 — Sesión 5 — Fase 2 completa (Chunks 2.1 → 2.8)
+
+**Estructura del trabajo:**
+8 chunks construidos durante 1 sesión larga (continuación del día anterior). Cada chunk
+con commit atómico, verificación format/lint/typecheck, y validación E2E manual donde
+fue posible.
+
+#### Chunks 2.1–2.4: DB extensions + onboarding por rol
+
+- **2.1** Migrations 0006-0010: profile_extensions (onboarding_completed, terms_accepted_at,
+  grade), teams + team_members, 5 RPC helpers (`get_my_profile`, `generate_team_invite_code`,
+  `complete_onboarding`, `join_team`), trigger handle_new_user extendido para procesar
+  metadata de signup (parent_id, birth_year/month, grade).
+- **2.2** Middleware con onboarding redirect: si `onboarding_completed=false` y la ruta no
+  está exenta, redirige a `/[locale]/onboarding`. Layout shells por rol.
+- **2.3** StudentOnboardingForm: país (22 países sorteados por locale), birth_year/month
+  (privacy-friendly, sin día), grade selector, invite_code opcional (auto-uppercase).
+  Validación Zod server-side + RPC complete_onboarding.
+- **2.4** ParentOnboardingForm: editor dinámico de hijos (1-4 max), por cada uno:
+  display_name, email, birth_year/month, grade. Server action invita a cada hijo via
+  admin.inviteUserByEmail con metadata; el trigger crea profile con parent_id.
+
+#### Chunk 2.5: Teacher onboarding + escuela + logo upload
+
+- Migration 0011: bucket `school-logos` con 4 RLS policies (public read; teacher
+  upload/update/delete a folder = school.id que creó).
+- `completeTeacherOnboarding(formData)` server action:
+  1. Valida nombre (2-200), slug (regex), country, city, primary_color
+  2. Inserta school (verified=false default)
+  3. Upload logo a storage (PNG/JPEG/WebP/SVG, max 512KB)
+  4. Update school.logo_url
+  5. RPC complete_onboarding con p_school_id
+- TeacherOnboardingForm: auto-generación de slug (sin acentos, lowercase, espacios→guiones,
+  filtro caracteres válidos), color picker dual (HTML5 + input hex sincronizado + swatch),
+  logo upload con preview + cleanup de object URLs.
+- **E2E validado** con `mimathonline+phase1test@gmail.com`:
+  - School row creada con `Escuela Internacional Sampedrana`, country=HN, verified=false
+  - Logo subido a `school-logos/{school.id}/logo-1778511097228.jpeg` (21.7KB)
+  - Profile actualizado: role=teacher, school_id, onboarding_completed=true
+
+#### Chunk 2.6: Teams system + /join/[code]
+
+- Sin migration nueva (reusa RPCs de migration 0008).
+- Server actions: `createTeam` (genera invite_code único + INSERT con RLS), `joinTeam`
+  (wrapper de RPC), `regenerateInviteCode` (rotar código).
+- 3 páginas nuevas: `/teams/new` (form con división elementary/middle + capacidad),
+  `/teams/[id]` (vista detalle con código grande monospace + copy buttons + URL completa
+  + lista de miembros + regenerar), `/join/[code]` (landing pública con 5 modos según
+  user state: anonymous, student-onboarding, student-ready, wrong-role, already-member).
+- Middleware: `/join` añadido a ONBOARDING_EXEMPT_PATHS.
+- StudentOnboardingForm: pre-llena invite_code desde URL params sanitizados.
+- TeacherOnboardingForm: tras crear escuela redirige a `/teams/new` (encadena flows).
+- **E2E validado**: team `Test Team Águilas 6º` creado con code `RCSNK2KQ`, página
+  /join funcional siendo anónimo, código inválido muestra error correcto.
+
+#### Chunk 2.7: Role-aware dashboards
+
+- Refactor de home page (`/`) detecta user → si anon: landing; si auth: dashboard del rol.
+- `DashboardShell` (layout común: brand + LocaleSwitcher + Salir).
+- **StudentDashboard**: greeting, team card (con `JoinTeamCard` inline si no tiene team),
+  stats grid (nivel/XP/racha del profile), placeholder competencias.
+- **ParentDashboard**: lista hijos con email (admin client scoped), grado, estado
+  onboarding (pendiente/activo), team.
+- **TeacherDashboard**: school card con logo + verified chip, lista de teams con conteo
+  miembros + link a /teams/[id] + CTA crear nuevo.
+- Login `next` redirect: ya estaba implementado end-to-end (no era tech debt).
+- AuthIndicator removido del root layout (causaba solapamiento visual con LocaleSwitcher);
+  añadido LandingHeader para anon users en /.
+- **E2E validado**: StudentDashboard renderiza con stats reales, JoinTeamCard funciona,
+  team card verde muestra "Profesor: Mario Ernesto Cañas" correctamente.
+
+#### Chunk 2.8a: Auth fix + RLS fix (crítico)
+
+**Bug #1 — Magic link PKCE callback intermitente** (ADR 0004 reabierto):
+- El callback fallaba con `exchange_failed` cuando el cookie PKCE verifier se perdía
+  (browsers distintos entre register y click, hard refresh, dev server restart).
+- Fix: implementar **OTP code flow** como camino primario. Usuario tipea código de
+  6 dígitos del correo en lugar de clickear link. `verifyOtp` NO necesita PKCE cookie.
+- Cambios: server action `verifyEmailOtp`, componente `VerifyCodeForm` (input mono,
+  autoComplete=one-time-code), refactor de `/check-email` con form integrado, i18n
+  `auth.verifyCode.*`. Magic link sigue funcionando como fallback.
+
+**Bug #2 — Infinite recursion en RLS de profiles** (migration 0012):
+- 3 policies tenían subqueries SELECT a `public.profiles` en USING/WITH CHECK clauses,
+  causando recursión cuando un user (no-admin) hacía UPDATE.
+- Descubierto en validación E2E: student onboarding hace UPDATE profiles para
+  birth_year/month, dispara `users_update_own_profile` con 5 subqueries recursivas.
+- Fix: 3 funciones SECURITY DEFINER (`my_school_id`, `my_immutable_profile_fields`,
+  `profile_immutable_fields`) que bypassan RLS al leer profiles. Policies re-creadas
+  usando estas funciones. Comportamiento funcional idéntico (anti-cheat se mantiene),
+  sin recursión.
+
+**Bug #3 — Student dashboard mostraba "Profesor: —"**:
+- RLS de profiles no permiten al student leer perfiles arbitrarios; el coach lookup
+  retornaba null.
+- Fix: `StudentDashboard.fetchStudentTeam` usa createAdminClient solo para resolver
+  display_name del coach (scope mínimo, student ya validado como miembro legítimo).
+
+**E2E validado con primer student real** (`mcanas@seishn.com`):
+1. ✅ Register → email con código de 6 dígitos
+2. ✅ /check-email → tipear código → verifyOtp → sesión + redirect
+3. ✅ Middleware lleva a /onboarding/student
+4. ✅ Form submit → UPDATE profiles sin recursión → RPC complete_onboarding
+5. ✅ Redirect a / → StudentDashboard con stats y JoinTeamCard
+6. ✅ Join team con `RCSNK2KQ` → team card verde con profesor visible
+
+---
+
+## 🏁 RETROSPECTIVA FASE 2
+
+### Logros cuantificables
+
+| Métrica | Phase 1 | Phase 2 | Total |
+|---|---|---|---|
+| Chunks completados | 10 | 8 (incluyendo 2.8) | 18 |
+| Sesiones de desarrollo | 4 | 1 sesión larga | 5 |
+| Commits | 17 | **11** | **28** |
+| Migrations SQL aplicadas | 5 | 7 (0006-0012) | 12 |
+| RLS policies activas | 12 | +12 (teams + school-logos + fix) | 24+ |
+| RPC functions SECURITY DEFINER | 0 | 8 | 8 |
+| Páginas web compiladas | 9 | 27 | 27 |
+| Bundle First Load JS | 128KB | 140KB max (dashboard) | dentro budget |
+| Idiomas activos | ES + EN | ES + EN (PT preparado) | sin cambio |
+| Tests pasando | 96/96 | 96/96 | sin regresiones |
+
+### Stack añadido en Phase 2
+
+- ✅ **OTP code flow** reemplazando magic link como auth primario
+- ✅ **Onboarding flows** completos para student/parent/teacher
+- ✅ **School creation** con upload de logo a Supabase Storage
+- ✅ **Teams system** con códigos de invitación únicos + landing pública /join
+- ✅ **Role-aware dashboards** (3 roles + anon)
+- ✅ **Profile data fetching pattern** con get_my_profile RPC (SECURITY DEFINER)
+- ✅ **Locale support** en formato de fechas + plural counts (memberships, etc.)
+
+### Lecciones aprendidas
+
+**Lo que funcionó:**
+- Pattern `get_my_profile` RPC + SECURITY DEFINER — bypassa los issues de
+  RLS context propagation en Server Components
+- E2E manual con users reales destapó bugs que typecheck + lint no pueden detectar
+  (RLS recursion, PKCE cookie intermitency)
+- Decisión de implementar OTP code flow vs intentar arreglar PKCE — eliminó la
+  variable de cookies completamente
+- Migration files con `drop policy if exists` antes de `create policy` — idempotencia
+  facilita re-aplicación
+
+**Lo que se pudo hacer mejor:**
+- Las RLS policies con subqueries a la misma tabla deberían haber sido detectadas
+  en code review de Phase 1; el bug latente solo se materializó cuando un user
+  no-admin hizo UPDATE. Lesson: en code review, marcar como tech debt cualquier
+  subquery SELECT desde dentro de policy de la misma tabla.
+- El primer "false positive" del ADR 0004 fue conclusión apresurada — un solo test
+  exitoso con cookies bien posicionadas no descarta un bug intermitente.
+
+**Tech debt no resuelta en Phase 2:**
+- E2E tests con Playwright para los 3 roles (deferido a Phase 3 setup)
+- Verificación de TeacherDashboard end-to-end (typecheck/lint/build pasan; user
+  validó componentes equivalentes pre-fix, pero no post-fix de admin client coach)
+- AuthIndicator.tsx queda en el repo sin uso — considerar borrar en Phase 3
+
+**Riesgos materializados:**
+- 🟡 Bug ADR 0004 reabierto — resuelto con OTP code flow
+
+**Riesgos NO materializados:**
+- ✅ Phase 2 12-week MVP timeline sigue intacto
+- ✅ Build production limpio: 27 páginas, 1 successful, 0 errors
+
+---
+
+## 🚀 Próximo paso del founder
+
+1. **Push a GitHub** (28 commits acumulados):
+   ```bash
+   cd "C:\Users\USER\Desktop\Math Competition APP"
+   git push origin main
+   ```
+   Esto activa los workflows de CI automáticamente. Si te pide auth, usa el método
+   que ya configuraste antes (gh CLI, PAT, o GCM).
+
+2. **(Opcional) Rotar service_role key** si todavía no lo has hecho desde Phase 1.
+
+3. **(Opcional) Validación final del TeacherDashboard** — login como `+phase1test`
+   con OTP code (en `localhost:3000/es/login` → email → código 6 dígitos del correo)
+   para ver el TeacherDashboard real con tu Escuela Internacional Sampedrana + team.
+
+## 📋 Phase 3 — primera tarea
+
+**Chunk 3.1: Banco de problemas** (1-2 sesiones):
+- Tabla `problems` (slug, difficulty, division, tags, body en markdown, answer)
+- Tabla `problem_attempts` (student_id, problem_id, answer, correct, submitted_at)
+- Seed con ~50 problemas reales de competencias (MOEMS, AMC, Kangaroo)
+- Página `/problems` con listado filtrable por division/difficulty
+- Página `/problems/[slug]` para resolver (input numérico, validación)
+- Server action `submitAnswer` con scoring server-side (anti-cheat)
