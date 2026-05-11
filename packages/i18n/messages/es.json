@@ -309,8 +309,22 @@
     },
     "results": {
       "title": "Resultados — {contestTitle}",
-      "comingSoon": "La página de resultados detallados llega en el siguiente chunk. Por ahora tu attempt está guardado.",
-      "backToContests": "← Volver a contests"
+      "yourAnswers": "Tus respuestas",
+      "problemLabel": "Problema",
+      "yourAnswer": "Tu respuesta",
+      "correctAnswer": "Correcta",
+      "unanswered": "Sin responder",
+      "explanationLabel": "Explicación",
+      "statusCorrect": "Correcto",
+      "statusWrong": "Incorrecto",
+      "statusUnanswered": "En blanco",
+      "pointsStat": "Puntos",
+      "correctStat": "Correctos",
+      "timeStat": "Tiempo",
+      "pointsOf": "{earned} / {max}",
+      "backToContests": "← Volver a contests",
+      "notSubmittedYet": "Aún no entregaste este contest.",
+      "continueAttempt": "Continuar contest"
     }
   },
   "teams": {

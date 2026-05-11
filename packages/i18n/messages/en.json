@@ -309,8 +309,22 @@
     },
     "results": {
       "title": "Results — {contestTitle}",
-      "comingSoon": "The detailed results page is coming in the next chunk. Your attempt is saved.",
-      "backToContests": "← Back to contests"
+      "yourAnswers": "Your answers",
+      "problemLabel": "Problem",
+      "yourAnswer": "Your answer",
+      "correctAnswer": "Correct",
+      "unanswered": "Blank",
+      "explanationLabel": "Explanation",
+      "statusCorrect": "Correct",
+      "statusWrong": "Wrong",
+      "statusUnanswered": "Blank",
+      "pointsStat": "Points",
+      "correctStat": "Correct",
+      "timeStat": "Time",
+      "pointsOf": "{earned} / {max}",
+      "backToContests": "← Back to contests",
+      "notSubmittedYet": "You haven't submitted this contest yet.",
+      "continueAttempt": "Continue contest"
     }
   },
   "teams": {
