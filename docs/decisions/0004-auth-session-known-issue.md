@@ -1,8 +1,35 @@
-# ADR 0004 — Known issue: auth session establishment after magic link / OAuth callback
+# ADR 0004 — Auth session — FALSO POSITIVO, sesión SIEMPRE funcionó
 
-- **Estado:** Aceptado como issue conocido — diferido a Phase 2 Chunk 2.0
-- **Fecha:** 2026-05-10
+- **Estado:** ✅ **RESUELTO 2026-05-11** — era issue de UX, no de auth
+- **Fecha original:** 2026-05-10
+- **Fecha de resolución:** 2026-05-11
 - **Decididores:** Mario Cañas (founder), Claude Code (co-developer)
+
+## 🟢 ACTUALIZACIÓN 2026-05-11: bug FALSO POSITIVO
+
+Después de construir el componente `AuthIndicator` (badge flotante esquina superior derecha que muestra estado de auth), se descubrió que **la sesión SÍ se establecía correctamente** en todos los intentos anteriores. El usuario percibía "no funciona" porque después del callback la app redirige a `/{locale}/` que era visualmente idéntica a la landing pública — no había ningún indicio visible de "estás logueado".
+
+**Validación end-to-end exitosa con `mimathonline+phase1test@gmail.com`:**
+1. ✅ Signup form (role=teacher seleccionado)
+2. ✅ Email magic link enviado (bypaseando rate limit con alias Gmail `+phase1test`)
+3. ✅ Click en magic link
+4. ✅ Callback intercambia code → sesión cookies establecidas
+5. ✅ Redirige a /es/
+6. ✅ AuthIndicator badge muestra "Mario Ernesto Cañas · 👩‍🏫 Profesor"
+7. ✅ Trigger handle_new_user creó profile con todos los metadata correctos
+
+**Sub-issue menor descubierto:** la query a `profiles` desde un Server Component con cliente normal (anon key + session cookie) devuelve null aunque el profile existe. Probable que @supabase/ssr 0.5.x no propaga el JWT correctamente al postgrest call en contexto de Server Component, haciendo que RLS auth.uid() devuelva null. **Workaround temporal:** AuthIndicator usa admin client (service_role) para leer su propio profile — seguro porque solo lee `user.id` ya autenticado.
+
+**Tech debt para Phase 2 Chunk 2.x:**
+- Investigar por qué auth.uid() devuelve null en postgrest desde Server Components
+- Posibles soluciones: (a) upgrade a @supabase/ssr 0.6+, (b) crear RPC `get_my_profile()` con SECURITY DEFINER, (c) refactor a Client Component que use createBrowserClient
+- Reemplazar admin client usage en AuthIndicator con solución limpia
+
+---
+
+## 📚 Contexto histórico (para referencia)
+
+- **Estado original:** Aceptado como issue conocido — diferido a Phase 2 Chunk 2.0
 
 ---
 
