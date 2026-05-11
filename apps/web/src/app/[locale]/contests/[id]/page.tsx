@@ -1,6 +1,7 @@
 import { ContestTakeView } from '@/components/contests/ContestTakeView';
-import { type ProblemCardData, inputHintForType } from '@/components/contests/ProblemCard';
+import type { ProblemCardData } from '@/components/contests/ProblemCard';
 import { startContestAttempt } from '@/lib/contests/actions';
+import { inputHintForType } from '@/lib/contests/input-hints';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { setRequestLocale } from 'next-intl/server';
