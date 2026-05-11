@@ -1,6 +1,6 @@
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Link } from '@/i18n/navigation';
-import { BRAND_NAME } from '@numoria/i18n';
+import { NumoriaLogo } from '@numoria/ui';
 
 /**
  * Layout para la landing de invitación a un team (`/join/[code]`).
@@ -8,13 +8,10 @@ import { BRAND_NAME } from '@numoria/i18n';
  */
 export default function JoinLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-gradient-to-br from-numoria-cloud via-white to-numoria-cloud">
+    <div className="flex min-h-dvh flex-col bg-gradient-to-br from-numoria-crema via-white to-numoria-crema">
       <header className="flex items-center justify-between px-6 py-4 sm:px-10">
-        <Link
-          href="/"
-          className="font-display text-xl font-bold text-numoria-ink hover:text-numoria-blue"
-        >
-          {BRAND_NAME}
+        <Link href="/" className="text-xl transition hover:opacity-80">
+          <NumoriaLogo variant="horizontal" />
         </Link>
         <LocaleSwitcher />
       </header>

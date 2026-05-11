@@ -1,11 +1,11 @@
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Link } from '@/i18n/navigation';
-import { BRAND_NAME } from '@numoria/i18n';
+import { NumoriaLogo } from '@numoria/ui';
 import { getTranslations } from 'next-intl/server';
 
 /**
  * Header pequeño para la landing page (solo se ve cuando el user es anónimo).
- * - Brand a la izquierda
+ * - NumoriaLogo a la izquierda (wordmark + tagline)
  * - LocaleSwitcher + link a Iniciar sesión a la derecha
  */
 export async function LandingHeader() {
@@ -13,17 +13,14 @@ export async function LandingHeader() {
 
   return (
     <header className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-4 sm:px-10">
-      <Link
-        href="/"
-        className="font-display text-xl font-bold text-numoria-ink hover:text-numoria-blue"
-      >
-        {BRAND_NAME}
+      <Link href="/" className="text-xl transition hover:opacity-80">
+        <NumoriaLogo variant="horizontal" />
       </Link>
       <div className="flex items-center gap-4">
         <LocaleSwitcher />
         <Link
           href="/login"
-          className="text-sm font-semibold text-numoria-ink underline-offset-2 hover:text-numoria-blue hover:underline"
+          className="text-sm font-semibold text-numoria-grafito underline-offset-2 hover:text-numoria-orange hover:underline"
         >
           {t('login')}
         </Link>

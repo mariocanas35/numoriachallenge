@@ -84,10 +84,11 @@ function NumaSVG({ pose }: { pose: NumaPose }) {
   }
 }
 
-const FUR = '#F97316';
-const FUR_DARK = '#D65F0E';
+// Colores oficiales del Manual de Marca v1.0
+const FUR = '#F97316'; // Naranja Numa (Manual §03)
+const FUR_DARK = '#EA580C';
 const BELLY = '#FFFFFF';
-const INK = '#2B2D42';
+const INK = '#1E1B4B'; // Índigo Medianoche — Manual §05: "Ojos grandes, expresivos, índigo"
 
 function NumaBase({ children }: { children?: React.ReactNode }) {
   return (
@@ -235,13 +236,13 @@ function NumaCelebrate() {
         transform="rotate(30 82 28)"
       />
       {/* Sparkles */}
-      <text x="14" y="14" fontSize="10" fill="#FFC800">
+      <text x="14" y="14" fontSize="10" fill="#FBBF24">
         ✦
       </text>
-      <text x="78" y="14" fontSize="10" fill="#FFC800">
+      <text x="78" y="14" fontSize="10" fill="#FBBF24">
         ✦
       </text>
-      <text x="50" y="10" fontSize="8" fill="#FFC800">
+      <text x="50" y="10" fontSize="8" fill="#FBBF24">
         ✦
       </text>
     </NumaBase>
@@ -291,8 +292,8 @@ function NumaSad() {
         fill="none"
         strokeLinecap="round"
       />
-      {/* Tear */}
-      <path d="M 40 56 Q 38 62 40 65 Q 42 62 40 56 Z" fill="#1CB0F6" opacity="0.8" />
+      {/* Tear — teal (Manual §03 acento triste) */}
+      <path d="M 40 56 Q 38 62 40 65 Q 42 62 40 56 Z" fill="#14B8A6" opacity="0.85" />
     </NumaBase>
   );
 }

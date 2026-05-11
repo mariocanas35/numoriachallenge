@@ -1,73 +1,126 @@
 /**
  * Numoria Challenge — Design Tokens
  *
+ * Alineado al Manual de Marca v1.0 (mayo 2026).
  * Tailwind CSS v4 @theme syntax. Define todos los tokens como CSS custom
  * properties que Tailwind expone automáticamente como utilidades:
- *   --color-numoria-blue → bg-numoria-blue, text-numoria-blue, border-numoria-blue
- *   --font-display       → font-display
- *   --radius-lg          → rounded-lg
+ *   --color-numoria-orange → bg-numoria-orange, text-numoria-orange, ...
+ *   --font-display         → font-display
+ *   --radius-lg            → rounded-lg
  *
  * Importar en cada app:
  *   @import "tailwindcss";
  *   @import "@numoria/config/tailwind/tokens.css";
+ *
+ * NOTA SOBRE NOMENCLATURA: algunos tokens conservan nombres legacy del
+ * MVP inicial (numoria-blue, numoria-purple) para evitar refactor masivo.
+ * Sus valores fueron actualizados a la paleta del Manual de Marca.
+ * Renombrar a numoria-primary / numoria-medianoche / etc. en una futura
+ * iteración cuando haya tiempo.
  */
 
 @theme {
   /* ============================================
-   * BRAND COLORS — paleta vibrante (estilo Duolingo)
+   * PRIMARIOS — el ADN de la marca (Manual §03)
+   * 60% Naranja Numa, 40% blanco/crema, acentos en índigo
    * ============================================ */
-  --color-numoria-blue: #1cb0f6;
-  --color-numoria-blue-hover: #0090d4;
-  --color-numoria-orange: #f97316;
-  --color-numoria-orange-hover: #d65f0e;
-  --color-numoria-yellow: #ffc800;
-  --color-numoria-yellow-hover: #e0af00;
-  --color-numoria-green: #58cc02;
-  --color-numoria-green-hover: #46a302;
-  --color-numoria-red: #ff4b4b;
-  --color-numoria-red-hover: #d83a3a;
-  --color-numoria-purple: #ce82ff;
-  --color-numoria-purple-hover: #b35ee0;
+  --color-numoria-orange: #f97316; /* Naranja Numa — primario, mascota, CTAs */
+  --color-numoria-orange-hover: #ea580c;
+  --color-numoria-indigo: #1e1b4b; /* Índigo Medianoche — autoridad, dark bg */
+  --color-numoria-indigo-hover: #2a2658;
+
+  /* LEGACY: `numoria-blue` apuntaba a un cyan estilo Duolingo. El Manual
+   * de Marca dicta que el CTA primario es Naranja Numa. Reasignamos el
+   * token sin renombrar para no romper 50+ usos. Rename pendiente. */
+  --color-numoria-blue: #f97316; /* = Naranja Numa */
+  --color-numoria-blue-hover: #ea580c;
 
   /* ============================================
-   * SEMANTIC COLORS — feedback de UI
+   * ACENTOS — estado emocional (Manual §03)
    * ============================================ */
-  --color-success: #58cc02;
-  --color-success-bg: #e7ffe0;
-  --color-error: #ff4b4b;
-  --color-error-bg: #ffe0e0;
-  --color-warning: #ffc800;
-  --color-warning-bg: #fff4d6;
-  --color-info: #1cb0f6;
-  --color-info-bg: #e0f4ff;
+  --color-numoria-dorado: #fbbf24; /* Dorado Medalla — logros, premios, nivel superior */
+  --color-numoria-teal: #14b8a6; /* Teal Éxito — respuestas correctas, progreso */
+  --color-numoria-coral: #fb7185; /* Coral Suave — alertas amigables, Numa triste */
+
+  /* LEGACY: alias para retrocompatibilidad con código existente */
+  --color-numoria-yellow: #fbbf24; /* = Dorado Medalla */
+  --color-numoria-yellow-hover: #f59e0b;
+  --color-numoria-green: #14b8a6; /* = Teal Éxito */
+  --color-numoria-green-hover: #0d9488;
+  --color-numoria-red: #fb7185; /* = Coral Suave */
+  --color-numoria-red-hover: #e11d48;
 
   /* ============================================
-   * MEDAL TIERS — gradientes para certificados/badges
+   * NEUTROS — estructura y lectura (Manual §03)
    * ============================================ */
-  --color-medal-gold-from: #ffd700;
-  --color-medal-gold-to: #ffa500;
-  --color-medal-silver-from: #e5e5e5;
-  --color-medal-silver-to: #b8b8b8;
-  --color-medal-bronze-from: #cd7f32;
-  --color-medal-bronze-to: #8b4513;
-  --color-medal-platinum-from: #e0e7ff;
-  --color-medal-platinum-to: #818cf8;
+  --color-numoria-crema: #fff7ed; /* Fondos cálidos (preferido para landing) */
+  --color-numoria-bone: #fafaf9; /* Blanco hueso — fondos limpios */
+  --color-numoria-niebla: #94a3b8; /* Gris niebla — texto secundario */
+  --color-numoria-grafito: #1f2937; /* Grafito — texto principal */
 
-  /* ============================================
-   * NEUTRALS
-   * ============================================ */
-  --color-numoria-ink: #2b2d42;
-  --color-numoria-mid: #6b7280;
-  --color-numoria-gray: #e5e7eb;
-  --color-numoria-cloud: #f3f4f6;
+  /* LEGACY: alias para retrocompatibilidad */
+  --color-numoria-ink: #1f2937; /* = Grafito (era #2B2D42) */
+  --color-numoria-mid: #94a3b8; /* = Gris niebla (era #6B7280) */
+  --color-numoria-gray: #e5e7eb; /* bordes ligeros — no del Manual, utilidad */
+  --color-numoria-cloud: #fff7ed; /* = Crema (era #F3F4F6) */
   --color-numoria-white: #ffffff;
-  --color-numoria-overlay: rgb(43 45 66 / 0.5);
+  --color-numoria-overlay: rgb(31 41 55 / 0.5);
 
   /* ============================================
-   * TYPOGRAPHY
-   * Display: Fraunces (títulos, hero, marca)
-   * Sans:    Plus Jakarta Sans (UI / body)
-   * Mono:    JetBrains Mono (matemáticas, código)
+   * DIFICULTAD — sistema de estrellas (no en Manual,
+   * pero alineado con el espíritu de la paleta de acentos)
+   * ============================================ */
+  --color-numoria-difficulty-easy: #14b8a6; /* ★ = Teal */
+  --color-numoria-difficulty-medium: #fbbf24; /* ★★ = Dorado */
+  --color-numoria-difficulty-hard: #fb7185; /* ★★★ = Coral */
+
+  /* ============================================
+   * DISCIPLINAS — 4 ramas, 4 colores (Manual §07)
+   * ============================================ */
+  --color-numoria-discipline-calculo: #f97316; /* Naranja — Aritmética, Operaciones */
+  --color-numoria-discipline-geometria: #14b8a6; /* Teal — Figuras, Ángulos */
+  --color-numoria-discipline-algebra: #1e1b4b; /* Índigo — Variables, Ecuaciones */
+  --color-numoria-discipline-logica: #fb7185; /* Coral — Conjuntos, Deducción */
+
+  /* ============================================
+   * MEDALLAS — sistema de rangos hexagonal (Manual §06)
+   * ============================================ */
+  --color-medal-bronce-from: #d97706; /* Bronce I — 0-999 XP */
+  --color-medal-bronce-to: #92400e;
+  --color-medal-plata-from: #cbd5e1; /* Plata II — 1k-4.9k XP */
+  --color-medal-plata-to: #94a3b8;
+  --color-medal-oro-from: #fbbf24; /* Oro III — 5k-14.9k XP */
+  --color-medal-oro-to: #d97706;
+  --color-medal-diamante-from: #93c5fd; /* Diamante IV — 15k+ XP */
+  --color-medal-diamante-to: #3b82f6;
+
+  /* LEGACY: alias en inglés */
+  --color-medal-gold-from: #fbbf24;
+  --color-medal-gold-to: #d97706;
+  --color-medal-silver-from: #cbd5e1;
+  --color-medal-silver-to: #94a3b8;
+  --color-medal-bronze-from: #d97706;
+  --color-medal-bronze-to: #92400e;
+  --color-medal-platinum-from: #93c5fd;
+  --color-medal-platinum-to: #3b82f6;
+
+  /* ============================================
+   * SEMANTIC — feedback de UI (alias a la paleta brand)
+   * ============================================ */
+  --color-success: #14b8a6; /* Teal */
+  --color-success-bg: #ccfbf1;
+  --color-error: #fb7185; /* Coral */
+  --color-error-bg: #ffe4e6;
+  --color-warning: #fbbf24; /* Dorado */
+  --color-warning-bg: #fef3c7;
+  --color-info: #1e1b4b; /* Índigo */
+  --color-info-bg: #e0e7ff;
+
+  /* ============================================
+   * TYPOGRAPHY — sistema de tres voces (Manual §04)
+   * 1. Heros grandes:  Fraunces ExtraBold (≥40px, weight 800)
+   * 2. Títulos y UI:   Plus Jakarta Sans (400-800)
+   * 3. Timers/Rankings: JetBrains Mono (tabular nums)
    * ============================================ */
   --font-display: "Fraunces", "Recoleta", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", "Nunito", system-ui, -apple-system, sans-serif;
@@ -101,9 +154,12 @@
   --shadow-card: 0 2px 6px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
   --shadow-card-hover: 0 8px 20px rgb(0 0 0 / 0.1), 0 2px 4px rgb(0 0 0 / 0.06);
   --shadow-modal: 0 20px 50px rgb(0 0 0 / 0.15);
-  --shadow-glow-blue: 0 0 24px rgb(28 176 246 / 0.4);
   --shadow-glow-orange: 0 0 24px rgb(249 115 22 / 0.4);
-  --shadow-glow-gold: 0 0 24px rgb(255 200 0 / 0.5);
+  --shadow-glow-indigo: 0 0 24px rgb(30 27 75 / 0.4);
+  --shadow-glow-gold: 0 0 24px rgb(251 191 36 / 0.5);
+
+  /* LEGACY alias */
+  --shadow-glow-blue: 0 0 24px rgb(249 115 22 / 0.4); /* = orange */
 
   /* ============================================
    * EASING — animaciones con personalidad
@@ -111,10 +167,4 @@
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --ease-out-strong: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* ============================================
-   * BREAKPOINTS — mobile-first absoluto
-   * Default Tailwind: sm 640, md 768, lg 1024, xl 1280, 2xl 1536
-   * Numoria sobrescribe ninguno por ahora — usa los defaults
-   * ============================================ */
 }
