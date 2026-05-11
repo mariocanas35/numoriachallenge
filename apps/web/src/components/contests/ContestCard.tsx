@@ -23,11 +23,18 @@ export interface ContestCardData {
   numProblems: number;
   /** State derivado del status del contest + del attempt del student */
   state: ContestState;
-  /** Solo si state === 'completed' */
+  /** Solo si state === 'completed' (student view) */
   yourScore?: number;
   yourMaxScore?: number;
   /** True si esta es la división recomendada para el student */
   isYourDivision: boolean;
+  /** Si está presente, renderiza en modo "teacher view": muestra agregados del
+   *  team en lugar de yourScore, y CTA "Ver leaderboard" en vez de "Empezar". */
+  teacherStats?: {
+    submittedCount: number;
+    totalMembers: number;
+    avgScore: number | null;
+  };
 }
 
 interface ContestCardProps {
@@ -137,42 +144,76 @@ export function ContestCard({ data }: ContestCardProps) {
         </p>
       )}
 
-      {data.state === 'completed' && data.yourScore !== undefined && data.yourMaxScore && (
-        <p className="mb-3 text-sm font-semibold text-numoria-ink">
-          {t('yourScore', { score: data.yourScore, max: data.yourMaxScore })}
-        </p>
+      {/* === TEACHER VIEW (teacherStats presente) === */}
+      {data.teacherStats && (
+        <>
+          {/* Línea de stats agregados */}
+          <p className="mb-3 text-sm text-numoria-ink">
+            {t('teacherStats.submittedRatio', {
+              submitted: data.teacherStats.submittedCount,
+              total: data.teacherStats.totalMembers,
+            })}
+            {data.teacherStats.avgScore !== null && (
+              <span className="ml-2 font-semibold text-numoria-orange">
+                · {t('teacherStats.avgScore', { score: data.teacherStats.avgScore.toFixed(1) })}
+              </span>
+            )}
+          </p>
+
+          {/* CTA: Ver leaderboard si el contest ya empezó (active, in-progress, completed, expired);
+              upcoming → preview disabled (todavía no hay datos) */}
+          {data.state === 'upcoming' ? (
+            <Button variant="ghost" size="md" fullWidth disabled>
+              {t('ctaPreview')}
+            </Button>
+          ) : (
+            <Button variant="primary" size="md" fullWidth asChild>
+              <Link href={`/contests/${data.id}/leaderboard`}>📊 {t('ctaViewLeaderboard')}</Link>
+            </Button>
+          )}
+        </>
       )}
 
-      {/* CTA */}
-      {data.state === 'active' && data.isYourDivision && (
-        <Button variant="primary" size="lg" fullWidth asChild>
-          <Link href={`/contests/${data.id}`}>{t('ctaStart')}</Link>
-        </Button>
-      )}
-      {data.state === 'in-progress' && (
-        <Button variant="primary" size="lg" fullWidth asChild>
-          <Link href={`/contests/${data.id}`}>{t('ctaContinue')}</Link>
-        </Button>
-      )}
-      {data.state === 'completed' && (
-        <Button variant="outline" size="md" fullWidth asChild>
-          <Link href={`/contests/${data.id}/results`}>{t('ctaResults')}</Link>
-        </Button>
-      )}
-      {data.state === 'expired' && (
-        <Button variant="ghost" size="md" fullWidth asChild>
-          <Link href={`/contests/${data.id}`}>{t('ctaPreview')}</Link>
-        </Button>
-      )}
-      {data.state === 'active' && !data.isYourDivision && (
-        <Button variant="ghost" size="md" fullWidth disabled>
-          {t('otherDivision')}
-        </Button>
-      )}
-      {data.state === 'upcoming' && (
-        <Button variant="ghost" size="md" fullWidth disabled>
-          {t('ctaPreview')}
-        </Button>
+      {/* === STUDENT VIEW (sin teacherStats) === */}
+      {!data.teacherStats && (
+        <>
+          {data.state === 'completed' && data.yourScore !== undefined && data.yourMaxScore && (
+            <p className="mb-3 text-sm font-semibold text-numoria-ink">
+              {t('yourScore', { score: data.yourScore, max: data.yourMaxScore })}
+            </p>
+          )}
+
+          {data.state === 'active' && data.isYourDivision && (
+            <Button variant="primary" size="lg" fullWidth asChild>
+              <Link href={`/contests/${data.id}`}>{t('ctaStart')}</Link>
+            </Button>
+          )}
+          {data.state === 'in-progress' && (
+            <Button variant="primary" size="lg" fullWidth asChild>
+              <Link href={`/contests/${data.id}`}>{t('ctaContinue')}</Link>
+            </Button>
+          )}
+          {data.state === 'completed' && (
+            <Button variant="outline" size="md" fullWidth asChild>
+              <Link href={`/contests/${data.id}/results`}>{t('ctaResults')}</Link>
+            </Button>
+          )}
+          {data.state === 'expired' && (
+            <Button variant="ghost" size="md" fullWidth asChild>
+              <Link href={`/contests/${data.id}`}>{t('ctaPreview')}</Link>
+            </Button>
+          )}
+          {data.state === 'active' && !data.isYourDivision && (
+            <Button variant="ghost" size="md" fullWidth disabled>
+              {t('otherDivision')}
+            </Button>
+          )}
+          {data.state === 'upcoming' && (
+            <Button variant="ghost" size="md" fullWidth disabled>
+              {t('ctaPreview')}
+            </Button>
+          )}
+        </>
       )}
     </article>
   );

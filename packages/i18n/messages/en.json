@@ -288,7 +288,12 @@
       "yourScore": "Your score: {score} / {max}",
       "scheduledFor": "Starts {date}",
       "yourDivisionBadge": "Your division",
-      "otherDivision": "Other division"
+      "otherDivision": "Other division",
+      "ctaViewLeaderboard": "View leaderboard",
+      "teacherStats": {
+        "submittedRatio": "👥 {submitted} / {total} students submitted",
+        "avgScore": "Average: {score}"
+      }
     },
     "preview": {
       "title": "Upcoming contests",

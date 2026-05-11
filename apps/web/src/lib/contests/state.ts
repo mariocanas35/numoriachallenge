@@ -73,6 +73,9 @@ export function deriveStudentDivision(args: {
 
 /**
  * Convierte contest row + datos extras a ContestCardData listo para render.
+ *
+ * Si `teacherStats` se pasa, la card se renderiza en modo teacher view
+ * (oculta yourScore, muestra agregado del team + CTA leaderboard).
  */
 export function toContestCardData(args: {
   contest: Pick<
@@ -93,8 +96,14 @@ export function toContestCardData(args: {
   attempt: Pick<ContestAttempt, 'submitted_at' | 'total_score' | 'max_possible_score'> | null;
   studentDivision: 'elementary' | 'middle';
   now: Date;
+  /** Solo presente para teacher viewer — opt-in para teacher view. */
+  teacherStats?: {
+    submittedCount: number;
+    totalMembers: number;
+    avgScore: number | null;
+  };
 }): ContestCardData {
-  const { contest, numProblems, attempt, studentDivision, now } = args;
+  const { contest, numProblems, attempt, studentDivision, now, teacherStats } = args;
   const { state, yourScore, yourMaxScore } = deriveContestState({
     status: contest.status,
     scheduledAt: contest.scheduled_at,
@@ -119,5 +128,6 @@ export function toContestCardData(args: {
     yourScore,
     yourMaxScore,
     isYourDivision: contest.division === studentDivision,
+    teacherStats,
   };
 }

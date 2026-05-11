@@ -1,5 +1,9 @@
 import { ContestCard, type ContestCardData } from '@/components/contests/ContestCard';
 import { deriveStudentDivision, toContestCardData } from '@/lib/contests/state';
+import {
+  type ContestTeacherStats,
+  getTeacherStatsByContest,
+} from '@/lib/contests/teacher-aggregates';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -139,17 +143,34 @@ export default async function ContestsListPage({
     );
   }
 
+  // Fetch teacher stats por contest (solo si role=teacher)
+  let teacherStatsByContest = new Map<string, ContestTeacherStats>();
+  if (profile.role === 'teacher') {
+    teacherStatsByContest = await getTeacherStatsByContest(supabase, {
+      teacherId: user.id,
+      contestIds,
+    });
+  }
+
   // Construir ContestCardData por contest
   const now = new Date();
-  const cards: ContestCardData[] = contests.map((c) =>
-    toContestCardData({
+  const cards: ContestCardData[] = contests.map((c) => {
+    const stats = teacherStatsByContest.get(c.id);
+    return toContestCardData({
       contest: c,
       numProblems: problemCountByContest.get(c.id) ?? 0,
       attempt: attemptByContest.get(c.id) ?? null,
       studentDivision,
       now,
-    }),
-  );
+      teacherStats: stats
+        ? {
+            submittedCount: stats.submittedCount,
+            totalMembers: stats.totalMembers,
+            avgScore: stats.avgScore,
+          }
+        : undefined,
+    });
+  });
 
   // Agrupar por sección
   const active = cards.filter((c) => c.state === 'active' || c.state === 'in-progress');
