@@ -1,9 +1,79 @@
-# ADR 0004 — Auth session — FALSO POSITIVO, sesión SIEMPRE funcionó
+# ADR 0004 — Auth session — bug intermitente del PKCE callback
 
-- **Estado:** ✅ **RESUELTO 2026-05-11** — era issue de UX, no de auth
+- **Estado:** 🟡 **REABIERTO 2026-05-11 (tarde)** — el bug es real e intermitente
 - **Fecha original:** 2026-05-10
-- **Fecha de resolución:** 2026-05-11
+- **Primera "resolución" (después invalidada):** 2026-05-11 (mañana)
+- **Reapertura:** 2026-05-11 (tarde) durante validación de Chunk 2.7
 - **Decididores:** Mario Cañas (founder), Claude Code (co-developer)
+
+## 🔴 ACTUALIZACIÓN 2026-05-11 (tarde): bug es real, NO falso positivo
+
+Durante la validación de Chunk 2.7 (role-aware dashboards), el founder intentó
+registrarse como teacher con `mcanas@seishn.com`. El flow falló idéntico a Phase 1:
+
+1. Form `/register` con role=teacher
+2. Magic link enviado → email recibido
+3. Click en link → callback intenta `exchangeCodeForSession(code)` → falla
+4. Redirect a `/auth/error?reason=exchange_failed`
+
+**La "resolución" como falso positivo de la mañana fue incorrecta.** Lo que pasó
+ese día con `mimathonline+phase1test@gmail.com` fue una **coincidencia de cookies**:
+el browser tenía las cookies PKCE bien posicionadas en ese intento específico. La
+nueva validación demuestra que el bug es **intermitente y reproducible**.
+
+### Causas plausibles del intermitency
+
+1. **PKCE verifier cookie pierde en restarts del dev server** — el cookie persiste
+   pero Next.js/Supabase puede invalidar el contexto
+2. **Click del link en browser diferente al del register** — si el user abrió Gmail
+   en Edge pero el dev en Chrome, el cookie del verifier no existe en Edge
+3. **Hard refresh (Ctrl+Shift+R)** entre registrar y clickear el link puede limpiar
+   cookies de sesión SameSite=Lax
+4. **Brave Shields / extensions de privacy** bloquean el cookie roundtrip
+
+### Workaround inmediato
+
+Como el bug es de **callback** y NO de creación de user:
+
+- El user `mcanas@seishn.com` SÍ existe en `auth.users` después del primer intento
+- Probar **login** (no register) con el mismo email → magic link nuevo → callback
+  debería funcionar si el cookie PKCE persiste
+- Si sigue fallando: usar **Google OAuth** que no depende del cookie PKCE
+
+### Solución real — implementar en Phase 2.8 antes de cerrar Phase 2
+
+**Opción preferida:** switch a **OTP code flow** (6-digit code) en lugar de magic link.
+
+```ts
+// En lugar de:
+await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo } });
+
+// Hacer:
+await supabase.auth.signInWithOtp({ email });
+// User ingresa código de 6 dígitos en una página, no se redirige
+await supabase.auth.verifyOtp({ email, token: '123456', type: 'email' });
+```
+
+Esto elimina el PKCE cookie roundtrip completamente. Trade-off: 1 click más para
+el usuario (tipear el código), pero gana confiabilidad 100%.
+
+**Opción alternativa:** upgrade `@supabase/ssr` a 0.6.x (cuando esté released
+estable) — puede traer fixes al cookie handling.
+
+### Tech debt explícito para Chunk 2.8
+
+- [ ] Implementar OTP code flow como reemplazo del magic link
+- [ ] Mantener Google OAuth (funciona, no usa PKCE)
+- [ ] Update /auth/error page con tips de recovery
+- [ ] Test E2E con Playwright que valide el callback flow end-to-end
+- [ ] Considerar bajar dependencia a @supabase/ssr canary si 0.6 no está released
+
+---
+
+## 🟢 (HISTÓRICO — invalidado) Resolución 2026-05-11 (mañana)
+
+Esta sección documentaba la "resolución" como falso positivo pero la nueva
+evidencia del 11 de mayo en la tarde la invalida. Se mantiene por trazabilidad.
 
 ## 🟢 ACTUALIZACIÓN 2026-05-11: bug FALSO POSITIVO
 
