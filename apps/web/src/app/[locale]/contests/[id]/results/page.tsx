@@ -64,14 +64,15 @@ export default async function ContestResultsPage({
   const title = locale === 'es' ? contest?.title_es : contest?.title_en;
 
   return (
-    <div className="flex flex-col items-center gap-6 text-center">
-      <NumaAvatar pose="celebrate" size="xl" animateIn />
-
-      <div>
+    <div className="flex flex-col items-center gap-8 text-center">
+      {/* Header: Numa + título en su propio cluster — flex-col interno
+          garantiza stacking sin overlap independiente del flex padre */}
+      <header className="flex flex-col items-center gap-4">
+        <NumaAvatar pose="celebrate" size="lg" animateIn />
         <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
           {t('title', { contestTitle: title ?? '' })}
         </h1>
-      </div>
+      </header>
 
       {attempt.submitted_at && (
         <div className="grid w-full max-w-md grid-cols-3 gap-3">
