@@ -31,9 +31,11 @@ export function LoginForm({ next }: LoginFormProps) {
         if (result.message) setServerError(result.message);
         return;
       }
-      // Magic link enviado — ir a página de confirmación
+      // Email enviado (con código OTP + magic link) — ir a página de verificación
       const email = formData.get('email')?.toString() ?? '';
-      router.push(`/check-email?email=${encodeURIComponent(email)}`);
+      const params = new URLSearchParams({ email });
+      if (next) params.set('next', next);
+      router.push(`/check-email?${params.toString()}`);
     });
   };
 

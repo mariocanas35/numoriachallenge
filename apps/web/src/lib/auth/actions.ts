@@ -135,6 +135,50 @@ export async function signUpWithEmail(formData: FormData): Promise<AuthActionRes
 }
 
 // ============================================================
+// VERIFY EMAIL OTP — Canjea el código de 6 dígitos por una sesión
+//
+// Bypassa el bug de PKCE callback (ADR 0004) — verifyOtp no necesita el
+// cookie verifier, solo el email + token de 6 dígitos del correo.
+// ============================================================
+
+const verifyOtpSchema = z.object({
+  email: emailSchema,
+  token: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, 'Code must be 6 digits'),
+});
+
+export async function verifyEmailOtp(formData: FormData): Promise<AuthActionResult> {
+  const parsed = verifyOtpSchema.safeParse({
+    email: formData.get('email'),
+    token: formData.get('token'),
+  });
+
+  if (!parsed.success) {
+    return {
+      ok: false,
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  const { email, token } = parsed.data;
+  const supabase = await createServerClient();
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: 'email',
+  });
+
+  if (error) {
+    return { ok: false, message: error.message };
+  }
+
+  return { ok: true };
+}
+
+// ============================================================
 // SIGN IN WITH GOOGLE — devuelve URL de OAuth a la que redirigir
 // ============================================================
 

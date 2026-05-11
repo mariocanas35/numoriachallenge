@@ -43,7 +43,9 @@ export function RegisterForm({ defaultRole = 'student', next }: RegisterFormProp
         return;
       }
       const email = formData.get('email')?.toString() ?? '';
-      router.push(`/check-email?email=${encodeURIComponent(email)}`);
+      const params = new URLSearchParams({ email });
+      if (next) params.set('next', next);
+      router.push(`/check-email?${params.toString()}`);
     });
   };
 

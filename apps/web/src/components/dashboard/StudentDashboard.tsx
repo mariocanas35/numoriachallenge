@@ -1,5 +1,5 @@
 import { JoinTeamCard } from '@/components/dashboard/JoinTeamCard';
-import { createServerClient } from '@numoria/database/server';
+import { createAdminClient, createServerClient } from '@numoria/database/server';
 import { NumaAvatar } from '@numoria/ui';
 import { getTranslations } from 'next-intl/server';
 
@@ -41,9 +41,15 @@ async function fetchStudentTeam(userId: string): Promise<TeamWithCoachAndSchool 
   if (!teamRow) return null;
   const team = teamRow as { id: string; name: string; coach_id: string; school_id: string };
 
-  // Coach name + school name en paralelo
+  // Coach name + school name en paralelo.
+  //
+  // El coach es otro user (teacher), las RLS de profiles NO permiten al
+  // student ver perfiles arbitrarios. Como la asociación team_members ya
+  // valida que el student está legítimamente en el team, usamos admin
+  // client para resolver solo display_name del coach (scope mínimo).
+  const admin = createAdminClient();
   const [coachRes, schoolRes] = await Promise.all([
-    supabase.from('profiles').select('display_name').eq('id', team.coach_id).single(),
+    admin.from('profiles').select('display_name').eq('id', team.coach_id).single(),
     supabase.from('schools').select('name').eq('id', team.school_id).single(),
   ]);
 
