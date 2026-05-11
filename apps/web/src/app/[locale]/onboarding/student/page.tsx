@@ -8,10 +8,13 @@ type Profile = Tables<'profiles'>;
 
 export default async function StudentOnboardingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ invite_code?: string }>;
 }) {
   const { locale } = await params;
+  const { invite_code: rawInviteCode } = await searchParams;
   setRequestLocale(locale);
 
   // Verificar que el user es realmente student (defensa en profundidad)
@@ -33,5 +36,11 @@ export default async function StudentOnboardingPage({
   // country_code pre-existente del trigger (raw_user_meta_data) o fallback
   const defaultCountry = profile.country_code ?? 'HN';
 
-  return <StudentOnboardingForm defaultCountry={defaultCountry} />;
+  // Sanitizar invite_code de URL (acepta solo formato A-Z0-9 de 8 chars)
+  const invite = (rawInviteCode ?? '').trim().toUpperCase();
+  const defaultInviteCode = /^[A-Z0-9]{8}$/.test(invite) ? invite : '';
+
+  return (
+    <StudentOnboardingForm defaultCountry={defaultCountry} defaultInviteCode={defaultInviteCode} />
+  );
 }

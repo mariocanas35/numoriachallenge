@@ -10,6 +10,8 @@ import { useState, useTransition } from 'react';
 interface StudentOnboardingFormProps {
   /** Country detectado o pre-existente en el profile. */
   defaultCountry?: string;
+  /** Invite code pre-llenado (ej. desde /join/[code] redirect). */
+  defaultInviteCode?: string;
 }
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -32,7 +34,10 @@ function sortCountries(locale: 'es' | 'en' | 'pt'): Array<[string, CountryConfig
   );
 }
 
-export function StudentOnboardingForm({ defaultCountry = 'HN' }: StudentOnboardingFormProps) {
+export function StudentOnboardingForm({
+  defaultCountry = 'HN',
+  defaultInviteCode = '',
+}: StudentOnboardingFormProps) {
   const t = useTranslations('onboarding.student');
   const tErrors = useTranslations('onboarding.errors');
   const tMonths = useTranslations('onboarding.months');
@@ -182,6 +187,7 @@ export function StudentOnboardingForm({ defaultCountry = 'HN' }: StudentOnboardi
           maxLength={8}
           autoComplete="off"
           placeholder={t('inviteCodePlaceholder')}
+          defaultValue={defaultInviteCode}
           className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base uppercase tracking-wider text-numoria-ink placeholder:normal-case placeholder:tracking-normal placeholder:text-numoria-mid focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
           style={{ textTransform: 'uppercase' }}
         />

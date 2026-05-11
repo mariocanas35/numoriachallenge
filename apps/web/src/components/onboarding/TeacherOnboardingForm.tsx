@@ -143,7 +143,8 @@ export function TeacherOnboardingForm({ defaultCountry = 'HN' }: TeacherOnboardi
         return;
       }
 
-      router.replace('/');
+      // Después de crear la escuela, llevar al teacher directo a crear su primer team
+      router.replace('/teams/new');
       router.refresh();
     });
   };

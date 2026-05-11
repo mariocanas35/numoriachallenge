@@ -208,6 +208,69 @@
       "createFailed": "No pudimos crear la escuela. Inténtalo de nuevo."
     }
   },
+  "teams": {
+    "new": {
+      "title": "Crea tu primer equipo",
+      "subtitle": "Tus estudiantes se unirán a este equipo con un código de invitación. Puedes crear más equipos después.",
+      "name": "Nombre del equipo",
+      "namePlaceholder": "Ej: Aguilas 6º grado",
+      "division": "División académica",
+      "divisionHelp": "Primaria: 3º-6º (8-11 años). Secundaria: 7º-9º (12-14 años).",
+      "divisionElementary": "Primaria",
+      "divisionMiddle": "Secundaria",
+      "maxMembers": "Capacidad máxima (opcional)",
+      "maxMembersHelp": "Default: 35. Hasta 100 estudiantes por equipo.",
+      "submit": "Crear equipo",
+      "saving": "Creando equipo...",
+      "errors": {
+        "nameRequired": "El nombre del equipo es requerido",
+        "nameTooLong": "El nombre debe tener máximo 100 caracteres",
+        "divisionRequired": "Selecciona una división",
+        "maxMembersInvalid": "Capacidad inválida (1-100)",
+        "noSchool": "Debes registrar tu escuela antes de crear equipos.",
+        "createFailed": "No pudimos crear el equipo. Inténtalo de nuevo."
+      }
+    },
+    "view": {
+      "back": "← Volver",
+      "shareTitle": "Comparte el código con tus estudiantes",
+      "shareSubtitle": "Cuando ingresen este código en /onboarding o en la página /join se unirán a tu equipo.",
+      "inviteCodeLabel": "Código de invitación",
+      "copyCode": "Copiar código",
+      "codeCopied": "¡Copiado!",
+      "inviteUrlLabel": "URL completa para compartir",
+      "copyUrl": "Copiar URL",
+      "urlCopied": "¡URL copiada!",
+      "regenerate": "Regenerar código",
+      "regenerateConfirm": "¿Seguro? Los estudiantes que tengan el código viejo no podrán unirse. Los que ya están en el equipo permanecen.",
+      "regenerating": "Regenerando...",
+      "regenerateFailed": "No pudimos regenerar el código.",
+      "members": "Miembros",
+      "membersEmpty": "Todavía no se ha unido nadie. Comparte el código.",
+      "memberJoined": "se unió {date}",
+      "memberCount": "{count, plural, =0 {Sin miembros} =1 {1 miembro} other {# miembros}} de {max}",
+      "createAnother": "+ Crear otro equipo"
+    },
+    "join": {
+      "loadingTitle": "Validando código...",
+      "validTitle": "Únete al equipo {teamName}",
+      "validSubtitle": "Escuela: {schoolName}. División: {division}.",
+      "joinButton": "Unirme al equipo",
+      "joining": "Uniéndote...",
+      "loginRequired": "Inicia sesión o regístrate para unirte",
+      "loginAsStudent": "Crear cuenta de estudiante",
+      "loginButton": "Ya tengo cuenta",
+      "successTitle": "¡Te uniste a {teamName}! 🎉",
+      "successSubtitle": "Ahora puedes participar en las competencias del equipo.",
+      "goToDashboard": "Ir al panel",
+      "errorInvalidCode": "El código no es válido o ya no está activo.",
+      "errorWrongRole": "Solo los estudiantes pueden unirse a equipos. Tu cuenta actual es de {role}.",
+      "errorFull": "Este equipo ya alcanzó su capacidad máxima.",
+      "errorAlreadyMember": "Ya eres miembro de este equipo.",
+      "errorOnboardingPending": "Termina tu registro antes de unirte al equipo.",
+      "errorGeneric": "No pudimos unirte al equipo. Intenta de nuevo."
+    }
+  },
   "footer": {
     "copyright": "© {year} Numoria Challenge. Todos los derechos reservados.",
     "privacy": "Privacidad",

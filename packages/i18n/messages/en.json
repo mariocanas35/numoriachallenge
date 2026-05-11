@@ -208,6 +208,69 @@
       "createFailed": "Couldn't create the school. Try again."
     }
   },
+  "teams": {
+    "new": {
+      "title": "Create your first team",
+      "subtitle": "Your students will join with an invite code. You can create more teams later.",
+      "name": "Team name",
+      "namePlaceholder": "E.g.: Eagles 6th grade",
+      "division": "Academic division",
+      "divisionHelp": "Elementary: grades 3-6 (ages 8-11). Middle: grades 7-9 (ages 12-14).",
+      "divisionElementary": "Elementary",
+      "divisionMiddle": "Middle school",
+      "maxMembers": "Max capacity (optional)",
+      "maxMembersHelp": "Default: 35. Up to 100 students per team.",
+      "submit": "Create team",
+      "saving": "Creating team...",
+      "errors": {
+        "nameRequired": "Team name is required",
+        "nameTooLong": "Name must be at most 100 characters",
+        "divisionRequired": "Select a division",
+        "maxMembersInvalid": "Invalid capacity (1-100)",
+        "noSchool": "You must register your school before creating teams.",
+        "createFailed": "Couldn't create the team. Try again."
+      }
+    },
+    "view": {
+      "back": "← Back",
+      "shareTitle": "Share the code with your students",
+      "shareSubtitle": "When they enter this code at /onboarding or visit /join they'll join your team.",
+      "inviteCodeLabel": "Invite code",
+      "copyCode": "Copy code",
+      "codeCopied": "Copied!",
+      "inviteUrlLabel": "Full URL to share",
+      "copyUrl": "Copy URL",
+      "urlCopied": "URL copied!",
+      "regenerate": "Regenerate code",
+      "regenerateConfirm": "Sure? Students with the old code won't be able to join. Those already in the team stay.",
+      "regenerating": "Regenerating...",
+      "regenerateFailed": "Couldn't regenerate the code.",
+      "members": "Members",
+      "membersEmpty": "No one has joined yet. Share the code.",
+      "memberJoined": "joined {date}",
+      "memberCount": "{count, plural, =0 {No members} =1 {1 member} other {# members}} of {max}",
+      "createAnother": "+ Create another team"
+    },
+    "join": {
+      "loadingTitle": "Validating code...",
+      "validTitle": "Join team {teamName}",
+      "validSubtitle": "School: {schoolName}. Division: {division}.",
+      "joinButton": "Join team",
+      "joining": "Joining...",
+      "loginRequired": "Sign in or register to join",
+      "loginAsStudent": "Create student account",
+      "loginButton": "I already have an account",
+      "successTitle": "You joined {teamName}! 🎉",
+      "successSubtitle": "You can now participate in your team's competitions.",
+      "goToDashboard": "Go to dashboard",
+      "errorInvalidCode": "Invalid or disabled code.",
+      "errorWrongRole": "Only students can join teams. Your current account is a {role}.",
+      "errorFull": "This team has reached its maximum capacity.",
+      "errorAlreadyMember": "You're already a member of this team.",
+      "errorOnboardingPending": "Finish your registration before joining the team.",
+      "errorGeneric": "Couldn't join the team. Try again."
+    }
+  },
   "footer": {
     "copyright": "© {year} Numoria Challenge. All rights reserved.",
     "privacy": "Privacy",

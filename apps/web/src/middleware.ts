@@ -12,8 +12,12 @@ const intlMiddleware = createMiddleware(routing);
  * Paths (locale-relative) que NO requieren onboarding completo.
  * Si user está logueado pero onboarding_completed=false, todos los
  * demás paths redirigen a /onboarding.
+ *
+ * `/join/*` permite ver la landing de invitación incluso si el user
+ * no ha terminado onboarding — la vista detecta el estado y muestra
+ * el CTA adecuado (volver a onboarding con el código pre-llenado).
  */
-const ONBOARDING_EXEMPT_PATHS = ['/onboarding'];
+const ONBOARDING_EXEMPT_PATHS = ['/onboarding', '/join'];
 
 function isExemptFromOnboarding(pathname: string, locale: string): boolean {
   const localePrefix = `/${locale}`;
