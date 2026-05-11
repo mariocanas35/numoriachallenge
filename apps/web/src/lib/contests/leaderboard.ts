@@ -5,6 +5,8 @@ export interface LeaderboardEntry {
   rank: number;
   studentId: string;
   studentName: string;
+  /** Grado escolar del student (1-12). Null si no completó onboarding. */
+  studentGrade: number | null;
   teamId: string;
   teamName: string;
   totalScore: number;
@@ -126,16 +128,19 @@ export async function getLeaderboardData(
     };
   }
 
-  // Step 4: Names
+  // Step 4: Names + grades
   const { data: profileRows } = await supabase
     .from('profiles')
-    .select('id, display_name')
+    .select('id, display_name, grade')
     .in('id', studentIds);
-  const nameById = new Map<string, string>(
-    ((profileRows as Array<{ id: string; display_name: string | null }> | null) ?? []).map((p) => [
-      p.id,
-      p.display_name ?? '—',
-    ]),
+  const profileById = new Map<string, { name: string; grade: number | null }>(
+    (
+      (profileRows as Array<{
+        id: string;
+        display_name: string | null;
+        grade: number | null;
+      }> | null) ?? []
+    ).map((p) => [p.id, { name: p.display_name ?? '—', grade: p.grade }]),
   );
 
   // Step 5: Build + rank
@@ -145,17 +150,21 @@ export async function getLeaderboardData(
   //   - Submitted con score 0 → después
   //   - Non-submitted → al final, sin rank competitivo (pero con rank numérico igual
   //     para que el teacher pueda ver TODOS sus students)
-  const unranked = attempts.map((a) => ({
-    studentId: a.student_id,
-    studentName: nameById.get(a.student_id) ?? '—',
-    teamId: teamByStudent.get(a.student_id) ?? '',
-    teamName: teamNameById.get(teamByStudent.get(a.student_id) ?? '') ?? '—',
-    totalScore: a.total_score,
-    totalCorrect: a.total_correct,
-    maxPossibleScore: a.max_possible_score,
-    timeSpentSeconds: a.time_spent_seconds,
-    submittedAt: a.submitted_at,
-  }));
+  const unranked = attempts.map((a) => {
+    const prof = profileById.get(a.student_id);
+    return {
+      studentId: a.student_id,
+      studentName: prof?.name ?? '—',
+      studentGrade: prof?.grade ?? null,
+      teamId: teamByStudent.get(a.student_id) ?? '',
+      teamName: teamNameById.get(teamByStudent.get(a.student_id) ?? '') ?? '—',
+      totalScore: a.total_score,
+      totalCorrect: a.total_correct,
+      maxPossibleScore: a.max_possible_score,
+      timeSpentSeconds: a.time_spent_seconds,
+      submittedAt: a.submitted_at,
+    };
+  });
 
   unranked.sort((a, b) => {
     // 1. Submitted antes que not-submitted

@@ -50,6 +50,7 @@ export async function GET(
   const rows = entries.map((e) => ({
     rank: e.rank,
     student_name: e.studentName,
+    grade: e.studentGrade ?? '',
     team: e.teamName,
     score: e.totalScore,
     max_score: e.maxPossibleScore,

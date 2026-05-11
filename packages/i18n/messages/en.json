@@ -356,7 +356,8 @@
         "time": "Time",
         "status": "Status",
         "submitted": "Submitted",
-        "inProgress": "In progress"
+        "inProgress": "In progress",
+        "gradeFormat": "Grade {n}"
       },
       "exportCsv": "Download CSV",
       "backToContests": "← Back to contests",
