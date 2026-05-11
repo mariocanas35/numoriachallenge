@@ -148,6 +148,32 @@
       "10": "October",
       "11": "November",
       "12": "December"
+    },
+    "parent": {
+      "title": "Set up your family account",
+      "subtitle": "Add your children so they can compete. You can add up to 4.",
+      "yourInfo": "About you",
+      "yourCountry": "Your country",
+      "children": "Your children",
+      "addChild": "+ Add a child",
+      "removeChild": "Remove",
+      "child": "Child {n}",
+      "childName": "Child's name",
+      "childNamePlaceholder": "E.g.: Sofía",
+      "childEmail": "Child's email (will receive invitation)",
+      "childEmailHelp": "If they don't have an email, use one of your aliases (e.g.: dad+sofia@gmail.com).",
+      "childBirth": "Birth date",
+      "childGrade": "School grade",
+      "atLeastOneChild": "You must add at least one child",
+      "maxChildren": "Maximum 4 children per parent",
+      "submit": "Create accounts and invite",
+      "saving": "Creating accounts..."
+    },
+    "parentDone": {
+      "title": "All set!",
+      "subtitle": "We sent {count, plural, =1 {1 invitation} other {# invitations}} to your children. Once they open their email and click the link, they can start competing.",
+      "checkInbox": "Check your own inbox too — you'll get a copy of each invitation.",
+      "goToDashboard": "Go to dashboard"
     }
   },
   "footer": {

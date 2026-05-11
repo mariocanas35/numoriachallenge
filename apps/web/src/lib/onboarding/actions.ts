@@ -1,7 +1,8 @@
 'use server';
 
-import { createServerClient } from '@numoria/database/server';
+import { createAdminClient, createServerClient } from '@numoria/database/server';
 import type { Database, TablesUpdate } from '@numoria/database/types';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 
 // Supabase JS type inference quirk: from().update() y rpc() args se infieren
@@ -116,4 +117,129 @@ export async function completeStudentOnboarding(formData: FormData): Promise<Onb
   }
 
   return { ok: true };
+}
+
+// ============================================================
+// PARENT ONBOARDING
+// ============================================================
+
+const childSchema = z.object({
+  display_name: z.string().trim().min(1).max(100),
+  email: z.string().trim().toLowerCase().email(),
+  birth_year: z.coerce.number().int().min(1990).max(2030),
+  birth_month: z.coerce.number().int().min(1).max(12),
+  grade: z.coerce.number().int().min(1).max(12),
+});
+
+const parentOnboardingSchema = z.object({
+  country_code: z.string().length(2),
+  children: z.array(childSchema).min(1).max(4),
+});
+
+export interface ParentOnboardingResult extends OnboardingResult {
+  /** Cuántos hijos se crearon exitosamente (puede ser menor que enviados si alguno falló). */
+  childrenCreated?: number;
+  /** Errores específicos por hijo, si alguno falló. */
+  childErrors?: Array<{ email: string; error: string }>;
+}
+
+/**
+ * Onboarding del padre/madre:
+ * 1. Marca su propio onboarding como completo (RPC complete_onboarding)
+ * 2. Para cada hijo: crea auth.user via admin.inviteUserByEmail con metadata
+ *    (display_name, role='student', parent_id, country_code, birth_year/month, grade)
+ * 3. El trigger handle_new_user (extendido en migration 0010) crea el profile
+ *    del hijo con todos los datos. El hijo recibe email invitation.
+ * 4. Cuando hijo abre el invite → callback → middleware lo manda a
+ *    /onboarding/student → form pre-llenado → solo confirmar.
+ */
+export async function completeParentOnboarding(input: {
+  country_code: string;
+  children: Array<{
+    display_name: string;
+    email: string;
+    birth_year: number;
+    birth_month: number;
+    grade: number;
+  }>;
+}): Promise<ParentOnboardingResult> {
+  const parsed = parentOnboardingSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return {
+      ok: false,
+      fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+    };
+  }
+
+  const { country_code, children } = parsed.data;
+
+  const supabase = await createServerClient();
+  const {
+    data: { user: parentUser },
+  } = await supabase.auth.getUser();
+
+  if (!parentUser) {
+    return { ok: false, message: 'No authenticated parent user' };
+  }
+
+  // Step 1: Completar onboarding del padre
+  const parentArgs: CompleteOnboardingArgs = {
+    p_country_code: country_code,
+  };
+  const { error: parentRpcError } = await supabase.rpc('complete_onboarding', parentArgs as never);
+
+  if (parentRpcError) {
+    console.error('Parent complete_onboarding failed:', parentRpcError);
+    return { ok: false, message: parentRpcError.message };
+  }
+
+  // Step 2: Crear cada hijo via admin API
+  const admin = createAdminClient();
+  const h = await headers();
+  const proto = h.get('x-forwarded-proto') ?? 'http';
+  const host = h.get('host') ?? 'localhost:3000';
+  const redirectTo = `${proto}://${host}/auth/callback`;
+
+  const childErrors: Array<{ email: string; error: string }> = [];
+  let childrenCreated = 0;
+
+  for (const child of children) {
+    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(child.email, {
+      data: {
+        display_name: child.display_name,
+        role: 'student',
+        parent_id: parentUser.id,
+        country_code,
+        birth_year: child.birth_year,
+        birth_month: child.birth_month,
+        grade: child.grade,
+        locale: 'es',
+      },
+      redirectTo,
+    });
+
+    if (inviteError) {
+      console.error(`Failed to invite child ${child.email}:`, inviteError);
+      childErrors.push({ email: child.email, error: inviteError.message });
+    } else {
+      childrenCreated++;
+    }
+  }
+
+  // Step 3: Resultado
+  if (childrenCreated === 0) {
+    return {
+      ok: false,
+      message: 'No children could be invited',
+      childErrors,
+      childrenCreated: 0,
+    };
+  }
+
+  return {
+    ok: true,
+    childrenCreated,
+    childErrors: childErrors.length > 0 ? childErrors : undefined,
+  };
 }

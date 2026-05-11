@@ -148,6 +148,32 @@
       "10": "Octubre",
       "11": "Noviembre",
       "12": "Diciembre"
+    },
+    "parent": {
+      "title": "Configura tu cuenta familiar",
+      "subtitle": "Agrega a tus hijos para que puedan participar en competencias. Puedes agregar hasta 4.",
+      "yourInfo": "Sobre ti",
+      "yourCountry": "Tu país",
+      "children": "Tus hijos",
+      "addChild": "+ Agregar hijo/a",
+      "removeChild": "Quitar",
+      "child": "Hijo/a {n}",
+      "childName": "Nombre del niño/a",
+      "childNamePlaceholder": "Ej: Sofía",
+      "childEmail": "Correo del niño/a (recibirá invitación)",
+      "childEmailHelp": "Si no tiene email propio, usa un alias tuyo (ej: papa+sofia@gmail.com).",
+      "childBirth": "Fecha de nacimiento",
+      "childGrade": "Grado escolar",
+      "atLeastOneChild": "Debes agregar al menos un hijo/a",
+      "maxChildren": "Máximo 4 hijos por padre/madre",
+      "submit": "Crear cuentas e invitar",
+      "saving": "Creando cuentas..."
+    },
+    "parentDone": {
+      "title": "¡Listo!",
+      "subtitle": "Enviamos {count, plural, =1 {1 invitación} other {# invitaciones}} a tus hijos. Cuando abran su correo y hagan click en el link, podrán empezar a competir.",
+      "checkInbox": "Revisa también tu propio correo — recibirás copia de cada invitación.",
+      "goToDashboard": "Ir al panel"
     }
   },
   "footer": {
