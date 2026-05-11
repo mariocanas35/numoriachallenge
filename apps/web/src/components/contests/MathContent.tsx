@@ -20,10 +20,13 @@ interface MathContentProps {
  * - Texto fuera de `$...$` → plain text (escapado por React)
  */
 export function MathContent({ text, className }: MathContentProps) {
-  // Split por display math ($$...$$) primero, luego por inline ($...$)
-  // Regex que captura el delimitador junto al contenido
+  // Split por display math ($$...$$) primero, luego por inline ($...$).
+  //
+  // Inline regex requiere que el contenido empiece Y termine con un carácter
+  // NO whitespace. Esto evita que prices como "$12 y $18" se confundan con
+  // LaTeX (que tendría "$x^2$" sin espacios en los bordes). KaTeX convention.
   const blockPattern = /(\$\$[^$]+?\$\$)/g;
-  const inlinePattern = /(\$[^$\n]+?\$)/g;
+  const inlinePattern = /(\$\S(?:[^$\n]*?\S)?\$)/g;
 
   const blockSegments = text.split(blockPattern);
 
