@@ -1,4 +1,3 @@
-import { AuthIndicator } from '@/components/layout/AuthIndicator';
 import { routing } from '@/i18n/routing';
 import { BRAND_NAME } from '@numoria/i18n';
 import type { Metadata } from 'next';
@@ -6,7 +5,6 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Fraunces, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 import '../../styles/globals.css';
 
 const fraunces = Fraunces({
@@ -93,9 +91,6 @@ export default async function LocaleLayout({
     >
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Suspense fallback={null}>
-            <AuthIndicator />
-          </Suspense>
           {children}
         </NextIntlClientProvider>
       </body>

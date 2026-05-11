@@ -5,10 +5,25 @@ import { TeacherDashboard } from '@/components/dashboard/TeacherDashboard';
 import { Footer } from '@/components/landing/Footer';
 import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
+import { LandingHeader } from '@/components/landing/LandingHeader';
 import { SchoolsSection } from '@/components/landing/SchoolsSection';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { setRequestLocale } from 'next-intl/server';
+
+function Landing() {
+  return (
+    <>
+      <LandingHeader />
+      <main className="min-h-dvh">
+        <Hero />
+        <HowItWorks />
+        <SchoolsSection />
+      </main>
+      <Footer />
+    </>
+  );
+}
 
 type Profile = Tables<'profiles'>;
 
@@ -35,16 +50,7 @@ export default async function HomePage({
 
   // Anónimo → landing
   if (!user) {
-    return (
-      <>
-        <main className="min-h-dvh">
-          <Hero />
-          <HowItWorks />
-          <SchoolsSection />
-        </main>
-        <Footer />
-      </>
-    );
+    return <Landing />;
   }
 
   // Logueado → profile (middleware garantiza onboarding_completed=true)
@@ -53,16 +59,7 @@ export default async function HomePage({
 
   if (!profile) {
     // Defensa: si el RPC falla por alguna razón, mostrar landing
-    return (
-      <>
-        <main className="min-h-dvh">
-          <Hero />
-          <HowItWorks />
-          <SchoolsSection />
-        </main>
-        <Footer />
-      </>
-    );
+    return <Landing />;
   }
 
   // Dashboard según rol
@@ -101,14 +98,5 @@ export default async function HomePage({
   }
 
   // Admin u otros casos → landing (su dashboard llega en Phase 4)
-  return (
-    <>
-      <main className="min-h-dvh">
-        <Hero />
-        <HowItWorks />
-        <SchoolsSection />
-      </main>
-      <Footer />
-    </>
-  );
+  return <Landing />;
 }
