@@ -8,6 +8,8 @@ import { z } from 'zod';
 // Supabase JS type inference quirk: from().update() y rpc() args se infieren
 // como `never` aunque Database está bien tipado. Usamos casts explícitos.
 type ProfileUpdate = TablesUpdate<'profiles'>;
+type SchoolInsert = Database['public']['Tables']['schools']['Insert'];
+type SchoolUpdate = Database['public']['Tables']['schools']['Update'];
 type CompleteOnboardingArgs = Database['public']['Functions']['complete_onboarding']['Args'];
 type JoinTeamArgs = Database['public']['Functions']['join_team']['Args'];
 
@@ -242,4 +244,151 @@ export async function completeParentOnboarding(input: {
     childrenCreated,
     childErrors: childErrors.length > 0 ? childErrors : undefined,
   };
+}
+
+// ============================================================
+// TEACHER ONBOARDING — Crear escuela + subir logo
+// ============================================================
+
+const SLUG_REGEX = /^[a-z0-9-]+$/;
+const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{6}$/;
+const ALLOWED_LOGO_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']);
+const MAX_LOGO_SIZE = 524288; // 512KB
+
+const teacherOnboardingSchema = z.object({
+  name: z.string().trim().min(2).max(200),
+  slug: z.string().trim().toLowerCase().min(3).max(50).regex(SLUG_REGEX),
+  country_code: z.string().length(2),
+  city: z.string().trim().max(100).optional().or(z.literal('')),
+  primary_color: z.string().regex(HEX_COLOR_REGEX).optional().or(z.literal('')),
+});
+
+export interface TeacherOnboardingResult extends OnboardingResult {
+  schoolId?: string;
+  schoolSlug?: string;
+}
+
+/**
+ * Onboarding del profesor:
+ * 1. Crea la escuela (verified=false por default)
+ * 2. Si subió logo: upload a storage bucket school-logos
+ * 3. Actualiza school.logo_url (si upload exitoso)
+ * 4. Marca onboarding del profesor como completo (RPC complete_onboarding
+ *    con p_school_id apuntando a la nueva escuela)
+ */
+export async function completeTeacherOnboarding(
+  formData: FormData,
+): Promise<TeacherOnboardingResult> {
+  const parsed = teacherOnboardingSchema.safeParse({
+    name: formData.get('name'),
+    slug: formData.get('slug'),
+    country_code: formData.get('country_code'),
+    city: formData.get('city') ?? '',
+    primary_color: formData.get('primary_color') ?? '',
+  });
+
+  if (!parsed.success) {
+    return {
+      ok: false,
+      fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+    };
+  }
+
+  const { name, slug, country_code, city, primary_color } = parsed.data;
+
+  // Validar archivo de logo si se proporcionó
+  const logoFile = formData.get('logo');
+  let logo: File | null = null;
+  if (logoFile instanceof File && logoFile.size > 0) {
+    if (!ALLOWED_LOGO_TYPES.has(logoFile.type)) {
+      return { ok: false, fieldErrors: { logo: ['Invalid file type'] } };
+    }
+    if (logoFile.size > MAX_LOGO_SIZE) {
+      return { ok: false, fieldErrors: { logo: ['File too large'] } };
+    }
+    logo = logoFile;
+  }
+
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { ok: false, message: 'No authenticated teacher' };
+  }
+
+  // Step 1: Crear escuela
+  const schoolInsert: SchoolInsert = {
+    name,
+    slug,
+    country_code,
+    city: city || null,
+    primary_color: primary_color || null,
+    created_by: user.id,
+    verified: false,
+  };
+
+  const { data: schoolRow, error: insertError } = await supabase
+    .from('schools')
+    .insert(schoolInsert as never)
+    .select('id, slug')
+    .single();
+
+  if (insertError || !schoolRow) {
+    const isDuplicateSlug =
+      insertError?.code === '23505' && insertError?.message?.toLowerCase().includes('slug');
+    return {
+      ok: false,
+      message: insertError?.message ?? 'Failed to create school',
+      fieldErrors: isDuplicateSlug ? { slug: ['Slug already taken'] } : undefined,
+    };
+  }
+
+  const school = schoolRow as { id: string; slug: string };
+
+  // Step 2: Subir logo (si se proporcionó)
+  let logoUrl: string | null = null;
+  if (logo) {
+    const ext = logo.name.split('.').pop()?.toLowerCase() ?? 'png';
+    const safeExt = ['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext) ? ext : 'png';
+    const path = `${school.id}/logo-${Date.now()}.${safeExt}`;
+
+    const { error: uploadError } = await supabase.storage.from('school-logos').upload(path, logo, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+
+    if (uploadError) {
+      console.error('Logo upload failed (continuing without logo):', uploadError);
+    } else {
+      const { data: urlData } = supabase.storage.from('school-logos').getPublicUrl(path);
+      logoUrl = urlData.publicUrl;
+
+      // Step 3: Actualizar school.logo_url
+      const schoolUpdate: SchoolUpdate = { logo_url: logoUrl };
+      const { error: updateError } = await supabase
+        .from('schools')
+        .update(schoolUpdate as never)
+        .eq('id', school.id);
+
+      if (updateError) {
+        console.error('School logo_url update failed:', updateError);
+      }
+    }
+  }
+
+  // Step 4: Completar onboarding del profesor
+  const completeArgs: CompleteOnboardingArgs = {
+    p_country_code: country_code,
+    p_school_id: school.id,
+  };
+  const { error: rpcError } = await supabase.rpc('complete_onboarding', completeArgs as never);
+
+  if (rpcError) {
+    console.error('Teacher complete_onboarding failed:', rpcError);
+    return { ok: false, message: rpcError.message };
+  }
+
+  return { ok: true, schoolId: school.id, schoolSlug: school.slug };
 }

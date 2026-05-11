@@ -174,6 +174,38 @@
       "subtitle": "We sent {count, plural, =1 {1 invitation} other {# invitations}} to your children. Once they open their email and click the link, they can start competing.",
       "checkInbox": "Check your own inbox too — you'll get a copy of each invitation.",
       "goToDashboard": "Go to dashboard"
+    },
+    "teacher": {
+      "title": "Register your school",
+      "subtitle": "This info appears in certificates, institutional ranking, and your school's public page.",
+      "schoolName": "School's official name",
+      "schoolNamePlaceholder": "E.g.: International School of San Pedro",
+      "schoolSlug": "Your school's URL",
+      "schoolSlugHelp": "Your public page will be numoria.app/schools/{slug}. Auto-generated, but you can edit it.",
+      "country": "Country",
+      "city": "City (optional)",
+      "cityPlaceholder": "E.g.: San Pedro Sula",
+      "primaryColor": "Institutional color (optional)",
+      "primaryColorHelp": "Used for accents in your team's dashboard. Default: Numoria blue.",
+      "logo": "School logo (optional)",
+      "logoHelp": "PNG, JPEG, WebP, or SVG. Maximum 512KB. Will appear on your students' certificates.",
+      "logoChoose": "Choose file",
+      "logoChange": "Change logo",
+      "logoRemove": "Remove logo",
+      "logoPreview": "Preview",
+      "submit": "Create school",
+      "saving": "Creating school...",
+      "unverifiedNote": "Your school remains \"unverified\" until Numoria's admin approves it (1-2 days)."
+    },
+    "teacherErrors": {
+      "nameRequired": "School name is required",
+      "nameTooShort": "Name must be at least 2 characters",
+      "slugInvalid": "URL can only contain lowercase letters, numbers, and hyphens",
+      "slugTaken": "That URL is already taken. Try another one.",
+      "colorInvalid": "Invalid color — use hex format #RRGGBB",
+      "logoTooLarge": "Logo is too large (max 512KB)",
+      "logoTypeInvalid": "File type not allowed (PNG, JPEG, WebP, or SVG)",
+      "createFailed": "Couldn't create the school. Try again."
     }
   },
   "footer": {

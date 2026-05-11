@@ -174,6 +174,38 @@
       "subtitle": "Enviamos {count, plural, =1 {1 invitación} other {# invitaciones}} a tus hijos. Cuando abran su correo y hagan click en el link, podrán empezar a competir.",
       "checkInbox": "Revisa también tu propio correo — recibirás copia de cada invitación.",
       "goToDashboard": "Ir al panel"
+    },
+    "teacher": {
+      "title": "Registra tu escuela",
+      "subtitle": "Estos datos aparecerán en certificados, ranking institucional y página pública de tu escuela.",
+      "schoolName": "Nombre oficial de la escuela",
+      "schoolNamePlaceholder": "Ej: Escuela Internacional Sampedrana",
+      "schoolSlug": "URL de tu escuela",
+      "schoolSlugHelp": "Tu página pública será numoria.app/schools/{slug}. Lo generamos automáticamente, pero puedes editarlo.",
+      "country": "País",
+      "city": "Ciudad (opcional)",
+      "cityPlaceholder": "Ej: San Pedro Sula",
+      "primaryColor": "Color institucional (opcional)",
+      "primaryColorHelp": "Usado para acentos del dashboard de tu equipo. Default: azul Numoria.",
+      "logo": "Logo de la escuela (opcional)",
+      "logoHelp": "PNG, JPEG, WebP o SVG. Máximo 512KB. Aparecerá en certificados de tus estudiantes.",
+      "logoChoose": "Elegir archivo",
+      "logoChange": "Cambiar logo",
+      "logoRemove": "Quitar logo",
+      "logoPreview": "Vista previa",
+      "submit": "Crear escuela",
+      "saving": "Creando escuela...",
+      "unverifiedNote": "Tu escuela queda como \"no verificada\" hasta que el admin de Numoria la apruebe (1-2 días)."
+    },
+    "teacherErrors": {
+      "nameRequired": "El nombre de la escuela es requerido",
+      "nameTooShort": "El nombre debe tener al menos 2 caracteres",
+      "slugInvalid": "El URL solo puede tener letras minúsculas, números y guiones",
+      "slugTaken": "Ese URL ya está en uso. Prueba otro.",
+      "colorInvalid": "Color inválido — usa formato hexadecimal #RRGGBB",
+      "logoTooLarge": "El logo es muy grande (máximo 512KB)",
+      "logoTypeInvalid": "Tipo de archivo no permitido (PNG, JPEG, WebP o SVG)",
+      "createFailed": "No pudimos crear la escuela. Inténtalo de nuevo."
     }
   },
   "footer": {
