@@ -23,14 +23,17 @@ export type Database = {
           created_at: string
           current_streak: number
           display_name: string
+          grade: number | null
           id: string
           last_active_at: string | null
           level: number
           locale: string
           longest_streak: number
+          onboarding_completed: boolean
           parent_id: string | null
           role: Database["public"]["Enums"]["user_role"]
           school_id: string | null
+          terms_accepted_at: string | null
           updated_at: string
           username: string | null
           xp_total: number
@@ -43,14 +46,17 @@ export type Database = {
           created_at?: string
           current_streak?: number
           display_name: string
+          grade?: number | null
           id: string
           last_active_at?: string | null
           level?: number
           locale?: string
           longest_streak?: number
+          onboarding_completed?: boolean
           parent_id?: string | null
           role: Database["public"]["Enums"]["user_role"]
           school_id?: string | null
+          terms_accepted_at?: string | null
           updated_at?: string
           username?: string | null
           xp_total?: number
@@ -63,14 +69,17 @@ export type Database = {
           created_at?: string
           current_streak?: number
           display_name?: string
+          grade?: number | null
           id?: string
           last_active_at?: string | null
           level?: number
           locale?: string
           longest_streak?: number
+          onboarding_completed?: boolean
           parent_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           school_id?: string | null
+          terms_accepted_at?: string | null
           updated_at?: string
           username?: string | null
           xp_total?: number
@@ -134,13 +143,191 @@ export type Database = {
         }
         Relationships: []
       }
+      team_members: {
+        Row: {
+          joined_at: string
+          student_id: string
+          team_id: string
+        }
+        Insert: {
+          joined_at?: string
+          student_id: string
+          team_id: string
+        }
+        Update: {
+          joined_at?: string
+          student_id?: string
+          team_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          coach_id: string
+          created_at: string
+          division: Database["public"]["Enums"]["school_division"]
+          id: string
+          invite_code: string
+          invite_enabled: boolean
+          max_members: number
+          name: string
+          school_id: string
+          updated_at: string
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          division: Database["public"]["Enums"]["school_division"]
+          id?: string
+          invite_code: string
+          invite_enabled?: boolean
+          max_members?: number
+          name: string
+          school_id: string
+          updated_at?: string
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          division?: Database["public"]["Enums"]["school_division"]
+          id?: string
+          invite_code?: string
+          invite_enabled?: boolean
+          max_members?: number
+          name?: string
+          school_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teams_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      complete_onboarding: {
+        Args: {
+          p_country_code?: string
+          p_grade?: number
+          p_school_id?: string
+          p_username?: string
+        }
+        Returns: {
+          avatar_url: string | null
+          birth_month: number | null
+          birth_year: number | null
+          country_code: string | null
+          created_at: string
+          current_streak: number
+          display_name: string
+          grade: number | null
+          id: string
+          last_active_at: string | null
+          level: number
+          locale: string
+          longest_streak: number
+          onboarding_completed: boolean
+          parent_id: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          school_id: string | null
+          terms_accepted_at: string | null
+          updated_at: string
+          username: string | null
+          xp_total: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      generate_team_invite_code: { Args: never; Returns: string }
+      get_my_profile: {
+        Args: never
+        Returns: {
+          avatar_url: string | null
+          birth_month: number | null
+          birth_year: number | null
+          country_code: string | null
+          created_at: string
+          current_streak: number
+          display_name: string
+          grade: number | null
+          id: string
+          last_active_at: string | null
+          level: number
+          locale: string
+          longest_streak: number
+          onboarding_completed: boolean
+          parent_id: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          school_id: string | null
+          terms_accepted_at: string | null
+          updated_at: string
+          username: string | null
+          xp_total: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       is_admin: { Args: never; Returns: boolean }
       is_teacher: { Args: never; Returns: boolean }
+      join_team: {
+        Args: { p_invite_code: string }
+        Returns: {
+          coach_id: string
+          created_at: string
+          division: Database["public"]["Enums"]["school_division"]
+          id: string
+          invite_code: string
+          invite_enabled: boolean
+          max_members: number
+          name: string
+          school_id: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "teams"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       school_division: "elementary" | "middle"

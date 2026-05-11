@@ -1,23 +1,24 @@
 import { Link } from '@/i18n/navigation';
-import { createAdminClient, createServerClient } from '@numoria/database/server';
+import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { Button } from '@numoria/ui';
 import { getTranslations } from 'next-intl/server';
 
-type ProfileSlice = Pick<Tables<'profiles'>, 'display_name' | 'role' | 'locale'>;
+type Profile = Tables<'profiles'>;
 
 /**
  * Indicador flotante (esquina superior derecha) que muestra el estado
  * de autenticación del usuario actual.
  *
  * - Si no hay sesión → botón "Iniciar sesión"
- * - Si hay sesión → display_name + rol + botón "Salir"
+ * - Si hay sesión → display_name + rol + email + botón "Cerrar"
  *
  * Server component — lee cookies vía createServerClient.
- * Si la sesión se estableció correctamente post-callback, el badge
- * aparecerá con info del user. Si no, aparece el CTA de login.
  *
- * Sirve como prueba visible del flow de auth durante desarrollo.
+ * Para la lectura del profile usa el RPC `get_my_profile()` (SECURITY DEFINER)
+ * que bypassa el issue de @supabase/ssr 0.5.x donde RLS no se propaga
+ * correctamente al postgrest en Server Components. Resuelve el tech debt
+ * documentado en ADR 0004.
  */
 export async function AuthIndicator() {
   const supabase = await createServerClient();
@@ -38,23 +39,19 @@ export async function AuthIndicator() {
     );
   }
 
-  // Buscar el profile para mostrar display_name + role.
-  // Usamos admin client (service_role) para esta lookup específica porque
-  // @supabase/ssr 0.5.x tiene un issue conocido propagando el JWT a postgrest
-  // calls desde Server Components, lo cual hace que RLS bloquee la query
-  // aunque el user esté autenticado.
-  // Seguro porque solo leemos `user.id` que ya verificamos vía getUser().
-  // TODO Phase 2: investigar RLS context propagation o migrar a RPC SECURITY DEFINER.
-  const admin = createAdminClient();
-  const profileResult = await admin
-    .from('profiles')
-    .select('display_name, role, locale')
-    .eq('id', user.id)
-    .single();
+  // RPC get_my_profile() es SECURITY DEFINER → devuelve el profile sin
+  // pasar por RLS, evitando el bug de propagación del JWT en Server Components.
+  // Type assertion necesaria por bug de inferencia de Supabase JS con
+  // funciones RPC que retornan TABLE types (data se infiere como `never`).
+  const rpcResult = await supabase.rpc('get_my_profile');
+  if (rpcResult.error) {
+    console.error('get_my_profile RPC failed:', rpcResult.error.message);
+  }
+  const profile = rpcResult.data as Profile | null;
 
-  const profile = profileResult.data as ProfileSlice | null;
   const displayName = profile?.display_name ?? user.email ?? 'Usuario';
   const role = profile?.role ?? null;
+  const onboarded = profile?.onboarding_completed ?? false;
 
   const roleLabels: Record<string, string> = {
     student: '🎓 Estudiante',
@@ -69,6 +66,7 @@ export async function AuthIndicator() {
         <p className="font-display font-bold text-numoria-ink">✅ {displayName}</p>
         <p className="text-xs text-numoria-mid">
           {role ? (roleLabels[role] ?? role) : 'sin rol'}
+          {!onboarded && ' · 📝 onboarding pendiente'}
           {' · '}
           {user.email}
         </p>
