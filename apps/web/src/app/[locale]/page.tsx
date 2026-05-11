@@ -1,20 +1,24 @@
+import { DashboardShell } from '@/components/dashboard/DashboardShell';
+import { ParentDashboard } from '@/components/dashboard/ParentDashboard';
+import { StudentDashboard } from '@/components/dashboard/StudentDashboard';
+import { TeacherDashboard } from '@/components/dashboard/TeacherDashboard';
 import { Footer } from '@/components/landing/Footer';
 import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { SchoolsSection } from '@/components/landing/SchoolsSection';
+import { createServerClient } from '@numoria/database/server';
+import type { Tables } from '@numoria/database/types';
 import { setRequestLocale } from 'next-intl/server';
 
+type Profile = Tables<'profiles'>;
+
 /**
- * Landing page MVP de Numoria Challenge.
+ * Home page role-aware.
  *
- * Composición:
- * 1. Hero — mascota Numa + CTA principales (registrarse / soy profesor)
- * 2. HowItWorks — 3 pasos visuales con poses distintas de Numa
- * 3. SchoolsSection — placeholders de escuelas piloto
- * 4. Footer — branding + links + LocaleSwitcher (ES/EN)
- *
- * Server component completo (sin client components excepto LocaleSwitcher
- * que es 'use client' por requerir interacción).
+ * - Anónimo → landing (Hero + HowItWorks + SchoolsSection + Footer)
+ * - Logueado y onboarded → dashboard según `profile.role`
+ * - Logueado pero NO onboarded → no llega aquí (middleware redirige a /onboarding)
+ * - Admin → landing por ahora (su dashboard llega en Phase 4)
  */
 export default async function HomePage({
   params,
@@ -24,6 +28,79 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Anónimo → landing
+  if (!user) {
+    return (
+      <>
+        <main className="min-h-dvh">
+          <Hero />
+          <HowItWorks />
+          <SchoolsSection />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // Logueado → profile (middleware garantiza onboarding_completed=true)
+  const rpcResult = await supabase.rpc('get_my_profile');
+  const profile = rpcResult.data as Profile | null;
+
+  if (!profile) {
+    // Defensa: si el RPC falla por alguna razón, mostrar landing
+    return (
+      <>
+        <main className="min-h-dvh">
+          <Hero />
+          <HowItWorks />
+          <SchoolsSection />
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // Dashboard según rol
+  if (profile.role === 'student') {
+    return (
+      <DashboardShell>
+        <StudentDashboard
+          userId={profile.id}
+          displayName={profile.display_name}
+          level={profile.level}
+          xpTotal={profile.xp_total}
+          currentStreak={profile.current_streak}
+        />
+      </DashboardShell>
+    );
+  }
+
+  if (profile.role === 'parent') {
+    return (
+      <DashboardShell>
+        <ParentDashboard userId={profile.id} displayName={profile.display_name} />
+      </DashboardShell>
+    );
+  }
+
+  if (profile.role === 'teacher' && profile.school_id) {
+    return (
+      <DashboardShell>
+        <TeacherDashboard
+          userId={profile.id}
+          displayName={profile.display_name}
+          schoolId={profile.school_id}
+        />
+      </DashboardShell>
+    );
+  }
+
+  // Admin u otros casos → landing (su dashboard llega en Phase 4)
   return (
     <>
       <main className="min-h-dvh">

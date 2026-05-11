@@ -208,6 +208,49 @@
       "createFailed": "Couldn't create the school. Try again."
     }
   },
+  "dashboard": {
+    "greeting": "Hi, {name}! 👋",
+    "student": {
+      "noTeamTitle": "You're not in a team yet",
+      "noTeamDescription": "Ask your teacher for the 8-letter team code and paste it here.",
+      "inviteCodePlaceholder": "E.g.: ABC12345",
+      "joinButton": "Join team",
+      "joining": "Joining...",
+      "joinError": "That code is not valid. Ask your teacher for the right one.",
+      "teamTitle": "Your team",
+      "teamCoach": "Teacher: {name}",
+      "teamSchool": "School: {name}",
+      "myStats": "Your progress",
+      "level": "Level {level}",
+      "xpTotal": "{xp} XP",
+      "streak": "{days, plural, =0 {No streak} =1 {1 day in a row} other {# days in a row}}",
+      "nextSection": "Coming soon",
+      "comingSoon": "Competitions and problems land in the next phase 🚀"
+    },
+    "parent": {
+      "childrenTitle": "Your children",
+      "childPending": "Pending: invitation not opened",
+      "childActive": "Active",
+      "childGrade": "Grade {grade}",
+      "childTeam": "Team: {team}",
+      "childNoTeam": "No team yet",
+      "addChildCta": "+ Add another child",
+      "maxChildrenReached": "You've added the maximum of 4 children.",
+      "noChildrenYet": "You haven't added any children yet."
+    },
+    "teacher": {
+      "schoolTitle": "Your school",
+      "schoolUnverified": "Unverified",
+      "schoolVerified": "Verified ✓",
+      "teamsTitle": "Your teams",
+      "noTeamsYet": "No teams created yet.",
+      "createFirstTeam": "Create my first team",
+      "createAnotherTeam": "+ Create another team",
+      "teamMembersCount": "{count, plural, =0 {No members} =1 {1 member} other {# members}} / {max}",
+      "teamCode": "Code: {code}",
+      "viewTeam": "View details →"
+    }
+  },
   "teams": {
     "new": {
       "title": "Create your first team",
