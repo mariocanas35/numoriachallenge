@@ -325,6 +325,39 @@
       "backToContests": "← Volver a contests",
       "notSubmittedYet": "Aún no entregaste este contest.",
       "continueAttempt": "Continuar contest"
+    },
+    "leaderboard": {
+      "title": "Leaderboard — {contestTitle}",
+      "divisionLabel": "División",
+      "divisionElementary": "Primaria",
+      "divisionMiddle": "Secundaria",
+      "stats": {
+        "totalAttempts": "Intentos",
+        "submitted": "Entregados",
+        "avgScore": "Promedio",
+        "maxScore": "Máximo"
+      },
+      "filter": {
+        "byTeam": "Equipo",
+        "allTeams": "Todos los equipos",
+        "apply": "Aplicar"
+      },
+      "table": {
+        "rank": "Pos.",
+        "student": "Estudiante",
+        "team": "Equipo",
+        "score": "Puntaje",
+        "correct": "Correctos",
+        "time": "Tiempo",
+        "status": "Estado",
+        "submitted": "Entregado",
+        "inProgress": "En curso"
+      },
+      "exportCsv": "Descargar CSV",
+      "backToContests": "← Volver a contests",
+      "noTeams": "Aún no tienes equipos. Crea uno para ver leaderboards.",
+      "manageTeams": "Gestionar equipos",
+      "noAttempts": "Ningún estudiante de tus equipos ha intentado este contest todavía."
     }
   },
   "teams": {

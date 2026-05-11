@@ -325,6 +325,39 @@
       "backToContests": "← Back to contests",
       "notSubmittedYet": "You haven't submitted this contest yet.",
       "continueAttempt": "Continue contest"
+    },
+    "leaderboard": {
+      "title": "Leaderboard — {contestTitle}",
+      "divisionLabel": "Division",
+      "divisionElementary": "Elementary",
+      "divisionMiddle": "Middle School",
+      "stats": {
+        "totalAttempts": "Attempts",
+        "submitted": "Submitted",
+        "avgScore": "Average",
+        "maxScore": "Max"
+      },
+      "filter": {
+        "byTeam": "Team",
+        "allTeams": "All teams",
+        "apply": "Apply"
+      },
+      "table": {
+        "rank": "Rank",
+        "student": "Student",
+        "team": "Team",
+        "score": "Score",
+        "correct": "Correct",
+        "time": "Time",
+        "status": "Status",
+        "submitted": "Submitted",
+        "inProgress": "In progress"
+      },
+      "exportCsv": "Download CSV",
+      "backToContests": "← Back to contests",
+      "noTeams": "You don't have teams yet. Create one to see leaderboards.",
+      "manageTeams": "Manage teams",
+      "noAttempts": "No student from your teams has attempted this contest yet."
     }
   },
   "teams": {
