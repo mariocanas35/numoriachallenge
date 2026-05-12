@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           contest_id: string
           id: string
+          is_paper_entry: boolean
           max_possible_score: number
           session_id: string | null
           started_at: string
@@ -30,6 +31,7 @@ export type Database = {
         Insert: {
           contest_id: string
           id?: string
+          is_paper_entry?: boolean
           max_possible_score?: number
           session_id?: string | null
           started_at?: string
@@ -42,6 +44,7 @@ export type Database = {
         Update: {
           contest_id?: string
           id?: string
+          is_paper_entry?: boolean
           max_possible_score?: number
           session_id?: string | null
           started_at?: string
