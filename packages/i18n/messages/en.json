@@ -292,6 +292,7 @@
       "ctaViewLeaderboard": "View leaderboard",
       "ctaOpenSession": "Open contest for my class",
       "ctaPaperEntry": "Manual entry (paper)",
+      "ctaPrint": "Print contest sheet",
       "awaitingTeacher": "Waiting for your teacher to open the contest",
       "studentSessionOpenUntil": "🟢 Contest open until {time}",
       "teacherStats": {
@@ -433,6 +434,32 @@
       "confirmBody": "This will create attempts for {count} student(s). Once submitted you cannot modify (but you can use 'Grant retry' per student).",
       "confirmCancel": "Cancel",
       "confirmSubmit": "Yes, submit"
+    },
+    "print": {
+      "printButton": "Print",
+      "backToContests": "Back to contests",
+      "showAnswers": "🔑 Show answers",
+      "hideAnswers": "👁️ Hide answers",
+      "answerKey": "Answer key",
+      "contestNumber": "Contest #{number}",
+      "season": "Season {year}",
+      "divisionE": "Elementary",
+      "divisionM": "Middle School",
+      "studentName": "Name",
+      "grade": "Grade",
+      "team": "Team",
+      "date": "Date",
+      "instructionsTitle": "Instructions",
+      "instructionProblems": "{count} problems",
+      "instructionDuration": "{min} minutes to solve",
+      "instructionWithCalc": "🧮 Calculator allowed",
+      "instructionNoCalc": "✏️ No calculator",
+      "instructionAnswers": "Write your answer clearly and completely in the space provided",
+      "problemLabel": "Problem {number}",
+      "answer": "Answer",
+      "correctAnswer": "Correct answer",
+      "explanationLabel": "Explanation",
+      "footerBrand": "Numoria Challenge"
     }
   },
   "teams": {

@@ -220,6 +220,11 @@ export function ContestCard({ data }: ContestCardProps) {
                     <Link href={`/contests/${data.id}/paper-entry`}>📝 {t('ctaPaperEntry')}</Link>
                   </Button>
                 )}
+                {/* Print CTA — disponible en cualquier state. Teacher puede imprimir
+                    antes (boletín blanco para students) o después (answer key para grading). */}
+                <Button variant="ghost" size="md" fullWidth asChild>
+                  <Link href={`/contests/${data.id}/print`}>🖨️ {t('ctaPrint')}</Link>
+                </Button>
               </div>
             )}
         </>

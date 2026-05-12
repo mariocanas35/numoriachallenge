@@ -50,3 +50,68 @@ body {
   outline: 2px solid var(--color-numoria-blue);
   outline-offset: 2px;
 }
+
+/* ============================================
+ * Print stylesheet — Phase 4.3
+ * Optimiza /contests/[id]/print para impresión / PDF export.
+ * ============================================ */
+@media print {
+  /* Body sin background — printers no imprimen colores planos por default */
+  body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Oculta UI chrome global */
+  header[class*="sticky"],
+  nav,
+  footer[role="contentinfo"] {
+    display: none !important;
+  }
+
+  /* Layout del main: full-width sin padding extra */
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Tailwind utility para forzar hidden en print */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Tailwind utility — full width en print */
+  .print\:max-w-none {
+    max-width: none !important;
+  }
+
+  .print\:p-0 {
+    padding: 0 !important;
+  }
+
+  /* Page break helpers */
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Page margins (Chrome respeta esto) */
+  @page {
+    margin: 1.5cm;
+    size: letter portrait;
+  }
+
+  /* KaTeX legibilidad en print */
+  .katex {
+    color: black !important;
+  }
+
+  /* Links sin color azul ni underline en print */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

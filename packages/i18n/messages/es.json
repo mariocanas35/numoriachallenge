@@ -292,6 +292,7 @@
       "ctaViewLeaderboard": "Ver leaderboard",
       "ctaOpenSession": "Abrir contest para mi clase",
       "ctaPaperEntry": "Entrada manual (papel)",
+      "ctaPrint": "Imprimir boletín",
       "awaitingTeacher": "Esperando que tu maestro abra el contest",
       "studentSessionOpenUntil": "🟢 Contest abierto hasta {time}",
       "teacherStats": {
@@ -433,6 +434,32 @@
       "confirmBody": "Esto creará intentos para {count} estudiante(s). Una vez enviado no se puede modificar (pero puedes usar 'Otorgar retry' por estudiante).",
       "confirmCancel": "Cancelar",
       "confirmSubmit": "Sí, enviar"
+    },
+    "print": {
+      "printButton": "Imprimir",
+      "backToContests": "Volver a contests",
+      "showAnswers": "🔑 Ver respuestas",
+      "hideAnswers": "👁️ Ocultar respuestas",
+      "answerKey": "Hoja de respuestas",
+      "contestNumber": "Contest #{number}",
+      "season": "Temporada {year}",
+      "divisionE": "Primaria",
+      "divisionM": "Secundaria",
+      "studentName": "Nombre",
+      "grade": "Grado",
+      "team": "Equipo",
+      "date": "Fecha",
+      "instructionsTitle": "Instrucciones",
+      "instructionProblems": "{count} problemas",
+      "instructionDuration": "{min} minutos para resolver",
+      "instructionWithCalc": "🧮 Calculadora permitida",
+      "instructionNoCalc": "✏️ Sin calculadora",
+      "instructionAnswers": "Escribe tu respuesta clara y completa en el espacio provisto",
+      "problemLabel": "Problema {number}",
+      "answer": "Respuesta",
+      "correctAnswer": "Respuesta correcta",
+      "explanationLabel": "Explicación",
+      "footerBrand": "Numoria Challenge"
     }
   },
   "teams": {
