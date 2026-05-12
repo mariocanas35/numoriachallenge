@@ -290,9 +290,23 @@
       "yourDivisionBadge": "Your division",
       "otherDivision": "Other division",
       "ctaViewLeaderboard": "View leaderboard",
+      "ctaOpenSession": "Open contest for my class",
       "teacherStats": {
         "submittedRatio": "👥 {submitted} / {total} students submitted",
-        "avgScore": "Average: {score}"
+        "avgScore": "Average: {score}",
+        "sessionOpenUntil": "🟢 Session open until {time}"
+      },
+      "openSession": {
+        "modalTitle": "Open contest for your class",
+        "modalSubtitle": "Your students can take it only during this session.",
+        "teamLabel": "Team",
+        "durationLabel": "Duration (minutes)",
+        "durationHint": "Contest default: {defaultMin} min. You can adjust within the calendar window.",
+        "cancel": "Cancel",
+        "confirm": "Open session",
+        "opening": "Opening...",
+        "noTeams": "You don't have teams created.",
+        "errorGeneric": "Could not open the session."
       }
     },
     "preview": {

@@ -1,3 +1,4 @@
+import { OpenSessionButton } from '@/components/contests/OpenSessionButton';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@numoria/ui';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
@@ -35,6 +36,15 @@ export interface ContestCardData {
     totalMembers: number;
     avgScore: number | null;
   };
+  /** Phase 4 — Si está presente, hay una session 'open' para uno de los teams
+   *  del teacher. Muestra badge "Sesión abierta hasta XX". */
+  teacherOpenSession?: {
+    sessionId: string;
+    teamId: string;
+    closesAt: string;
+  };
+  /** Phase 4 — Teams del teacher para el dropdown del modal OpenSessionButton. */
+  teacherTeams?: Array<{ id: string; name: string; division: 'elementary' | 'middle' }>;
 }
 
 interface ContestCardProps {
@@ -160,12 +170,34 @@ export function ContestCard({ data }: ContestCardProps) {
             )}
           </p>
 
-          {/* CTA: Ver leaderboard si el contest ya empezó (active, in-progress, completed, expired);
-              upcoming → preview disabled (todavía no hay datos) */}
+          {/* Badge: sesión abierta — solo si Phase 4 session activa */}
+          {data.teacherOpenSession && (
+            <p className="mb-3 text-xs font-bold text-numoria-teal">
+              {t('teacherStats.sessionOpenUntil', {
+                time: format.dateTime(new Date(data.teacherOpenSession.closesAt), {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                }),
+              })}
+            </p>
+          )}
+
+          {/* CTA contextual del teacher view:
+              - upcoming → ghost preview (no actions yet)
+              - active sin session → "Abrir sesión" (MOEMS Phase 4)
+              - active con session abierta → "Ver leaderboard"
+              - completed/expired → "Ver leaderboard" */}
           {data.state === 'upcoming' ? (
             <Button variant="ghost" size="md" fullWidth disabled>
               {t('ctaPreview')}
             </Button>
+          ) : data.state === 'active' && !data.teacherOpenSession && data.teacherTeams ? (
+            <OpenSessionButton
+              contestId={data.id}
+              teams={data.teacherTeams}
+              defaultDurationMinutes={data.durationMinutes}
+              label={t('ctaOpenSession')}
+            />
           ) : (
             <Button variant="primary" size="md" fullWidth asChild>
               <Link href={`/contests/${data.id}/leaderboard`}>📊 {t('ctaViewLeaderboard')}</Link>

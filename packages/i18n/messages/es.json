@@ -290,9 +290,23 @@
       "yourDivisionBadge": "Tu división",
       "otherDivision": "Otra división",
       "ctaViewLeaderboard": "Ver leaderboard",
+      "ctaOpenSession": "Abrir contest para mi clase",
       "teacherStats": {
         "submittedRatio": "👥 {submitted} / {total} estudiantes entregaron",
-        "avgScore": "Promedio: {score}"
+        "avgScore": "Promedio: {score}",
+        "sessionOpenUntil": "🟢 Sesión abierta hasta {time}"
+      },
+      "openSession": {
+        "modalTitle": "Abrir contest para tu clase",
+        "modalSubtitle": "Tus estudiantes solo pueden tomarlo durante esta sesión.",
+        "teamLabel": "Equipo",
+        "durationLabel": "Duración (minutos)",
+        "durationHint": "Default del contest: {defaultMin} min. Puedes ajustarlo dentro del calendar window.",
+        "cancel": "Cancelar",
+        "confirm": "Abrir sesión",
+        "opening": "Abriendo...",
+        "noTeams": "No tienes equipos creados.",
+        "errorGeneric": "No se pudo abrir la sesión."
       }
     },
     "preview": {

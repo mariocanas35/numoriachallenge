@@ -102,8 +102,25 @@ export function toContestCardData(args: {
     totalMembers: number;
     avgScore: number | null;
   };
+  /** Phase 4 — session 'open' del teacher para alguno de sus teams. */
+  teacherOpenSession?: {
+    sessionId: string;
+    teamId: string;
+    closesAt: string;
+  };
+  /** Phase 4 — Teams del teacher (para dropdown del modal abrir sesión). */
+  teacherTeams?: Array<{ id: string; name: string; division: 'elementary' | 'middle' }>;
 }): ContestCardData {
-  const { contest, numProblems, attempt, studentDivision, now, teacherStats } = args;
+  const {
+    contest,
+    numProblems,
+    attempt,
+    studentDivision,
+    now,
+    teacherStats,
+    teacherOpenSession,
+    teacherTeams,
+  } = args;
   const { state, yourScore, yourMaxScore } = deriveContestState({
     status: contest.status,
     scheduledAt: contest.scheduled_at,
@@ -129,5 +146,7 @@ export function toContestCardData(args: {
     yourMaxScore,
     isYourDivision: contest.division === studentDivision,
     teacherStats,
+    teacherOpenSession,
+    teacherTeams,
   };
 }

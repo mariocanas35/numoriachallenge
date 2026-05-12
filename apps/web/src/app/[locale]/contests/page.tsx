@@ -2,7 +2,11 @@ import { ContestCard, type ContestCardData } from '@/components/contests/Contest
 import { deriveStudentDivision, toContestCardData } from '@/lib/contests/state';
 import {
   type ContestTeacherStats,
+  type OpenSession,
+  type TeacherTeam,
+  getTeacherOpenSessions,
   getTeacherStatsByContest,
+  getTeacherTeams,
 } from '@/lib/contests/teacher-aggregates';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
@@ -143,19 +147,26 @@ export default async function ContestsListPage({
     );
   }
 
-  // Fetch teacher stats por contest (solo si role=teacher)
+  // Fetch teacher data (solo si role=teacher):
+  //   - stats agregados por contest
+  //   - teams del teacher (para dropdown OpenSessionButton)
+  //   - sessions abiertas por contest
   let teacherStatsByContest = new Map<string, ContestTeacherStats>();
+  let teacherTeams: TeacherTeam[] = [];
+  let openSessionsByContest = new Map<string, OpenSession>();
   if (profile.role === 'teacher') {
-    teacherStatsByContest = await getTeacherStatsByContest(supabase, {
-      teacherId: user.id,
-      contestIds,
-    });
+    [teacherStatsByContest, teacherTeams, openSessionsByContest] = await Promise.all([
+      getTeacherStatsByContest(supabase, { teacherId: user.id, contestIds }),
+      getTeacherTeams(supabase, user.id),
+      getTeacherOpenSessions(supabase, { teacherId: user.id, contestIds }),
+    ]);
   }
 
   // Construir ContestCardData por contest
   const now = new Date();
   const cards: ContestCardData[] = contests.map((c) => {
     const stats = teacherStatsByContest.get(c.id);
+    const openSession = openSessionsByContest.get(c.id);
     return toContestCardData({
       contest: c,
       numProblems: problemCountByContest.get(c.id) ?? 0,
@@ -169,6 +180,14 @@ export default async function ContestsListPage({
             avgScore: stats.avgScore,
           }
         : undefined,
+      teacherOpenSession: openSession
+        ? {
+            sessionId: openSession.id,
+            teamId: openSession.teamId,
+            closesAt: openSession.closesAt,
+          }
+        : undefined,
+      teacherTeams: profile.role === 'teacher' ? teacherTeams : undefined,
     });
   });
 

@@ -10,6 +10,76 @@ export interface ContestTeacherStats {
   avgScore: number | null;
 }
 
+export interface TeacherTeam {
+  id: string;
+  name: string;
+  division: 'elementary' | 'middle';
+}
+
+export interface OpenSession {
+  id: string;
+  contestId: string;
+  teamId: string;
+  closesAt: string;
+}
+
+/**
+ * Lista los teams del teacher actual (donde coach_id = teacherId). Usado por
+ * /contests page para pasar a OpenSessionButton (dropdown selection).
+ */
+export async function getTeacherTeams(
+  supabase: ServerClient,
+  teacherId: string,
+): Promise<TeacherTeam[]> {
+  const { data } = await supabase
+    .from('teams')
+    .select('id, name, division')
+    .eq('coach_id', teacherId)
+    .order('name');
+  return (
+    (data ?? []) as Array<{ id: string; name: string; division: 'elementary' | 'middle' }>
+  ).map((t) => ({ id: t.id, name: t.name, division: t.division }));
+}
+
+/**
+ * Sessions abiertas (status='open') del teacher, indexadas por contest_id.
+ * Si un teacher tiene 2 teams y abrió session en uno solo, solo aparece ese.
+ *
+ * Side effect: marca expiradas lazy via RPC.
+ */
+export async function getTeacherOpenSessions(
+  supabase: ServerClient,
+  opts: { teacherId: string; contestIds: string[] },
+): Promise<Map<string, OpenSession>> {
+  const result = new Map<string, OpenSession>();
+  if (opts.contestIds.length === 0) return result;
+
+  await supabase.rpc('expire_old_contest_sessions');
+
+  const { data } = await supabase
+    .from('contest_sessions')
+    .select('id, contest_id, team_id, closes_at')
+    .eq('opened_by', opts.teacherId)
+    .eq('status', 'open')
+    .in('contest_id', opts.contestIds);
+
+  for (const row of ((data ?? []) as Array<{
+    id: string;
+    contest_id: string;
+    team_id: string;
+    closes_at: string;
+  }>) ?? []) {
+    result.set(row.contest_id, {
+      id: row.id,
+      contestId: row.contest_id,
+      teamId: row.team_id,
+      closesAt: row.closes_at,
+    });
+  }
+
+  return result;
+}
+
 /**
  * Calcula stats agregados por contest para todos los students del teacher.
  *

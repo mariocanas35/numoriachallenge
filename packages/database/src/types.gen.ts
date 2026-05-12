@@ -19,6 +19,7 @@ export type Database = {
           contest_id: string
           id: string
           max_possible_score: number
+          session_id: string | null
           started_at: string
           student_id: string
           submitted_at: string | null
@@ -30,6 +31,7 @@ export type Database = {
           contest_id: string
           id?: string
           max_possible_score?: number
+          session_id?: string | null
           started_at?: string
           student_id: string
           submitted_at?: string | null
@@ -41,6 +43,7 @@ export type Database = {
           contest_id?: string
           id?: string
           max_possible_score?: number
+          session_id?: string | null
           started_at?: string
           student_id?: string
           submitted_at?: string | null
@@ -54,6 +57,13 @@ export type Database = {
             columns: ["contest_id"]
             isOneToOne: false
             referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contest_attempts_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "contest_sessions"
             referencedColumns: ["id"]
           },
           {
@@ -94,6 +104,67 @@ export type Database = {
             columns: ["problem_id"]
             isOneToOne: false
             referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contest_sessions: {
+        Row: {
+          closes_at: string
+          contest_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          opened_at: string
+          opened_by: string
+          status: Database["public"]["Enums"]["session_status"]
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          closes_at: string
+          contest_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opened_by: string
+          status?: Database["public"]["Enums"]["session_status"]
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          closes_at?: string
+          contest_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opened_by?: string
+          status?: Database["public"]["Enums"]["session_status"]
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contest_sessions_contest_id_fkey"
+            columns: ["contest_id"]
+            isOneToOne: false
+            referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contest_sessions_opened_by_fkey"
+            columns: ["opened_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contest_sessions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
@@ -655,6 +726,7 @@ export type Database = {
         | "geometry_3d"
         | "pythagoras"
       school_division: "elementary" | "middle"
+      session_status: "open" | "closed" | "expired"
       user_role: "student" | "parent" | "teacher" | "admin"
     }
     CompositeTypes: {

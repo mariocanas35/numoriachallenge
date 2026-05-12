@@ -1,6 +1,10 @@
 'use server';
 
 import { scoreProblemAttempt } from '@/lib/contests/scoring';
+import {
+  closeContestSession as closeSessionHelper,
+  openContestSession as openSessionHelper,
+} from '@/lib/contests/sessions';
 import { createServerClient } from '@numoria/database/server';
 import type { Database } from '@numoria/database/types';
 import { revalidatePath } from 'next/cache';
@@ -334,4 +338,48 @@ export async function submitContest(
   revalidatePath(`/contests/${attempt.contest_id}`);
 
   return { ok: true, data: { totalScore, maxScore: attempt.max_possible_score } };
+}
+
+// ============================================================
+// Phase 4 — MOEMS contest sessions
+// ============================================================
+
+/**
+ * Server action: teacher abre una sesión de contest para su team.
+ *
+ * Reglas (ver lib/contests/sessions.ts:openContestSession):
+ * - User es teacher y coach del team
+ * - Contest status = 'active', dentro del calendar window
+ * - No hay otra session 'open' para (contest, team)
+ *
+ * Invalidates: /contests (list page) + /contests/[id]/leaderboard
+ */
+export async function openContestSession(input: {
+  contestId: string;
+  teamId: string;
+  durationMinutes?: number;
+  notes?: string;
+}): Promise<ActionResult<{ sessionId: string; closesAt: string }>> {
+  const supabase = await createServerClient();
+  const result = await openSessionHelper(supabase, input);
+  if (result.ok) {
+    revalidatePath('/contests');
+    revalidatePath(`/contests/${input.contestId}/leaderboard`);
+  }
+  return result;
+}
+
+/**
+ * Server action: teacher cierra manualmente una sesión.
+ * Solo el opener (o admin) puede cerrarla.
+ */
+export async function closeContestSession(
+  sessionId: string,
+): Promise<ActionResult<{ sessionId: string; closesAt: string }>> {
+  const supabase = await createServerClient();
+  const result = await closeSessionHelper(supabase, sessionId);
+  if (result.ok) {
+    revalidatePath('/contests');
+  }
+  return result;
 }
