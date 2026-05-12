@@ -17,6 +17,10 @@ interface LeaderboardTableProps {
     gradeFormat: string;
     /** Header de la columna acciones (Phase 4 grant retry). */
     actions: string;
+    /** Badge text para attempts de paper-entry. */
+    paperEntryBadge: string;
+    /** Tooltip text del badge paper-entry. */
+    paperEntryTooltip: string;
   };
   /** Si true, renderiza columna acciones con GrantRetryButton donde aplique.
    *  Pasado por la page solo cuando el viewer es teacher. */
@@ -73,7 +77,17 @@ export function LeaderboardTable({ entries, labels, enableActions }: Leaderboard
                   {rankBadge ?? <span className="text-numoria-mid">#{e.rank}</span>}
                 </td>
                 <td className="px-3 py-2">
-                  <div className="font-medium text-numoria-ink">{e.studentName}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-numoria-ink">{e.studentName}</span>
+                    {e.isPaperEntry && (
+                      <span
+                        title={labels.paperEntryTooltip}
+                        className="inline-block rounded-full bg-numoria-indigo/10 px-2 py-0.5 text-[10px] font-bold text-numoria-indigo"
+                      >
+                        📝 {labels.paperEntryBadge}
+                      </span>
+                    )}
+                  </div>
                   {e.studentGrade !== null && (
                     <div className="text-xs text-numoria-mid">
                       {labels.gradeFormat.replace('{n}', String(e.studentGrade))}

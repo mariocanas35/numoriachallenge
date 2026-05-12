@@ -186,27 +186,42 @@ export function ContestCard({ data }: ContestCardProps) {
             </p>
           )}
 
-          {/* CTA contextual del teacher view:
+          {/* CTAs contextuales del teacher view:
               - upcoming → ghost preview (no actions yet)
-              - active sin session → "Abrir sesión" (MOEMS Phase 4)
-              - active con session abierta → "Ver leaderboard"
+              - active sin session → "Abrir sesión" (MOEMS Phase 4.1b)
+              - active con session abierta → "Ver leaderboard" + "Entrada manual" (Phase 4.2)
               - completed/expired → "Ver leaderboard" */}
-          {data.state === 'upcoming' ? (
+          {data.state === 'upcoming' && (
             <Button variant="ghost" size="md" fullWidth disabled>
               {t('ctaPreview')}
             </Button>
-          ) : data.state === 'active' && !data.teacherOpenSession && data.teacherTeams ? (
+          )}
+
+          {data.state === 'active' && !data.teacherOpenSession && data.teacherTeams && (
             <OpenSessionButton
               contestId={data.id}
               teams={data.teacherTeams}
               defaultDurationMinutes={data.durationMinutes}
               label={t('ctaOpenSession')}
             />
-          ) : (
-            <Button variant="primary" size="md" fullWidth asChild>
-              <Link href={`/contests/${data.id}/leaderboard`}>📊 {t('ctaViewLeaderboard')}</Link>
-            </Button>
           )}
+
+          {data.state !== 'upcoming' &&
+            !(data.state === 'active' && !data.teacherOpenSession && data.teacherTeams) && (
+              <div className="flex flex-col gap-2">
+                <Button variant="primary" size="md" fullWidth asChild>
+                  <Link href={`/contests/${data.id}/leaderboard`}>
+                    📊 {t('ctaViewLeaderboard')}
+                  </Link>
+                </Button>
+                {/* Paper-entry CTA solo cuando hay sesión abierta (Phase 4.2) */}
+                {data.teacherOpenSession && (
+                  <Button variant="ghost" size="md" fullWidth asChild>
+                    <Link href={`/contests/${data.id}/paper-entry`}>📝 {t('ctaPaperEntry')}</Link>
+                  </Button>
+                )}
+              </div>
+            )}
         </>
       )}
 

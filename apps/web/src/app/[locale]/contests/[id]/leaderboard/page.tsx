@@ -93,6 +93,8 @@ export default async function ContestLeaderboardPage({
     // la sustitución del {n} ocurre en LeaderboardTable per row, no aquí.
     gradeFormat: t.raw('table.gradeFormat') as string,
     actions: t('table.actions'),
+    paperEntryBadge: t('table.paperEntryBadge'),
+    paperEntryTooltip: t('table.paperEntryTooltip'),
   };
 
   // CSV download URL incluye el filter para que el export respete el filtrado UI

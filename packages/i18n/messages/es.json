@@ -291,6 +291,7 @@
       "otherDivision": "Otra división",
       "ctaViewLeaderboard": "Ver leaderboard",
       "ctaOpenSession": "Abrir contest para mi clase",
+      "ctaPaperEntry": "Entrada manual (papel)",
       "awaitingTeacher": "Esperando que tu maestro abra el contest",
       "studentSessionOpenUntil": "🟢 Contest abierto hasta {time}",
       "teacherStats": {
@@ -374,7 +375,9 @@
         "submitted": "Entregado",
         "inProgress": "En curso",
         "gradeFormat": "{n}° grado",
-        "actions": "Acciones"
+        "actions": "Acciones",
+        "paperEntryBadge": "Papel",
+        "paperEntryTooltip": "Respuestas ingresadas por el maestro vía entrada manual"
       },
       "grantRetry": {
         "reset": "Reset",

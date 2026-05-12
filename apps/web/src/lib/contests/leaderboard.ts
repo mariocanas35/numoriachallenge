@@ -19,6 +19,8 @@ export interface LeaderboardEntry {
   sessionId: string | null;
   /** Phase 4 MOEMS: true si la session está aún 'open' (teacher puede grant retry). */
   canGrantRetry: boolean;
+  /** Phase 4.2: true si el attempt fue creado por teacher vía paper-entry. */
+  isPaperEntry: boolean;
 }
 
 export interface LeaderboardSummary {
@@ -107,11 +109,11 @@ export async function getLeaderboardData(
   for (const m of members) teamByStudent.set(m.student_id, m.team_id);
   const studentIds = Array.from(new Set(members.map((m) => m.student_id)));
 
-  // Step 3: contest_attempts (incluye id + session_id para grant retry Phase 4)
+  // Step 3: contest_attempts (incluye id + session_id + is_paper_entry para Phase 4)
   const { data: attemptRows } = await supabase
     .from('contest_attempts')
     .select(
-      'id, student_id, total_score, total_correct, max_possible_score, time_spent_seconds, submitted_at, session_id',
+      'id, student_id, total_score, total_correct, max_possible_score, time_spent_seconds, submitted_at, session_id, is_paper_entry',
     )
     .eq('contest_id', contestId)
     .in('student_id', studentIds);
@@ -125,6 +127,7 @@ export async function getLeaderboardData(
     time_spent_seconds: number | null;
     submitted_at: string | null;
     session_id: string | null;
+    is_paper_entry: boolean;
   }>;
 
   // Fetch sessions status para validar canGrantRetry (Phase 4)
@@ -193,6 +196,7 @@ export async function getLeaderboardData(
       sessionId: a.session_id,
       // canGrantRetry = attempt tiene session AND la session sigue open
       canGrantRetry: a.session_id !== null && sessionStatus === 'open',
+      isPaperEntry: a.is_paper_entry,
     };
   });
 
