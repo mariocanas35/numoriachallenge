@@ -418,3 +418,103 @@ export async function closeContestSession(
   }
   return result;
 }
+
+/**
+ * Server action: teacher otorga otro intento a un student específico.
+ *
+ * Use case: Student tuvo problema mid-contest (internet, distracción, etc.).
+ * Teacher resetea su attempt → student puede re-tomar mientras la sesión siga
+ * abierta.
+ *
+ * Reglas:
+ * - User autenticado es teacher
+ * - El attempt tiene session_id (era Phase 4 MOEMS, no legacy)
+ * - La session asociada está aún 'open' (no expirada/cerrada)
+ * - El student está en uno de los teams del teacher (RLS lo enforce indirecto;
+ *   validamos explícito para mejor UX)
+ *
+ * Acción:
+ * - DELETE contest_attempts (CASCADE limpia problem_attempts via FK)
+ * - Append audit log a session.notes
+ * - revalidatePath del leaderboard
+ *
+ * Returns: { ok, data: { contestId } } para que UI pueda hacer router.refresh()
+ */
+export async function grantContestRetry(input: {
+  contestAttemptId: string;
+}): Promise<ActionResult<{ contestId: string }>> {
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: 'No autenticado' };
+
+  // Fetch del attempt para validar
+  const { data: attemptRow } = await supabase
+    .from('contest_attempts')
+    .select('id, student_id, contest_id, session_id')
+    .eq('id', input.contestAttemptId)
+    .single();
+  if (!attemptRow) return { ok: false, message: 'Attempt no encontrado' };
+
+  const attempt = attemptRow as {
+    id: string;
+    student_id: string;
+    contest_id: string;
+    session_id: string | null;
+  };
+
+  if (!attempt.session_id) {
+    return {
+      ok: false,
+      message: 'Este attempt es legacy (sin session_id) y no se puede resetear con grant retry',
+    };
+  }
+
+  // Fetch session — validar que está open y el opener es el teacher actual
+  const { data: sessionRow } = await supabase
+    .from('contest_sessions')
+    .select('id, opened_by, status, notes, team_id')
+    .eq('id', attempt.session_id)
+    .single();
+  if (!sessionRow) return { ok: false, message: 'Session no encontrada' };
+
+  const session = sessionRow as {
+    id: string;
+    opened_by: string;
+    status: 'open' | 'closed' | 'expired';
+    notes: string | null;
+    team_id: string;
+  };
+
+  if (session.opened_by !== user.id) {
+    return { ok: false, message: 'No eres el teacher que abrió esta sesión' };
+  }
+  if (session.status !== 'open') {
+    return {
+      ok: false,
+      message: 'La sesión ya está cerrada/expirada — no se puede otorgar retry',
+    };
+  }
+
+  // DELETE contest_attempts — CASCADE limpia problem_attempts
+  const { error: deleteErr } = await supabase
+    .from('contest_attempts')
+    .delete()
+    .eq('id', attempt.id);
+  if (deleteErr) {
+    return { ok: false, message: deleteErr.message };
+  }
+
+  // Audit log en session.notes (append)
+  const timestamp = new Date().toISOString();
+  const auditLine = `[${timestamp}] Retry otorgado a student ${attempt.student_id}`;
+  const newNotes = session.notes ? `${session.notes}\n${auditLine}` : auditLine;
+  await supabase.from('contest_sessions').update({ notes: newNotes }).eq('id', session.id);
+
+  // Revalidate UI
+  revalidatePath('/contests');
+  revalidatePath(`/contests/${attempt.contest_id}/leaderboard`);
+
+  return { ok: true, data: { contestId: attempt.contest_id } };
+}

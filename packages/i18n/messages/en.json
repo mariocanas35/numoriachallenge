@@ -373,7 +373,19 @@
         "status": "Status",
         "submitted": "Submitted",
         "inProgress": "In progress",
-        "gradeFormat": "Grade {n}"
+        "gradeFormat": "Grade {n}",
+        "actions": "Actions"
+      },
+      "grantRetry": {
+        "reset": "Reset",
+        "resetting": "Resetting...",
+        "tooltip": "Grant another attempt to this student",
+        "modalTitle": "Grant another attempt?",
+        "modalBody": "This deletes {studentName}'s current attempt. They can re-take the contest while the session is still open.",
+        "warningDestructive": "Irreversible action. The student's current answers will be lost.",
+        "cancel": "Cancel",
+        "confirm": "Yes, grant retry",
+        "errorGeneric": "Could not grant retry"
       },
       "exportCsv": "Download CSV",
       "backToContests": "← Back to contests",

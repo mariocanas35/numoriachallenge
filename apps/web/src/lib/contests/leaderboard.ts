@@ -2,6 +2,8 @@ import type { ServerClient } from '@numoria/database/server';
 
 export interface LeaderboardEntry {
   rank: number;
+  /** ID del contest_attempt — usado por grant retry */
+  attemptId: string;
   studentId: string;
   studentName: string;
   /** Grado escolar del student (1-12). Null si no completó onboarding. */
@@ -13,6 +15,10 @@ export interface LeaderboardEntry {
   maxPossibleScore: number;
   timeSpentSeconds: number | null;
   submittedAt: string | null;
+  /** Phase 4 MOEMS: ID de la session asociada al attempt. Null si legacy Phase 3. */
+  sessionId: string | null;
+  /** Phase 4 MOEMS: true si la session está aún 'open' (teacher puede grant retry). */
+  canGrantRetry: boolean;
 }
 
 export interface LeaderboardSummary {
@@ -101,23 +107,43 @@ export async function getLeaderboardData(
   for (const m of members) teamByStudent.set(m.student_id, m.team_id);
   const studentIds = Array.from(new Set(members.map((m) => m.student_id)));
 
-  // Step 3: contest_attempts
+  // Step 3: contest_attempts (incluye id + session_id para grant retry Phase 4)
   const { data: attemptRows } = await supabase
     .from('contest_attempts')
     .select(
-      'student_id, total_score, total_correct, max_possible_score, time_spent_seconds, submitted_at',
+      'id, student_id, total_score, total_correct, max_possible_score, time_spent_seconds, submitted_at, session_id',
     )
     .eq('contest_id', contestId)
     .in('student_id', studentIds);
 
   const attempts = (attemptRows ?? []) as Array<{
+    id: string;
     student_id: string;
     total_score: number;
     total_correct: number;
     max_possible_score: number;
     time_spent_seconds: number | null;
     submitted_at: string | null;
+    session_id: string | null;
   }>;
+
+  // Fetch sessions status para validar canGrantRetry (Phase 4)
+  const sessionIds = Array.from(
+    new Set(attempts.map((a) => a.session_id).filter((s): s is string => s !== null)),
+  );
+  const sessionStatusById = new Map<string, 'open' | 'closed' | 'expired'>();
+  if (sessionIds.length > 0) {
+    const { data: sessionRows } = await supabase
+      .from('contest_sessions')
+      .select('id, status')
+      .in('id', sessionIds);
+    for (const row of ((sessionRows ?? []) as Array<{
+      id: string;
+      status: 'open' | 'closed' | 'expired';
+    }>) ?? []) {
+      sessionStatusById.set(row.id, row.status);
+    }
+  }
 
   if (attempts.length === 0) {
     return {
@@ -151,7 +177,9 @@ export async function getLeaderboardData(
   //     para que el teacher pueda ver TODOS sus students)
   const unranked = attempts.map((a) => {
     const prof = profileById.get(a.student_id);
+    const sessionStatus = a.session_id ? sessionStatusById.get(a.session_id) : null;
     return {
+      attemptId: a.id,
       studentId: a.student_id,
       studentName: prof?.name ?? '—',
       studentGrade: prof?.grade ?? null,
@@ -162,6 +190,9 @@ export async function getLeaderboardData(
       maxPossibleScore: a.max_possible_score,
       timeSpentSeconds: a.time_spent_seconds,
       submittedAt: a.submitted_at,
+      sessionId: a.session_id,
+      // canGrantRetry = attempt tiene session AND la session sigue open
+      canGrantRetry: a.session_id !== null && sessionStatus === 'open',
     };
   });
 

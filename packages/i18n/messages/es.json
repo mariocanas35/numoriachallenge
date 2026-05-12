@@ -373,7 +373,19 @@
         "status": "Estado",
         "submitted": "Entregado",
         "inProgress": "En curso",
-        "gradeFormat": "{n}° grado"
+        "gradeFormat": "{n}° grado",
+        "actions": "Acciones"
+      },
+      "grantRetry": {
+        "reset": "Reset",
+        "resetting": "Reseteando...",
+        "tooltip": "Otorgar otro intento a este estudiante",
+        "modalTitle": "¿Otorgar otro intento?",
+        "modalBody": "Esto borra el intento actual de {studentName}. Podrá re-tomar el contest mientras la sesión siga abierta.",
+        "warningDestructive": "Acción irreversible. Las respuestas actuales del estudiante se pierden.",
+        "cancel": "Cancelar",
+        "confirm": "Sí, otorgar retry",
+        "errorGeneric": "No se pudo otorgar el retry"
       },
       "exportCsv": "Descargar CSV",
       "backToContests": "← Volver a contests",

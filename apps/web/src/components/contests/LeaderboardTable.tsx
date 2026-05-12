@@ -1,3 +1,4 @@
+import { GrantRetryButton } from '@/components/contests/GrantRetryButton';
 import type { LeaderboardEntry } from '@/lib/contests/leaderboard';
 
 interface LeaderboardTableProps {
@@ -14,7 +15,12 @@ interface LeaderboardTableProps {
     inProgress: string;
     /** Formato de grado, ej "5° grado" / "Grade 5". {n} → número. */
     gradeFormat: string;
+    /** Header de la columna acciones (Phase 4 grant retry). */
+    actions: string;
   };
+  /** Si true, renderiza columna acciones con GrantRetryButton donde aplique.
+   *  Pasado por la page solo cuando el viewer es teacher. */
+  enableActions?: boolean;
 }
 
 /**
@@ -26,7 +32,7 @@ interface LeaderboardTableProps {
  * Top-3 reciben emoji medal (🥇🥈🥉). Resto: número en mono font.
  * Non-submitted: row con bg dim + status pill "En curso" naranja.
  */
-export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
+export function LeaderboardTable({ entries, labels, enableActions }: LeaderboardTableProps) {
   return (
     <div className="overflow-x-auto rounded-xl border-2 border-numoria-niebla/30 bg-white">
       <table className="w-full text-sm">
@@ -39,6 +45,9 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
             <th className="whitespace-nowrap px-3 py-2 text-right">{labels.correct}</th>
             <th className="whitespace-nowrap px-3 py-2 text-right">{labels.time}</th>
             <th className="whitespace-nowrap px-3 py-2 text-right">{labels.status}</th>
+            {enableActions && (
+              <th className="whitespace-nowrap px-3 py-2 text-right">{labels.actions}</th>
+            )}
           </tr>
         </thead>
         <tbody className="divide-y divide-numoria-niebla/20">
@@ -101,6 +110,18 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
                     </span>
                   )}
                 </td>
+                {enableActions && (
+                  <td className="whitespace-nowrap px-3 py-2 text-right">
+                    {e.canGrantRetry ? (
+                      <GrantRetryButton
+                        contestAttemptId={e.attemptId}
+                        studentName={e.studentName}
+                      />
+                    ) : (
+                      <span className="text-xs text-numoria-niebla">—</span>
+                    )}
+                  </td>
+                )}
               </tr>
             );
           })}

@@ -92,6 +92,7 @@ export default async function ContestLeaderboardPage({
     // t.raw() devuelve el string sin validar interpolación — necesario porque
     // la sustitución del {n} ocurre en LeaderboardTable per row, no aquí.
     gradeFormat: t.raw('table.gradeFormat') as string,
+    actions: t('table.actions'),
   };
 
   // CSV download URL incluye el filter para que el export respete el filtrado UI
@@ -194,9 +195,9 @@ export default async function ContestLeaderboardPage({
             </a>
           </div>
 
-          {/* Tabla */}
+          {/* Tabla — enableActions=true porque role=teacher (guard ya validado arriba) */}
           {entries.length > 0 ? (
-            <LeaderboardTable entries={entries} labels={rowLabels} />
+            <LeaderboardTable entries={entries} labels={rowLabels} enableActions />
           ) : (
             <p className="rounded-xl border-2 border-dashed border-numoria-niebla/40 bg-white p-8 text-center text-sm text-numoria-mid">
               {t('noAttempts')}
