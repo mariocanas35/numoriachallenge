@@ -237,6 +237,61 @@ export async function getActiveSessionForStudent(
 }
 
 /**
+ * Para un student, devuelve un Map<contestId, sessionInfo> con todas las
+ * sessions activas en sus teams para una lista de contests dada.
+ *
+ * Usado por /contests page (student view) para mostrar "Esperando maestro"
+ * cuando state=active pero no hay session abierta.
+ *
+ * RLS-friendly: el policy "students_view_team_sessions" filtra automáticamente
+ * a sessions de teams donde student está miembro. Solo pedimos status='open'.
+ */
+export async function getStudentActiveSessions(
+  supabase: ServerClient,
+  opts: { studentId: string; contestIds: string[] },
+): Promise<Map<string, { id: string; contestId: string; teamId: string; closesAt: string }>> {
+  const result = new Map<
+    string,
+    { id: string; contestId: string; teamId: string; closesAt: string }
+  >();
+  if (opts.contestIds.length === 0) return result;
+
+  await supabase.rpc('expire_old_contest_sessions');
+
+  // Teams del student
+  const { data: memberRows } = await supabase
+    .from('team_members')
+    .select('team_id')
+    .eq('student_id', opts.studentId);
+  const teamIds = ((memberRows ?? []) as Array<{ team_id: string }>).map((m) => m.team_id);
+  if (teamIds.length === 0) return result;
+
+  // Sessions activas en cualquiera de esos teams para esos contests
+  const { data: sessionRows } = await supabase
+    .from('contest_sessions')
+    .select('id, contest_id, team_id, closes_at')
+    .in('contest_id', opts.contestIds)
+    .in('team_id', teamIds)
+    .eq('status', 'open');
+
+  for (const row of ((sessionRows ?? []) as Array<{
+    id: string;
+    contest_id: string;
+    team_id: string;
+    closes_at: string;
+  }>) ?? []) {
+    result.set(row.contest_id, {
+      id: row.id,
+      contestId: row.contest_id,
+      teamId: row.team_id,
+      closesAt: row.closes_at,
+    });
+  }
+
+  return result;
+}
+
+/**
  * Lista todas las sessions del teacher (para vista admin de todas sus
  * sessions abiertas across sus teams).
  */

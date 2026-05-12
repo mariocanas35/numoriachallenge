@@ -205,23 +205,41 @@ export default async function ContestTakePage({
     }
   }
 
-  // Fetch started_at del attempt para calcular endsAt
+  // Fetch started_at + session_id del attempt para calcular endsAt
   const { data: attemptRow } = await supabase
     .from('contest_attempts')
-    .select('started_at')
+    .select('started_at, session_id')
     .eq('id', attemptId)
     .single();
 
-  const startedAt = (attemptRow as Pick<ContestAttempt, 'started_at'> | null)?.started_at;
+  const attemptData = attemptRow as Pick<ContestAttempt, 'started_at' | 'session_id'> | null;
+  const startedAt = attemptData?.started_at;
   if (!startedAt) {
     redirect(`/${locale}/contests`);
   }
 
-  // El attempt ends_at = max(now() + remaining contest window, started_at + duration_minutes)
-  // Para simplificar y ser justos: usar el menor entre (contest window end) y (started_at + duration).
-  const startedDate = new Date(startedAt);
-  const attemptEnd = new Date(startedDate.getTime() + contest.duration_minutes * 60_000);
-  const actualEnd = attemptEnd < endDate ? attemptEnd : endDate;
+  // Phase 4 MOEMS: si el attempt tiene session_id, el bound es session.closes_at.
+  // Si no (legacy Phase 3 attempts), usar min(contest_window_end, started+duration).
+  let actualEnd: Date;
+  if (attemptData?.session_id) {
+    const { data: sessionRow } = await supabase
+      .from('contest_sessions')
+      .select('closes_at')
+      .eq('id', attemptData.session_id)
+      .single();
+    const sessionClosesAt = (sessionRow as { closes_at: string } | null)?.closes_at;
+    if (sessionClosesAt) {
+      actualEnd = new Date(sessionClosesAt);
+    } else {
+      // Fallback defensivo: usa el calendar window
+      actualEnd = endDate;
+    }
+  } else {
+    // Legacy attempt (Phase 3) — comportamiento previo
+    const startedDate = new Date(startedAt);
+    const attemptEnd = new Date(startedDate.getTime() + contest.duration_minutes * 60_000);
+    actualEnd = attemptEnd < endDate ? attemptEnd : endDate;
+  }
 
   return (
     <ContestTakeView

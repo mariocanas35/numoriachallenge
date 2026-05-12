@@ -291,6 +291,8 @@
       "otherDivision": "Otra división",
       "ctaViewLeaderboard": "Ver leaderboard",
       "ctaOpenSession": "Abrir contest para mi clase",
+      "awaitingTeacher": "Esperando que tu maestro abra el contest",
+      "studentSessionOpenUntil": "🟢 Contest abierto hasta {time}",
       "teacherStats": {
         "submittedRatio": "👥 {submitted} / {total} estudiantes entregaron",
         "avgScore": "Promedio: {score}",

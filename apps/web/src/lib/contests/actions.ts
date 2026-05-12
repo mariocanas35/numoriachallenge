@@ -87,7 +87,41 @@ export async function startContestAttempt(
     if (existing.submitted_at) {
       return { ok: false, message: 'You have already submitted this contest' };
     }
+    // Resume — no re-validamos session (si la session cerró mid-attempt,
+    // el student aún puede ver/submitear lo que tiene)
     return { ok: true, data: { attemptId: existing.id } };
+  }
+
+  // Phase 4 MOEMS: validar que existe una contest_session 'open' para alguno
+  // de los teams del student. Sin session → student no puede tomar el contest.
+  await supabase.rpc('expire_old_contest_sessions');
+
+  const { data: memberRows } = await supabase
+    .from('team_members')
+    .select('team_id')
+    .eq('student_id', user.id);
+  const teamIds = ((memberRows ?? []) as Array<{ team_id: string }>).map((m) => m.team_id);
+
+  let sessionId: string | null = null;
+  if (teamIds.length > 0) {
+    const { data: sessionRows } = await supabase
+      .from('contest_sessions')
+      .select('id, closes_at')
+      .eq('contest_id', contestId)
+      .eq('status', 'open')
+      .in('team_id', teamIds)
+      .limit(1);
+    const session = (sessionRows ?? [])[0] as { id: string; closes_at: string } | undefined;
+    if (session) {
+      sessionId = session.id;
+    }
+  }
+
+  if (!sessionId) {
+    return {
+      ok: false,
+      message: 'session_not_open', // i18n key for UI to localize
+    };
   }
 
   // Calcular max_possible_score sumando points de los contest_problems
@@ -111,11 +145,12 @@ export async function startContestAttempt(
     }
   }
 
-  // Crear el attempt
+  // Crear el attempt — incluye session_id (Phase 4 MOEMS)
   const insertData: ContestAttemptInsert = {
     contest_id: contestId,
     student_id: user.id,
     max_possible_score: maxScore,
+    session_id: sessionId,
   };
   const { data: newRow, error: insertErr } = await supabase
     .from('contest_attempts')

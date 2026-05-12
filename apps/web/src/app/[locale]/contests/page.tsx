@@ -1,4 +1,5 @@
 import { ContestCard, type ContestCardData } from '@/components/contests/ContestCard';
+import { getStudentActiveSessions } from '@/lib/contests/sessions';
 import { deriveStudentDivision, toContestCardData } from '@/lib/contests/state';
 import {
   type ContestTeacherStats,
@@ -162,11 +163,26 @@ export default async function ContestsListPage({
     ]);
   }
 
+  // Fetch student sessions (Phase 4 MOEMS) — para saber si su team tiene sesión
+  // abierta. Si no hay sesión, la card muestra "Esperando maestro" en vez de
+  // "Empezar contest".
+  let studentSessionsByContest = new Map<
+    string,
+    { id: string; contestId: string; teamId: string; closesAt: string }
+  >();
+  if (profile.role === 'student') {
+    studentSessionsByContest = await getStudentActiveSessions(supabase, {
+      studentId: user.id,
+      contestIds,
+    });
+  }
+
   // Construir ContestCardData por contest
   const now = new Date();
   const cards: ContestCardData[] = contests.map((c) => {
     const stats = teacherStatsByContest.get(c.id);
     const openSession = openSessionsByContest.get(c.id);
+    const studentSession = studentSessionsByContest.get(c.id);
     return toContestCardData({
       contest: c,
       numProblems: problemCountByContest.get(c.id) ?? 0,
@@ -188,6 +204,8 @@ export default async function ContestsListPage({
           }
         : undefined,
       teacherTeams: profile.role === 'teacher' ? teacherTeams : undefined,
+      studentHasActiveSession: studentSession !== undefined,
+      studentSessionClosesAt: studentSession?.closesAt,
     });
   });
 

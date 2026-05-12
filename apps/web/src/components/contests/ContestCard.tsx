@@ -45,6 +45,10 @@ export interface ContestCardData {
   };
   /** Phase 4 — Teams del teacher para el dropdown del modal OpenSessionButton. */
   teacherTeams?: Array<{ id: string; name: string; division: 'elementary' | 'middle' }>;
+  /** Phase 4 — True si el student tiene una session 'open' para este contest. */
+  studentHasActiveSession?: boolean;
+  /** Phase 4 — closes_at de la sesión del student (UI mostrar countdown). */
+  studentSessionClosesAt?: string;
 }
 
 interface ContestCardProps {
@@ -215,9 +219,28 @@ export function ContestCard({ data }: ContestCardProps) {
             </p>
           )}
 
-          {data.state === 'active' && data.isYourDivision && (
+          {/* Badge: sesión abierta — muestra time bound al student */}
+          {data.studentHasActiveSession &&
+            data.studentSessionClosesAt &&
+            data.state === 'active' && (
+              <p className="mb-3 text-xs font-bold text-numoria-teal">
+                {t('studentSessionOpenUntil', {
+                  time: format.dateTime(new Date(data.studentSessionClosesAt), {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  }),
+                })}
+              </p>
+            )}
+
+          {data.state === 'active' && data.isYourDivision && data.studentHasActiveSession && (
             <Button variant="primary" size="lg" fullWidth asChild>
               <Link href={`/contests/${data.id}`}>{t('ctaStart')}</Link>
+            </Button>
+          )}
+          {data.state === 'active' && data.isYourDivision && !data.studentHasActiveSession && (
+            <Button variant="ghost" size="md" fullWidth disabled>
+              ⏳ {t('awaitingTeacher')}
             </Button>
           )}
           {data.state === 'in-progress' && (

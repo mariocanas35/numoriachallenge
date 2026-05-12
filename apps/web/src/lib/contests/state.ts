@@ -110,6 +110,10 @@ export function toContestCardData(args: {
   };
   /** Phase 4 — Teams del teacher (para dropdown del modal abrir sesión). */
   teacherTeams?: Array<{ id: string; name: string; division: 'elementary' | 'middle' }>;
+  /** Phase 4 — Student tiene una session 'open' en su team para este contest. */
+  studentHasActiveSession?: boolean;
+  /** Phase 4 — closes_at de la session activa del student (para UI countdown). */
+  studentSessionClosesAt?: string;
 }): ContestCardData {
   const {
     contest,
@@ -120,6 +124,8 @@ export function toContestCardData(args: {
     teacherStats,
     teacherOpenSession,
     teacherTeams,
+    studentHasActiveSession,
+    studentSessionClosesAt,
   } = args;
   const { state, yourScore, yourMaxScore } = deriveContestState({
     status: contest.status,
@@ -148,5 +154,7 @@ export function toContestCardData(args: {
     teacherStats,
     teacherOpenSession,
     teacherTeams,
+    studentHasActiveSession,
+    studentSessionClosesAt,
   };
 }
