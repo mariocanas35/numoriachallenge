@@ -1,5 +1,4 @@
-import type { Database } from '@numoria/database/types';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { ServerClient } from '@numoria/database/server';
 
 export interface ContestTeacherStats {
   contestId: string;
@@ -27,7 +26,7 @@ export interface ContestTeacherStats {
  *          La page que la consume itera con `?? null` para contests sin entry.
  */
 export async function getTeacherStatsByContest(
-  supabase: SupabaseClient<Database>,
+  supabase: ServerClient,
   opts: { teacherId: string; contestIds: string[] },
 ): Promise<Map<string, ContestTeacherStats>> {
   const { teacherId, contestIds } = opts;

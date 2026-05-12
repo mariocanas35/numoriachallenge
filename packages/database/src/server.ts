@@ -16,6 +16,17 @@ import type { Database } from './types.gen';
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 /**
+ * Tipo del cliente que retorna `createServerClient()`. Usar este alias en
+ * función signatures que aceptan el cliente como parámetro — evita generics
+ * mismatch entre @supabase/ssr y @supabase/supabase-js.
+ *
+ * @example
+ *   import type { ServerClient } from '@numoria/database/server';
+ *   async function myHelper(supabase: ServerClient) { ... }
+ */
+export type ServerClient = Awaited<ReturnType<typeof createServerClient>>;
+
+/**
  * Cliente Supabase autenticado con la sesión del usuario actual.
  * Respeta RLS — opera con los permisos del usuario logueado.
  */

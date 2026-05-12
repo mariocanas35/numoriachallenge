@@ -53,14 +53,19 @@ export function normalizeAnswer(raw: string, type: AnswerType): string {
     case 'with_units': {
       // "48 cm²", "48cm2", "48 cm^2" → normaliza a "48 cm²"
       // Estrategia: separa número + unidad, normaliza ^2 → ², limita espacios
-      return trimmed
-        .replace(/\s+/g, ' ')
-        .replace(/\^2/g, '²')
-        .replace(/\^3/g, '³')
-        .replace(/cm2/gi, 'cm²')
-        .replace(/cm3/gi, 'cm³')
-        .replace(/m2/gi, 'm²')
-        .replace(/(\d)\s+([a-zA-ZºμπΩ²³])/g, '$1 $2');
+      return (
+        trimmed
+          .replace(/\s+/g, ' ')
+          .replace(/\^2/g, '²')
+          .replace(/\^3/g, '³')
+          .replace(/cm2/gi, 'cm²')
+          .replace(/cm3/gi, 'cm³')
+          .replace(/m2/gi, 'm²')
+          // Inserta espacio entre dígito y unidad si falta: "44cm²" → "44 cm²"
+          .replace(/(\d)([a-zA-Z])/g, '$1 $2')
+          // Colapsa múltiples espacios entre número y unidad a uno solo
+          .replace(/(\d)\s+([a-zA-ZºμπΩ²³])/g, '$1 $2')
+      );
     }
 
     case 'multiple_choice':

@@ -157,34 +157,34 @@ export default async function ContestResultsPage({
     attemptMap.set(a.problem_id, a);
   }
 
-  // Compose ProblemResultData ordenado por position
-  const results: ProblemResultData[] = positions
-    .map(({ position, problem_id }) => {
-      const p = problemsMap.get(problem_id);
-      if (!p) return null;
-      const a = attemptMap.get(problem_id);
-      return {
-        problemId: p.id,
-        position,
-        stars: p.stars as 1 | 2 | 3,
-        pointsMax: p.points,
-        titleEs: p.title_es,
-        titleEn: p.title_en,
-        bodyEs: p.body_es,
-        bodyEn: p.body_en,
-        explanationEs: p.explanation_es,
-        explanationEn: p.explanation_en,
-        hasDiagram: p.has_diagram,
-        diagramSvgUrl: p.diagram_svg_url,
-        diagramCaptionEs: p.diagram_caption_es,
-        diagramCaptionEn: p.diagram_caption_en,
-        expectedAnswer: p.expected_answer,
-        answerSubmitted: a?.answer_submitted ?? null,
-        isCorrect: a?.is_correct ?? null,
-        pointsEarned: a?.points_earned ?? 0,
-      };
-    })
-    .filter((x): x is ProblemResultData => x !== null);
+  // Compose ProblemResultData ordenado por position (for-loop evita issues
+  // de type narrowing en filter predicates con chained generics complejos)
+  const results: ProblemResultData[] = [];
+  for (const { position, problem_id } of positions) {
+    const p = problemsMap.get(problem_id);
+    if (!p) continue;
+    const a = attemptMap.get(problem_id);
+    results.push({
+      problemId: p.id,
+      position,
+      stars: p.stars as 1 | 2 | 3,
+      pointsMax: p.points,
+      titleEs: p.title_es,
+      titleEn: p.title_en,
+      bodyEs: p.body_es,
+      bodyEn: p.body_en,
+      explanationEs: p.explanation_es,
+      explanationEn: p.explanation_en,
+      hasDiagram: p.has_diagram,
+      diagramSvgUrl: p.diagram_svg_url,
+      diagramCaptionEs: p.diagram_caption_es,
+      diagramCaptionEn: p.diagram_caption_en,
+      expectedAnswer: p.expected_answer,
+      answerSubmitted: a?.answer_submitted ?? null,
+      isCorrect: a?.is_correct ?? null,
+      pointsEarned: a?.points_earned ?? 0,
+    });
+  }
 
   // Labels traducidos para ProblemResultRow (server component requiere prop drilling)
   const rowLabels = {

@@ -1,5 +1,4 @@
-import type { Database } from '@numoria/database/types';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { ServerClient } from '@numoria/database/server';
 
 export interface LeaderboardEntry {
   rank: number;
@@ -46,7 +45,7 @@ export interface LeaderboardData {
  * @returns LeaderboardData con entries rankeados + summary stats + lista de teams.
  */
 export async function getLeaderboardData(
-  supabase: SupabaseClient<Database>,
+  supabase: ServerClient,
   opts: {
     contestId: string;
     teacherId: string;

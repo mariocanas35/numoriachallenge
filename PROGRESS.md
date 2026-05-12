@@ -7,9 +7,51 @@
 
 ## 📌 Estado actual
 
-**Fase:** Fase 2 cerrada ✅ — Fase 3 pendiente de arranque
+**Fase:** Fase 3 cerrada ✅ — Fase 4 pendiente de arranque
 **Última actualización:** 2026-05-11
-**Próximo hito:** Push a GitHub (28 commits acumulados) + Fase 3 Chunk 3.1 (banco de problemas)
+**Próximo hito:** Fase 4 Chunk 4.1 — MOEMS sessions (teacher activa contest + grant retry)
+
+---
+
+## 🏁 Fase 3 — Cerrada (2026-05-11)
+
+**Resumen**: Contest system end-to-end completo — take page con KaTeX + timer, scoring server-side, results page con explicaciones, teacher leaderboard + CSV export, brand alignment con Manual v1.0.
+
+**Chunks cerrados (6/6)**:
+- ✅ 3.1 Schema unificado contests/problems + 2 contests seed + 14 problemas
+- ✅ 3.2 Página /contests + ContestCard + StudentDashboard preview
+- ✅ 3.3 Brand alignment v1.0 + take page con timer/KaTeX/autosave/submit
+- ✅ 3.4 Results page con KaTeX explanations + per-problem detail + spoiler-on-submit
+- ✅ 3.5 Teacher leaderboard + filter por team + CSV export (BOM UTF-8 + CRLF)
+- ✅ 3.6 Vitest unit tests (59/59 passing) + production build OK + close
+
+**Commits notables** (16 commits Phase 3, todos pusheados a GitHub):
+- `aabd242` 3.1 schema + seed
+- `fab12d0` 3.2 contests list page
+- `2b74087` 3.3a brand alignment v1.0
+- `8022e34` 3.3b take page
+- `d23bea4` 3.4 results with KaTeX
+- `a19b171` 3.5 leaderboard + CSV
+- `ae413cc` teacher view of /contests list
+- `272e1bf` leaderboard shows name + grade
+- `010bf0f` gradeFormat uses t.raw()
+- `79af820` SVG diagram pipeline (P3 geometry)
+- `5c40606` fix P3 answer_type with_units → integer
+- `fd8208b` fix Numa overlap on results
+- `eac14ae` fix MathContent regex (currency vs LaTeX)
+
+**Tests**: 59/59 unit tests pasan (csv 9, scoring 38, state 12). Production build OK con `typescript.ignoreBuildErrors=true` (typecheck separado via `pnpm typecheck`).
+
+**Founder feedbacks capturados** (Phase 4):
+- MOEMS model pivot — teacher activa contest + grant retry (memory `moems-model-pivot.md`)
+- Two delivery modes — online + paper-entry (memory `business-model-decisions.md`)
+- Subscription 20 students/team default + seat scaling (Phase 5b)
+
+**E2E validados con browser real**:
+- Student toma contest, autosave, submit → 14/14 perfect
+- Teacher abre /contests list → ve cards con stats + "Ver leaderboard"
+- Teacher abre leaderboard → tabla con student name + grade, medal 🥇, status pills
+- CSV download — Excel-friendly con tildes correctas
 
 ---
 
