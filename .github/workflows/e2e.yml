@@ -1,10 +1,16 @@
 name: E2E
 
+# Phase 4 status (2026-05-12): workflow disabled hasta que tengamos:
+#   1. GitHub Secrets configurados para SUPABASE_URL + SUPABASE_ANON_KEY
+#   2. Tests E2E reales escritos (no solo smoke tests)
+#   3. webServer.command cambiado a `pnpm start` (sirve el build estático)
+#      en lugar de `pnpm dev` (que necesita full Supabase setup en runtime)
+#
+# Por ahora solo se dispara manualmente desde Actions tab → Run workflow.
+# Esto evita spam de emails en cada push mientras el setup queda pendiente.
+#
+# TODO Phase 5+: re-habilitar push trigger cuando tengamos los 3 items arriba.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 # Solo correr una E2E suite a la vez por branch

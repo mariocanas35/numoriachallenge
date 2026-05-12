@@ -132,7 +132,16 @@ jobs:
           key: turbo-${{ runner.os }}-${{ github.sha }}
           restore-keys: |
             turbo-${{ runner.os }}-
-      - run: pnpm build
+      # Placeholder env vars para que `next build` no falle si algún Server
+      # Component intenta inicializar el cliente Supabase durante static
+      # generation. Son URLs válidas pero apuntan a un proyecto inexistente —
+      # safe porque CI no hace requests reales, solo verifica que el bundle
+      # compila. Para validation real con backend, usar GitHub Secrets.
+      - name: Build (con placeholder Supabase env)
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder-ci.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
       - name: Check Next.js bundle budget
         run: |
           echo "Build complete. Verify First Load JS in build output."
