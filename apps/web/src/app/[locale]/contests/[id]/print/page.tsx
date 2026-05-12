@@ -118,16 +118,31 @@ export default async function ContestPrintPage({
     ).map((p) => [p.id, p]),
   );
 
-  const problems = positions
-    .map(({ position, problem_id }) => {
-      const p = problemsMap.get(problem_id);
-      if (!p) return null;
-      return {
-        position,
-        ...p,
-      };
-    })
-    .filter(<T,>(x: T | null): x is T => x !== null);
+  // For-loop explícito en vez de .map().filter(generic predicate) — el filter
+  // con type predicate genérico tiene parse ambiguo en TSX en algunas versiones.
+  type ProblemForPrint = {
+    position: number;
+    id: string;
+    stars: number;
+    title_es: string;
+    title_en: string;
+    body_es: string;
+    body_en: string;
+    expected_answer: string;
+    explanation_es: string;
+    explanation_en: string;
+    has_diagram: boolean;
+    diagram_svg_url: string | null;
+    diagram_caption_es: string | null;
+    diagram_caption_en: string | null;
+    answer_type: Problem['answer_type'];
+  };
+  const problems: ProblemForPrint[] = [];
+  for (const { position, problem_id } of positions) {
+    const p = problemsMap.get(problem_id);
+    if (!p) continue;
+    problems.push({ position, ...p });
+  }
 
   const title = locale === 'es' ? contest.title_es : contest.title_en;
   const divisionLabel = contest.division === 'elementary' ? t('divisionE') : t('divisionM');
