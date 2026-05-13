@@ -288,7 +288,11 @@
       "active": "🟢 Active now",
       "upcoming": "🔵 Upcoming",
       "past": "⚫ Past",
-      "empty": "No contests in this section yet."
+      "empty": "No contests in this section yet.",
+      "practices": "Practices",
+      "practicesSubtitle": "Tests always available to train before official contests.",
+      "officials": "Official contests",
+      "officialsSubtitle": "Official competitions with fixed calendar and national ranking."
     },
     "card": {
       "contestNumber": "Contest #{number}",

@@ -78,7 +78,7 @@ export default async function ContestsListPage({
   const { data: contestsRows } = await supabase
     .from('contests')
     .select(
-      'id, slug, contest_number, season_year, division, title_es, title_en, scheduled_at, duration_minutes, calendar_window_days, calculator_allowed, status',
+      'id, slug, contest_number, season_year, division, title_es, title_en, scheduled_at, duration_minutes, calendar_window_days, calculator_allowed, status, contest_type',
     )
     .neq('status', 'draft')
     .order('scheduled_at', { ascending: false });
@@ -97,7 +97,7 @@ export default async function ContestsListPage({
       | 'duration_minutes'
       | 'calculator_allowed'
       | 'status'
-    > & { calendar_window_days: number }
+    > & { calendar_window_days: number; contest_type: 'practice' | 'official' }
   >;
 
   if (contests.length === 0) {
@@ -209,10 +209,22 @@ export default async function ContestsListPage({
     });
   });
 
-  // Agrupar por sección
-  const active = cards.filter((c) => c.state === 'active' || c.state === 'in-progress');
-  const upcoming = cards.filter((c) => c.state === 'upcoming');
-  const past = cards.filter((c) => c.state === 'expired' || c.state === 'completed');
+  // Separar practices vs officials (Phase 4.5a)
+  // El cards array tiene contestType derivado del contest.contest_type
+  // Practices: siempre disponibles, no se agrupan por calendar state
+  // Officials: agrupados por activos/próximos/pasados según calendar
+  const practices = cards.filter((c) => {
+    const contest = contests.find((ct) => ct.id === c.id);
+    return contest?.contest_type === 'practice';
+  });
+  const officials = cards.filter((c) => {
+    const contest = contests.find((ct) => ct.id === c.id);
+    return contest?.contest_type === 'official';
+  });
+
+  const officialActive = officials.filter((c) => c.state === 'active' || c.state === 'in-progress');
+  const officialUpcoming = officials.filter((c) => c.state === 'upcoming');
+  const officialPast = officials.filter((c) => c.state === 'expired' || c.state === 'completed');
 
   return (
     <div className="flex flex-col gap-8">
@@ -223,9 +235,45 @@ export default async function ContestsListPage({
         <p className="mt-2 text-sm text-numoria-mid">{t('listSubtitle')}</p>
       </header>
 
-      <ContestSection title={t('sections.active')} cards={active} empty={t('sections.empty')} />
-      <ContestSection title={t('sections.upcoming')} cards={upcoming} empty={t('sections.empty')} />
-      <ContestSection title={t('sections.past')} cards={past} empty={t('sections.empty')} />
+      {/* Phase 4.5a — Sección PRÁCTICAS arriba (siempre disponibles, no expiran) */}
+      {practices.length > 0 && (
+        <section>
+          <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
+            📚 {t('sections.practices')}
+          </h2>
+          <p className="mb-3 text-sm text-numoria-mid">{t('sections.practicesSubtitle')}</p>
+          <div className="flex flex-col gap-3">
+            {practices.map((card) => (
+              <ContestCard key={card.id} data={card} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* CONTESTS OFICIALES — agrupados por calendar state */}
+      <section>
+        <h2 className="mb-3 font-display text-xl font-bold text-numoria-ink">
+          🏆 {t('sections.officials')}
+        </h2>
+        <p className="mb-4 text-sm text-numoria-mid">{t('sections.officialsSubtitle')}</p>
+        <div className="flex flex-col gap-6">
+          <ContestSection
+            title={t('sections.active')}
+            cards={officialActive}
+            empty={t('sections.empty')}
+          />
+          <ContestSection
+            title={t('sections.upcoming')}
+            cards={officialUpcoming}
+            empty={t('sections.empty')}
+          />
+          <ContestSection
+            title={t('sections.past')}
+            cards={officialPast}
+            empty={t('sections.empty')}
+          />
+        </div>
+      </section>
     </div>
   );
 }
