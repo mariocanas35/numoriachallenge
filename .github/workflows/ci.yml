@@ -1,10 +1,21 @@
 name: CI
 
+# Phase 4 status (2026-05-12): workflow disabled hasta Phase 5+ por dos razones:
+#   1. El founder está recibiendo spam masivo de failure emails (Gmail al 100%
+#      de cuota). CI corre en cada push y la mayoría falla por:
+#      - Falta de Supabase Secrets reales en GitHub Settings
+#      - typecheck no termina por OOM en runners gratuitos
+#      - tests pueden necesitar config adicional
+#   2. La validación local con pnpm typecheck + pnpm test + biome lint cubre
+#      lo crítico mientras el founder es el único developer.
+#
+# Re-habilitar en Phase 5+ cuando:
+#   - Configuremos Supabase Secrets en repo settings
+#   - Ajustemos memory limits para typecheck
+#   - Tengamos contribuidores externos que requieran CI guard
+#
+# Por ahora: solo manual desde Actions tab → Run workflow.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 # Cancelar runs anteriores del mismo branch al hacer push nuevo
