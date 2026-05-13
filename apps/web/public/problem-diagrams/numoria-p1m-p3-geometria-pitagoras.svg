@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 280" role="img" aria-labelledby="t3 d3">
+  <title id="t3">Triángulo rectángulo con catetos 5 cm y 12 cm</title>
+  <desc id="d3">Triángulo rectángulo con catetos de 5 cm y 12 cm, e hipotenusa h desconocida.</desc>
+  <!-- Triángulo rectángulo (cateto vertical = 5, horizontal = 12, escala visual aprox) -->
+  <polygon points="100,210 100,80 380,210" fill="#FFF7ED" stroke="#F97316" stroke-width="3" stroke-linejoin="round"/>
+  <!-- Hatching del área -->
+  <defs>
+    <pattern id="h3" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#F97316" stroke-width="0.6" stroke-opacity="0.35"/>
+    </pattern>
+  </defs>
+  <polygon points="100,210 100,80 380,210" fill="url(#h3)" pointer-events="none"/>
+  <!-- Ángulo recto en el vértice inferior izquierdo -->
+  <polyline points="100,200 110,200 110,210" fill="none" stroke="#1E1B4B" stroke-width="1.5"/>
+  <!-- Etiqueta cateto vertical "5 cm" -->
+  <text x="85" y="148" text-anchor="end" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1F2937">5 cm</text>
+  <!-- Etiqueta cateto horizontal "12 cm" -->
+  <text x="240" y="232" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1F2937">12 cm</text>
+  <!-- Etiqueta hipotenusa con variable "h" -->
+  <text x="260" y="138" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-style="italic" font-weight="700" fill="#1E1B4B">h = ?</text>
+</svg>

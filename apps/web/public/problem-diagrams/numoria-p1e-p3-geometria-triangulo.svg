@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 280" role="img" aria-labelledby="t1 d1">
+  <title id="t1">Triángulo con base 10 cm y altura 6 cm</title>
+  <desc id="d1">Triángulo con base horizontal de 10 cm y altura vertical de 6 cm. No dibujado a escala.</desc>
+  <!-- Triángulo principal -->
+  <polygon points="80,210 380,210 230,70" fill="#FFF7ED" stroke="#F97316" stroke-width="3" stroke-linejoin="round"/>
+  <!-- Altura en línea auxiliar -->
+  <line x1="230" y1="70" x2="230" y2="210" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <!-- Ángulo recto en la altura -->
+  <polyline points="230,200 240,200 240,210" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+  <!-- Hatching del área -->
+  <defs>
+    <pattern id="h1" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#F97316" stroke-width="0.6" stroke-opacity="0.35"/>
+    </pattern>
+  </defs>
+  <polygon points="80,210 380,210 230,70" fill="url(#h1)" pointer-events="none"/>
+  <!-- Dimensión base 10 cm -->
+  <g stroke="#1F2937" stroke-width="1" fill="none">
+    <line x1="80" y1="240" x2="380" y2="240"/>
+    <line x1="80" y1="234" x2="80" y2="246"/>
+    <line x1="380" y1="234" x2="380" y2="246"/>
+  </g>
+  <text x="230" y="262" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1F2937">10 cm</text>
+  <!-- Etiqueta altura 6 cm -->
+  <text x="245" y="140" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1E1B4B">6 cm</text>
+  <!-- Etiquetas vértices -->
+  <text x="70" y="225" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" fill="#1E1B4B">A</text>
+  <text x="390" y="225" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" fill="#1E1B4B">B</text>
+  <text x="230" y="60" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="700" fill="#1E1B4B">C</text>
+</svg>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 280" role="img" aria-labelledby="t2 d2">
+  <title id="t2">Patrón de figuras con cuadrados perfectos</title>
+  <desc id="d2">Cuatro figuras de cuadritos: Figura 1 con 1 cuadrito, Figura 2 con 4, Figura 3 con 9, Figura 4 con 16.</desc>
+  <defs>
+    <pattern id="hp" patternUnits="userSpaceOnUse" width="14" height="14">
+      <rect width="13" height="13" fill="#14B8A6" fill-opacity="0.18" stroke="#1E1B4B" stroke-width="0.8"/>
+    </pattern>
+  </defs>
+
+  <!-- Figura 1: 1x1 -->
+  <g transform="translate(40, 100)">
+    <rect width="28" height="28" fill="url(#hp)"/>
+    <text x="14" y="58" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1E1B4B">Figura 1</text>
+    <text x="14" y="74" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#1F2937">1 cuadrito</text>
+  </g>
+
+  <!-- Figura 2: 2x2 -->
+  <g transform="translate(120, 86)">
+    <rect width="56" height="56" fill="url(#hp)"/>
+    <text x="28" y="86" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1E1B4B">Figura 2</text>
+    <text x="28" y="102" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#1F2937">4 cuadritos</text>
+  </g>
+
+  <!-- Figura 3: 3x3 -->
+  <g transform="translate(228, 72)">
+    <rect width="84" height="84" fill="url(#hp)"/>
+    <text x="42" y="114" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1E1B4B">Figura 3</text>
+    <text x="42" y="130" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#1F2937">9 cuadritos</text>
+  </g>
+
+  <!-- Figura 4: 4x4 -->
+  <g transform="translate(364, 58)">
+    <rect width="112" height="112" fill="url(#hp)"/>
+    <text x="56" y="142" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1E1B4B">Figura 4</text>
+    <text x="56" y="158" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#1F2937">16 cuadritos</text>
+  </g>
+
+  <!-- Flecha indicando "patrón" -->
+  <text x="270" y="220" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-style="italic" fill="#94A3B8">¿Figura 7?</text>
+</svg>

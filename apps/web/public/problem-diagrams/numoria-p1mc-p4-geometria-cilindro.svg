@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320" role="img" aria-labelledby="tc dc">
+  <title id="tc">Cilindro con radio 5 cm y altura 10 cm</title>
+  <desc id="dc">Cilindro vertical con base circular de radio 5 cm y altura 10 cm. No dibujado a escala.</desc>
+  <!-- Cuerpo del cilindro -->
+  <!-- Base superior (elipse) -->
+  <ellipse cx="180" cy="60" rx="80" ry="20" fill="#FFF7ED" stroke="#F97316" stroke-width="3"/>
+  <!-- Cuerpo lateral -->
+  <path d="M 100 60 L 100 240 A 80 20 0 0 0 260 240 L 260 60" fill="#14B8A6" fill-opacity="0.12" stroke="#F97316" stroke-width="3"/>
+  <!-- Base inferior (elipse media oculta — solo borde frontal visible) -->
+  <path d="M 100 240 A 80 20 0 0 0 260 240" fill="none" stroke="#F97316" stroke-width="3"/>
+  <path d="M 100 240 A 80 20 0 0 1 260 240" fill="none" stroke="#F97316" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <!-- Diámetro superior (radio 5 cm — línea horizontal en elipse superior) -->
+  <line x1="180" y1="60" x2="260" y2="60" stroke="#1E1B4B" stroke-width="1.5"/>
+  <circle cx="180" cy="60" r="3" fill="#1E1B4B"/>
+  <text x="220" y="50" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1E1B4B">r = 5 cm</text>
+  <!-- Altura 10 cm (línea vertical fuera del cilindro, a la izquierda) -->
+  <g stroke="#1F2937" stroke-width="1" fill="none">
+    <line x1="70" y1="60" x2="70" y2="240"/>
+    <line x1="64" y1="60" x2="76" y2="60"/>
+    <line x1="64" y1="240" x2="76" y2="240"/>
+  </g>
+  <text x="50" y="155" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1F2937">h = 10 cm</text>
+  <!-- Etiqueta volumen pregunta -->
+  <text x="180" y="290" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-style="italic" fill="#94A3B8">Volumen = ?</text>
+</svg>

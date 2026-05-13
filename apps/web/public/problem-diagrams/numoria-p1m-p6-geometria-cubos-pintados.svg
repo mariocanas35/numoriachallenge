@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320" role="img" aria-labelledby="t6 d6">
+  <title id="t6">Cubo 3x3x3 con superficie pintada de rojo</title>
+  <desc id="d6">Cubo grande compuesto por 27 cubitos pequeños. La superficie del cubo grande está pintada de rojo. No dibujado a escala.</desc>
+  <!-- Cubo isométrico 3x3x3 simplificado: 3 caras visibles (frente, lateral derecha, superior) -->
+
+  <!-- Cara frontal (cuadrícula 3x3) -->
+  <g stroke="#F97316" stroke-width="2" fill="#FFF7ED">
+    <rect x="60" y="120" width="180" height="180"/>
+    <line x1="120" y1="120" x2="120" y2="300"/>
+    <line x1="180" y1="120" x2="180" y2="300"/>
+    <line x1="60" y1="180" x2="240" y2="180"/>
+    <line x1="60" y1="240" x2="240" y2="240"/>
+  </g>
+
+  <!-- Cara lateral derecha (con perspectiva isométrica) -->
+  <polygon points="240,120 320,80 320,260 240,300" fill="#FFF7ED" stroke="#F97316" stroke-width="2"/>
+  <g stroke="#F97316" stroke-width="1.5" fill="none">
+    <line x1="240" y1="180" x2="320" y2="140"/>
+    <line x1="240" y1="240" x2="320" y2="200"/>
+    <polyline points="266,107 266,287"/>
+    <polyline points="293,93 293,273"/>
+  </g>
+
+  <!-- Cara superior (con perspectiva isométrica) -->
+  <polygon points="60,120 140,80 320,80 240,120" fill="#FFF7ED" stroke="#F97316" stroke-width="2"/>
+  <g stroke="#F97316" stroke-width="1.5" fill="none">
+    <line x1="120" y1="120" x2="200" y2="80"/>
+    <line x1="180" y1="120" x2="260" y2="80"/>
+    <polyline points="86,107 266,107"/>
+    <polyline points="113,93 293,93"/>
+  </g>
+
+  <!-- Sombreado rojo translúcido sobre las 3 caras visibles para indicar "pintado" -->
+  <defs>
+    <pattern id="red" patternUnits="userSpaceOnUse" width="5" height="5">
+      <line x1="0" y1="0" x2="5" y2="5" stroke="#FB7185" stroke-width="0.6" stroke-opacity="0.5"/>
+    </pattern>
+  </defs>
+  <rect x="60" y="120" width="180" height="180" fill="url(#red)" pointer-events="none"/>
+  <polygon points="240,120 320,80 320,260 240,300" fill="url(#red)" pointer-events="none"/>
+  <polygon points="60,120 140,80 320,80 240,120" fill="url(#red)" pointer-events="none"/>
+
+  <!-- Etiqueta "3 × 3 × 3 = 27 cubitos" -->
+  <text x="180" y="40" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" fill="#1E1B4B">3 × 3 × 3 = 27 cubitos</text>
+  <text x="180" y="58" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#FB7185" font-style="italic">superficie pintada de rojo</text>
+</svg>

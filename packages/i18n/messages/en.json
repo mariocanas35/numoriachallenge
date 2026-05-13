@@ -462,6 +462,8 @@
     "print": {
       "printButton": "Print",
       "backToContests": "Back to contests",
+      "printTipTitle": "Tip:",
+      "printTipBody": "For a clean PDF without strange URL or page numbers, uncheck \"Headers and footers\" in the browser print dialog before saving.",
       "showAnswers": "🔑 Show answers",
       "hideAnswers": "👁️ Hide answers",
       "answerKey": "Answer key",

@@ -149,6 +149,11 @@ export default async function ContestPrintPage({
 
   return (
     <div className="print-contest">
+      {/* Tip box para deshabilitar headers/footers del browser — solo en preview */}
+      <div className="mb-4 rounded-md border-2 border-numoria-orange/30 bg-numoria-orange/5 p-3 text-xs text-numoria-mid print:hidden">
+        💡 <strong className="text-numoria-orange">{t('printTipTitle')}</strong> {t('printTipBody')}
+      </div>
+
       {/* Controls bar — oculto al imprimir */}
       <div className="mb-6 flex items-center justify-between gap-3 print:hidden">
         <Link href="/contests" className="text-sm font-bold text-numoria-orange hover:underline">

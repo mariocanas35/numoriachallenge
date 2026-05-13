@@ -462,6 +462,8 @@
     "print": {
       "printButton": "Imprimir",
       "backToContests": "Volver a contests",
+      "printTipTitle": "Tip:",
+      "printTipBody": "Para un PDF limpio sin URL ni números de página raros, en el cuadro de impresión del navegador desmarca \"Encabezados y pies\" (\"Headers and footers\") antes de guardar.",
       "showAnswers": "🔑 Ver respuestas",
       "hideAnswers": "👁️ Ocultar respuestas",
       "answerKey": "Hoja de respuestas",
