@@ -111,6 +111,23 @@ export async function StudentDashboard({
         <JoinTeamCard />
       )}
 
+      {/* PRÁCTICAS — CTA destacado para que students entrenen */}
+      <Link
+        href="/contests"
+        className="group flex items-center gap-4 rounded-xl border-2 border-numoria-teal/40 bg-numoria-teal/5 p-5 transition hover:border-numoria-teal hover:bg-numoria-teal/10"
+      >
+        <span className="text-4xl">📚</span>
+        <div className="flex-1">
+          <p className="font-display text-lg font-bold text-numoria-ink">
+            {tStudent('practicesTitle')}
+          </p>
+          <p className="mt-0.5 text-sm text-numoria-mid">{tStudent('practicesDesc')}</p>
+        </div>
+        <span className="text-2xl text-numoria-teal opacity-50 transition group-hover:opacity-100">
+          →
+        </span>
+      </Link>
+
       {/* Stats */}
       <section>
         <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">

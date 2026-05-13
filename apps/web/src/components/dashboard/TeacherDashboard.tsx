@@ -281,7 +281,24 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
         <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
           🚀 {tTeacher('quickActionsTitle')}
         </h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {/* PRÁCTICAS — destacado primero para que teachers las descubran fácilmente */}
+          <Link
+            href="/contests"
+            className="group flex items-start gap-3 rounded-xl border-2 border-numoria-teal/40 bg-numoria-teal/5 p-4 transition hover:border-numoria-teal hover:bg-numoria-teal/10"
+          >
+            <span className="text-2xl">📚</span>
+            <div className="flex-1">
+              <p className="font-display text-base font-bold text-numoria-ink">
+                {tTeacher('actionPractices')}
+              </p>
+              <p className="mt-0.5 text-xs text-numoria-mid">{tTeacher('actionPracticesDesc')}</p>
+            </div>
+            <span className="text-numoria-teal opacity-0 transition group-hover:opacity-100">
+              →
+            </span>
+          </Link>
+
           <Link
             href="/contests"
             className="group flex items-start gap-3 rounded-xl border-2 border-numoria-orange/30 bg-numoria-orange/5 p-4 transition hover:border-numoria-orange hover:bg-numoria-orange/10"

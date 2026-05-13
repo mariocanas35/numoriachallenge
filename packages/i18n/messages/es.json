@@ -236,7 +236,9 @@
       "xpTotal": "{xp} XP",
       "streak": "{days, plural, =0 {Sin racha} =1 {1 día seguido} other {# días seguidos}}",
       "nextSection": "Próximamente",
-      "comingSoon": "Competencias y problemas llegan en la próxima fase 🚀"
+      "comingSoon": "Competencias y problemas llegan en la próxima fase 🚀",
+      "practicesTitle": "Prácticas",
+      "practicesDesc": "5 tests disponibles ahora para que practiques antes de los contests oficiales"
     },
     "parent": {
       "childrenTitle": "Tus hijos",
@@ -278,6 +280,8 @@
       "actionResultsDesc": "Leaderboards de tus equipos",
       "actionPaperEntry": "Entrada manual",
       "actionPaperEntryDesc": "Transcribe respuestas de papel a la plataforma",
+      "actionPractices": "Prácticas",
+      "actionPracticesDesc": "5 tests siempre disponibles para que tus estudiantes entrenen antes de los contests oficiales",
       "moreTeams": "más"
     }
   },
