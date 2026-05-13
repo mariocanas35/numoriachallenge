@@ -177,6 +177,7 @@ export type Database = {
           calculator_allowed: boolean
           calendar_window_days: number
           contest_number: number
+          contest_type: Database["public"]["Enums"]["contest_type"]
           created_at: string
           division: Database["public"]["Enums"]["school_division"]
           duration_minutes: number
@@ -195,6 +196,7 @@ export type Database = {
           calculator_allowed?: boolean
           calendar_window_days?: number
           contest_number: number
+          contest_type?: Database["public"]["Enums"]["contest_type"]
           created_at?: string
           division: Database["public"]["Enums"]["school_division"]
           duration_minutes?: number
@@ -213,6 +215,7 @@ export type Database = {
           calculator_allowed?: boolean
           calendar_window_days?: number
           contest_number?: number
+          contest_type?: Database["public"]["Enums"]["contest_type"]
           created_at?: string
           division?: Database["public"]["Enums"]["school_division"]
           duration_minutes?: number
@@ -711,6 +714,7 @@ export type Database = {
         | "with_units"
         | "multiple_choice"
       contest_status: "draft" | "scheduled" | "active" | "closed"
+      contest_type: "practice" | "official"
       problem_category:
         | "algebra"
         | "number_theory"
