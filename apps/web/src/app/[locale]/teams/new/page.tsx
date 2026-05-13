@@ -44,5 +44,9 @@ export default async function NewTeamPage({
     redirect(`/${locale}/onboarding/teacher`);
   }
 
-  return <CreateTeamForm />;
+  return (
+    <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-8 shadow-card sm:p-10">
+      <CreateTeamForm />
+    </div>
+  );
 }

@@ -41,6 +41,7 @@
     "registerTitle": "Empieza gratis",
     "registerSubtitle": "Sin tarjeta de crédito. Las primeras 3 competencias están en la casa.",
     "logout": "Cerrar sesión",
+    "home": "Inicio",
     "email": "Correo electrónico",
     "emailPlaceholder": "tu@correo.com",
     "password": "Contraseña",
@@ -275,6 +276,8 @@
       "actionNewTeamDesc": "Nuevo equipo con código de invitación",
       "actionResults": "Resultados",
       "actionResultsDesc": "Leaderboards de tus equipos",
+      "actionPaperEntry": "Entrada manual",
+      "actionPaperEntryDesc": "Transcribe respuestas de papel a la plataforma",
       "moreTeams": "más"
     }
   },
@@ -480,6 +483,19 @@
     }
   },
   "teams": {
+    "list": {
+      "title": "Tus equipos",
+      "subtitle": "Gestiona tus equipos, invita estudiantes y comparte códigos.",
+      "createNewTeam": "Crear nuevo equipo",
+      "createFirstTeam": "Crear mi primer equipo",
+      "emptyTitle": "Aún no tienes equipos",
+      "emptyBody": "Crea un equipo para empezar. Cada equipo tendrá un código único de invitación que tus estudiantes usan para unirse.",
+      "inviteCode": "Código de invitación",
+      "divisionE": "Primaria",
+      "divisionM": "Secundaria",
+      "viewDetails": "Ver detalles",
+      "backToHome": "Volver al inicio"
+    },
     "new": {
       "title": "Crea tu primer equipo",
       "subtitle": "Tus estudiantes se unirán a este equipo con un código de invitación. Puedes crear más equipos después.",

@@ -41,6 +41,7 @@
     "registerTitle": "Start free",
     "registerSubtitle": "No credit card required. The first 3 competitions are on us.",
     "logout": "Log out",
+    "home": "Home",
     "email": "Email",
     "emailPlaceholder": "you@email.com",
     "password": "Password",
@@ -275,6 +276,8 @@
       "actionNewTeamDesc": "New team with invite code",
       "actionResults": "Results",
       "actionResultsDesc": "Leaderboards of your teams",
+      "actionPaperEntry": "Manual entry",
+      "actionPaperEntryDesc": "Transcribe paper answers into the platform",
       "moreTeams": "more"
     }
   },
@@ -480,6 +483,19 @@
     }
   },
   "teams": {
+    "list": {
+      "title": "Your teams",
+      "subtitle": "Manage your teams, invite students, and share codes.",
+      "createNewTeam": "Create new team",
+      "createFirstTeam": "Create my first team",
+      "emptyTitle": "You don't have teams yet",
+      "emptyBody": "Create a team to get started. Each team gets a unique invite code that your students use to join.",
+      "inviteCode": "Invite code",
+      "divisionE": "Elementary",
+      "divisionM": "Middle School",
+      "viewDetails": "View details",
+      "backToHome": "Back to home"
+    },
     "new": {
       "title": "Create your first team",
       "subtitle": "Your students will join with an invite code. You can create more teams later.",

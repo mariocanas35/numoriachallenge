@@ -15,7 +15,13 @@ export default async function ContestsLayout({ children }: { children: React.Rea
         <Link href="/" className="text-xl transition hover:opacity-80">
           <NumoriaLogo variant="horizontal" />
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-sm font-bold text-numoria-mid transition hover:text-numoria-orange"
+          >
+            🏠 <span className="hidden sm:inline">{t('home')}</span>
+          </Link>
           <LocaleSwitcher />
           <a
             href="/auth/logout"
