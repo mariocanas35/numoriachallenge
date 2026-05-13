@@ -46,7 +46,7 @@ export async function openContestSession(
   // Validar contest
   const { data: contestRow } = await supabase
     .from('contests')
-    .select('id, status, scheduled_at, duration_minutes')
+    .select('id, status, scheduled_at, duration_minutes, calendar_window_days')
     .eq('id', input.contestId)
     .single();
   if (!contestRow) return { ok: false, message: 'Contest no encontrado' };
@@ -56,6 +56,7 @@ export async function openContestSession(
     status: 'draft' | 'scheduled' | 'active' | 'closed';
     scheduled_at: string;
     duration_minutes: number;
+    calendar_window_days?: number;
   };
 
   if (contest.status === 'draft' || contest.status === 'closed') {
@@ -95,9 +96,12 @@ export async function openContestSession(
   const now = new Date();
   const closesAt = new Date(now.getTime() + durationMin * 60_000);
 
-  // Outer bound: closes_at no puede pasar contest_window
+  // Outer bound: closes_at no puede pasar el calendar window oficial.
+  // Phase 4.4: usa calendar_window_days (default 30 días) en lugar de
+  // duration_minutes (que ahora es solo la session duration).
   const contestStart = new Date(contest.scheduled_at);
-  const contestEnd = new Date(contestStart.getTime() + contest.duration_minutes * 60_000);
+  const calendarDays = contest.calendar_window_days ?? 30;
+  const contestEnd = new Date(contestStart.getTime() + calendarDays * 24 * 60 * 60 * 1000);
   // Política: permitimos que session arranque después del contest scheduled_at
   // (teacher tiene libertad de programar dentro del calendar window).
   // closes_at debe caer dentro del calendar window oficial.

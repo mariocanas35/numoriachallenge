@@ -18,6 +18,12 @@ type ContestAttempt = Tables<'contest_attempts'>;
 export function deriveContestState(args: {
   status: Contest['status'];
   scheduledAt: string;
+  /** Calendar window en días — cuánto dura el periodo oficial del contest
+   *  (Phase 4.4: default 30 días para modelo MOEMS). Backward compat: si
+   *  undefined, usa durationMinutes como fallback (legacy Phase 3 behavior). */
+  calendarWindowDays?: number;
+  /** Session duration en minutos (default 35) — usado para fallback legacy
+   *  cuando calendarWindowDays no está disponible. */
   durationMinutes: number;
   attempt: Pick<ContestAttempt, 'submitted_at' | 'total_score' | 'max_possible_score'> | null;
   now: Date;
@@ -26,9 +32,12 @@ export function deriveContestState(args: {
   yourScore?: number;
   yourMaxScore?: number;
 } {
-  const { status, scheduledAt, durationMinutes, attempt, now } = args;
+  const { status, scheduledAt, calendarWindowDays, durationMinutes, attempt, now } = args;
   const scheduledDate = new Date(scheduledAt);
-  const endDate = new Date(scheduledDate.getTime() + durationMinutes * 60_000);
+  // Window end: prefiere calendar_window_days (Phase 4.4), fallback a duration_minutes (legacy)
+  const endDate = calendarWindowDays
+    ? new Date(scheduledDate.getTime() + calendarWindowDays * 24 * 60 * 60 * 1000)
+    : new Date(scheduledDate.getTime() + durationMinutes * 60_000);
 
   // Attempt submitted → completed (overrides cualquier otro state)
   if (attempt?.submitted_at) {
@@ -91,7 +100,10 @@ export function toContestCardData(args: {
     | 'duration_minutes'
     | 'calculator_allowed'
     | 'status'
-  >;
+  > & {
+    /** Phase 4.4 — opcional para backward compat con queries que no lo seleccionan */
+    calendar_window_days?: number;
+  };
   numProblems: number;
   attempt: Pick<ContestAttempt, 'submitted_at' | 'total_score' | 'max_possible_score'> | null;
   studentDivision: 'elementary' | 'middle';
@@ -130,6 +142,7 @@ export function toContestCardData(args: {
   const { state, yourScore, yourMaxScore } = deriveContestState({
     status: contest.status,
     scheduledAt: contest.scheduled_at,
+    calendarWindowDays: contest.calendar_window_days,
     durationMinutes: contest.duration_minutes,
     attempt,
     now,

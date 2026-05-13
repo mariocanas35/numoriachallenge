@@ -1,3 +1,4 @@
+import { TeamShareButtons } from '@/components/teams/TeamShareButtons';
 import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
@@ -128,6 +129,18 @@ export default async function TeamsListPage({
                       {team.invite_code}
                     </p>
                   </div>
+
+                  {/* Share buttons — copy URL + WhatsApp */}
+                  <TeamShareButtons
+                    inviteCode={team.invite_code}
+                    teamName={team.name}
+                    labels={{
+                      copyUrl: t('share.copyUrl'),
+                      copied: t('share.copied'),
+                      shareWhatsApp: t('share.whatsApp'),
+                      inviteMessage: t.raw('share.message') as string,
+                    }}
+                  />
 
                   <span className="mt-auto text-sm font-bold text-numoria-orange opacity-0 transition group-hover:opacity-100">
                     {t('viewDetails')} →

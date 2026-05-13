@@ -78,7 +78,7 @@ export default async function ContestsListPage({
   const { data: contestsRows } = await supabase
     .from('contests')
     .select(
-      'id, slug, contest_number, season_year, division, title_es, title_en, scheduled_at, duration_minutes, calculator_allowed, status',
+      'id, slug, contest_number, season_year, division, title_es, title_en, scheduled_at, duration_minutes, calendar_window_days, calculator_allowed, status',
     )
     .neq('status', 'draft')
     .order('scheduled_at', { ascending: false });
@@ -97,7 +97,7 @@ export default async function ContestsListPage({
       | 'duration_minutes'
       | 'calculator_allowed'
       | 'status'
-    >
+    > & { calendar_window_days: number }
   >;
 
   if (contests.length === 0) {

@@ -43,7 +43,7 @@ export async function startContestAttempt(
   // Verificar que el contest existe y está activo
   const { data: contestRow, error: contestErr } = await supabase
     .from('contests')
-    .select('id, status, scheduled_at, duration_minutes')
+    .select('id, status, scheduled_at, duration_minutes, calendar_window_days')
     .eq('id', contestId)
     .single();
 
@@ -56,16 +56,18 @@ export async function startContestAttempt(
     status: 'draft' | 'scheduled' | 'active' | 'closed';
     scheduled_at: string;
     duration_minutes: number;
+    calendar_window_days?: number;
   };
 
   if (contest.status !== 'active') {
     return { ok: false, message: 'Contest is not active' };
   }
 
-  // Verificar que estamos dentro de la ventana
+  // Verificar que estamos dentro del calendar window oficial (Phase 4.4)
   const now = new Date();
   const scheduledDate = new Date(contest.scheduled_at);
-  const endDate = new Date(scheduledDate.getTime() + contest.duration_minutes * 60_000);
+  const calendarDays = contest.calendar_window_days ?? 30;
+  const endDate = new Date(scheduledDate.getTime() + calendarDays * 24 * 60 * 60 * 1000);
 
   if (now < scheduledDate) {
     return { ok: false, message: 'Contest has not started yet' };

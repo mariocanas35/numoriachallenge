@@ -110,7 +110,7 @@ export function CreateTeamForm() {
           name="max_members"
           min={1}
           max={100}
-          defaultValue={35}
+          defaultValue={30}
           className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base text-numoria-ink focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
         />
         <span className="text-xs text-numoria-mid">{t('maxMembersHelp')}</span>

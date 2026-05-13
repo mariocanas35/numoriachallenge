@@ -494,7 +494,13 @@
       "divisionE": "Primaria",
       "divisionM": "Secundaria",
       "viewDetails": "Ver detalles",
-      "backToHome": "Volver al inicio"
+      "backToHome": "Volver al inicio",
+      "share": {
+        "copyUrl": "Copiar enlace",
+        "copied": "¡Copiado!",
+        "whatsApp": "WhatsApp",
+        "message": "¡Únete a mi equipo \"{teamName}\" en Numoria Challenge! Click aquí para unirte: {url}"
+      }
     },
     "new": {
       "title": "Crea tu primer equipo",
@@ -506,7 +512,7 @@
       "divisionElementary": "Primaria",
       "divisionMiddle": "Secundaria",
       "maxMembers": "Capacidad máxima (opcional)",
-      "maxMembersHelp": "Default: 35. Hasta 100 estudiantes por equipo.",
+      "maxMembersHelp": "Default: 30. Hasta 100 estudiantes por equipo. Cobro adicional por cada estudiante sobre 30.",
       "submit": "Crear equipo",
       "saving": "Creando equipo...",
       "errors": {

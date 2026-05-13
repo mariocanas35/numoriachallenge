@@ -175,6 +175,7 @@ export type Database = {
       contests: {
         Row: {
           calculator_allowed: boolean
+          calendar_window_days: number
           contest_number: number
           created_at: string
           division: Database["public"]["Enums"]["school_division"]
@@ -192,6 +193,7 @@ export type Database = {
         }
         Insert: {
           calculator_allowed?: boolean
+          calendar_window_days?: number
           contest_number: number
           created_at?: string
           division: Database["public"]["Enums"]["school_division"]
@@ -209,6 +211,7 @@ export type Database = {
         }
         Update: {
           calculator_allowed?: boolean
+          calendar_window_days?: number
           contest_number?: number
           created_at?: string
           division?: Database["public"]["Enums"]["school_division"]
