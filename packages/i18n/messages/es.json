@@ -258,7 +258,24 @@
       "createAnotherTeam": "+ Crear otro equipo",
       "teamMembersCount": "{count, plural, =0 {Sin miembros} =1 {1 miembro} other {# miembros}} / {max}",
       "teamCode": "Código: {code}",
-      "viewTeam": "Ver detalles →"
+      "viewTeam": "Ver detalles →",
+      "summary": "{teamCount, plural, =1 {1 equipo} other {# equipos}} · {studentCount, plural, =0 {sin estudiantes} =1 {1 estudiante} other {# estudiantes}}",
+      "activeSessionsTitle": "Sesiones en curso",
+      "sessionTeam": "Equipo",
+      "sessionUntil": "Hasta {time}",
+      "sessionSubmitted": "{submitted} de {total} entregados",
+      "viewLeaderboard": "Ver leaderboard",
+      "paperEntry": "Entrada manual",
+      "quickActionsTitle": "Acciones rápidas",
+      "actionContests": "Mis contests",
+      "actionContestsDesc": "Abre sesiones, ve resultados, imprime boletines",
+      "actionTeams": "Gestionar equipos",
+      "actionTeamsDesc": "Invita estudiantes, comparte códigos",
+      "actionNewTeam": "Crear equipo",
+      "actionNewTeamDesc": "Nuevo equipo con código de invitación",
+      "actionResults": "Resultados",
+      "actionResultsDesc": "Leaderboards de tus equipos",
+      "moreTeams": "más"
     }
   },
   "contests": {
