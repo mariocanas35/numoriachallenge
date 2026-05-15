@@ -40,17 +40,17 @@ insert into public.problems (
   false, null, null,
   1, 'Numoria Challenge — Practice #3', 2026, true
 ),
--- P2 Tiempo ★ — zona horaria (palanca: suma con cambio de formato, distinta a horas/días)
+-- P2 Tiempo ★ — zona horaria (palanca: suma horaria con resultado entero)
 (
   'numoria-p3e-p2-tiempo-zona-horaria',
   'time_clocks', 1, 'elementary',
   'Tiempo', 'Time',
-  'Madrid está 7 horas adelante de Tegucigalpa. Si Ana llamó a su tío en Madrid cuando en Tegucigalpa eran las 8:00 AM, ¿qué hora era en Madrid en ese momento? Responde en formato 24 horas (HH:MM, ej: 15:00).',
-  'Madrid is 7 hours ahead of Tegucigalpa. If Ana called her uncle in Madrid when it was 8:00 AM in Tegucigalpa, what time was it in Madrid? Answer in 24-hour format (HH:MM, e.g. 15:00).',
-  'Sumamos 7 horas a 8:00 AM: $8 + 7 = 15$, lo que da las 3:00 PM. En formato 24 horas: $15{:}00$.',
-  'Add 7 hours to 8:00 AM: $8 + 7 = 15$, which gives 3:00 PM. In 24-hour format: $15{:}00$.',
-  'short_text', '15:00',
-  'Formato HH:MM (24 horas).', 'Format HH:MM (24-hour).',
+  'Madrid está 7 horas adelante de Tegucigalpa. Si Ana llamó a su tío en Madrid cuando en Tegucigalpa eran las 8:00 AM, ¿qué hora de la tarde era en Madrid en ese momento? Responde solo el número de la hora en formato de 12 horas (por ejemplo, si fueran las 4:00 PM, responde 4).',
+  'Madrid is 7 hours ahead of Tegucigalpa. If Ana called her uncle in Madrid when it was 8:00 AM in Tegucigalpa, what hour of the afternoon was it in Madrid? Answer only the hour number in 12-hour format (e.g. if it were 4:00 PM, answer 4).',
+  'Sumamos 7 horas a las 8:00 AM: $8 + 7 = 15$ horas, que en formato 12 horas son las 3:00 PM. La respuesta es $3$.',
+  'Add 7 hours to 8:00 AM: $8 + 7 = 15$ hours, which in 12-hour format is 3:00 PM. The answer is $3$.',
+  'integer', '3',
+  'Solo el número de hora (1-12).', 'Just the hour number (1-12).',
   false, null, null,
   1, 'Numoria Challenge — Practice #3', 2026, true
 ),

@@ -39,17 +39,17 @@ insert into public.problems (
   false, null, null,
   1, 'Numoria Challenge — Practice #2', 2026, true
 ),
--- P2 Tiempo ★ — suma de tiempos con conversión (palanca: respuesta no-numérica HH:MM)
+-- P2 Tiempo ★ — duración total en minutos (palanca: conversión horas→minutos)
 (
   'numoria-p2e-p2-tiempo-reloj',
   'time_clocks', 1, 'elementary',
   'Tiempo', 'Time',
-  'Un partido empieza a las 3:45 PM y dura 2 horas y 25 minutos. ¿A qué hora termina? Responde en formato de 24 horas (HH:MM, ej: 18:30).',
-  'A game starts at 3:45 PM and lasts 2 hours and 25 minutes. What time does it end? Answer in 24-hour format (HH:MM, e.g. 18:30).',
-  'Sumamos 2 horas: 3:45 PM + 2 h = 5:45 PM. Sumamos 25 minutos: 5:45 + 0:25 = 6:10 PM. En formato 24 horas: 18:10.',
-  'Add 2 hours: 3:45 PM + 2 h = 5:45 PM. Add 25 minutes: 5:45 + 0:25 = 6:10 PM. In 24-hour format: 18:10.',
-  'short_text', '18:10',
-  'Formato HH:MM (24 horas).', 'Format HH:MM (24-hour).',
+  'Un partido de fútbol dura 2 horas y 25 minutos en total. ¿Cuántos minutos dura el partido en total?',
+  'A soccer game lasts 2 hours and 25 minutes in total. How many minutes does the game last in total?',
+  'Convertimos las horas a minutos: $2 \text{ horas} = 2 \times 60 = 120$ minutos. Sumamos los 25 minutos restantes: $120 + 25 = 145$ minutos.',
+  'Convert hours to minutes: $2 \text{ hours} = 2 \times 60 = 120$ minutes. Add the remaining 25 minutes: $120 + 25 = 145$ minutes.',
+  'integer', '145',
+  'Solo el número (en minutos).', 'Just the number (in minutes).',
   false, null, null,
   1, 'Numoria Challenge — Practice #2', 2026, true
 ),
