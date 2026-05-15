@@ -235,16 +235,31 @@ export default async function ContestsListPage({
         <p className="mt-2 text-sm text-numoria-mid">{t('listSubtitle')}</p>
       </header>
 
-      {/* Phase 4.5a — Sección PRÁCTICAS arriba (siempre disponibles, no expiran) */}
+      {/* Phase 4.5a — Sección PRÁCTICAS arriba (siempre disponibles, no expiran).
+          Agrupadas en "carpetas" por contest_number — cada práctica tiene 3
+          versiones (E sin-calc, M sin-calc, M con-calc) que se muestran lado
+          a lado en desktop, apiladas en móvil. */}
       {practices.length > 0 && (
         <section>
           <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
             📚 {t('sections.practices')}
           </h2>
-          <p className="mb-3 text-sm text-numoria-mid">{t('sections.practicesSubtitle')}</p>
-          <div className="flex flex-col gap-3">
-            {practices.map((card) => (
-              <ContestCard key={card.id} data={card} />
+          <p className="mb-5 text-sm text-numoria-mid">{t('sections.practicesSubtitle')}</p>
+          <div className="flex flex-col gap-6">
+            {groupPracticesByNumber(practices, contests).map(({ number, cards }) => (
+              <div
+                key={number}
+                className="rounded-2xl border-2 border-numoria-teal/20 bg-numoria-teal/5 p-4"
+              >
+                <h3 className="mb-3 font-display text-base font-bold text-numoria-ink">
+                  {t('sections.practiceGroupHeader', { number })}
+                </h3>
+                <div className="grid gap-3 md:grid-cols-3">
+                  {cards.map((card) => (
+                    <ContestCard key={card.id} data={card} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -276,6 +291,46 @@ export default async function ContestsListPage({
       </section>
     </div>
   );
+}
+
+/**
+ * Agrupa practice cards por contest_number y ordena cada grupo internamente
+ * (E sin-calc → M sin-calc → M con-calc). Devuelve los grupos ordenados por
+ * número de práctica ascendente.
+ */
+function groupPracticesByNumber(
+  cards: ContestCardData[],
+  contests: Array<{
+    id: string;
+    contest_number: number;
+    division: string;
+    calculator_allowed: boolean;
+  }>,
+): Array<{ number: number; cards: ContestCardData[] }> {
+  const byNumber = new Map<number, ContestCardData[]>();
+  for (const card of cards) {
+    const contest = contests.find((c) => c.id === card.id);
+    if (!contest) continue;
+    const list = byNumber.get(contest.contest_number) ?? [];
+    list.push(card);
+    byNumber.set(contest.contest_number, list);
+  }
+
+  // Orden interno: elementary-noCalc → middle-noCalc → middle-calc
+  const variantRank = (cardId: string): number => {
+    const contest = contests.find((c) => c.id === cardId);
+    if (!contest) return 99;
+    if (contest.division === 'elementary') return 0;
+    if (contest.division === 'middle' && !contest.calculator_allowed) return 1;
+    return 2;
+  };
+
+  return Array.from(byNumber.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([number, list]) => ({
+      number,
+      cards: [...list].sort((a, b) => variantRank(a.id) - variantRank(b.id)),
+    }));
 }
 
 function ContestSection({
