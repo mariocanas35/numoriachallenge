@@ -103,6 +103,8 @@ export function toContestCardData(args: {
   > & {
     /** Phase 4.4 — opcional para backward compat con queries que no lo seleccionan */
     calendar_window_days?: number;
+    /** Phase 4.5 — 'practice' siempre disponibles (no requieren sesión MOEMS) */
+    contest_type?: 'practice' | 'official';
   };
   numProblems: number;
   attempt: Pick<ContestAttempt, 'submitted_at' | 'total_score' | 'max_possible_score'> | null;
@@ -167,7 +169,9 @@ export function toContestCardData(args: {
     teacherStats,
     teacherOpenSession,
     teacherTeams,
-    studentHasActiveSession,
+    // Practices NUNCA requieren sesión MOEMS — siempre "active" para el student.
+    // Officials respetan el gating por session activa del teacher.
+    studentHasActiveSession: contest.contest_type === 'practice' ? true : studentHasActiveSession,
     studentSessionClosesAt,
   };
 }

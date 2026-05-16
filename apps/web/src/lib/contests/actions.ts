@@ -43,7 +43,7 @@ export async function startContestAttempt(
   // Verificar que el contest existe y está activo
   const { data: contestRow, error: contestErr } = await supabase
     .from('contests')
-    .select('id, status, scheduled_at, duration_minutes, calendar_window_days')
+    .select('id, status, scheduled_at, duration_minutes, calendar_window_days, contest_type')
     .eq('id', contestId)
     .single();
 
@@ -57,6 +57,7 @@ export async function startContestAttempt(
     scheduled_at: string;
     duration_minutes: number;
     calendar_window_days?: number;
+    contest_type?: 'practice' | 'official';
   };
 
   if (contest.status !== 'active') {
@@ -94,36 +95,41 @@ export async function startContestAttempt(
     return { ok: true, data: { attemptId: existing.id } };
   }
 
-  // Phase 4 MOEMS: validar que existe una contest_session 'open' para alguno
-  // de los teams del student. Sin session → student no puede tomar el contest.
-  await supabase.rpc('expire_old_contest_sessions');
-
-  const { data: memberRows } = await supabase
-    .from('team_members')
-    .select('team_id')
-    .eq('student_id', user.id);
-  const teamIds = ((memberRows ?? []) as Array<{ team_id: string }>).map((m) => m.team_id);
-
+  // Phase 4 MOEMS: solo los contests OFICIALES requieren una contest_session
+  // 'open' abierta por el teacher para alguno de los teams del student.
+  // Las PRÁCTICAS están "siempre disponibles para entrenar" — no requieren
+  // supervisión del teacher ni team membership, igual que un sandbox de
+  // entrenamiento. session_id queda null para attempts de practice.
   let sessionId: string | null = null;
-  if (teamIds.length > 0) {
-    const { data: sessionRows } = await supabase
-      .from('contest_sessions')
-      .select('id, closes_at')
-      .eq('contest_id', contestId)
-      .eq('status', 'open')
-      .in('team_id', teamIds)
-      .limit(1);
-    const session = (sessionRows ?? [])[0] as { id: string; closes_at: string } | undefined;
-    if (session) {
-      sessionId = session.id;
-    }
-  }
+  if (contest.contest_type === 'official') {
+    await supabase.rpc('expire_old_contest_sessions');
 
-  if (!sessionId) {
-    return {
-      ok: false,
-      message: 'session_not_open', // i18n key for UI to localize
-    };
+    const { data: memberRows } = await supabase
+      .from('team_members')
+      .select('team_id')
+      .eq('student_id', user.id);
+    const teamIds = ((memberRows ?? []) as Array<{ team_id: string }>).map((m) => m.team_id);
+
+    if (teamIds.length > 0) {
+      const { data: sessionRows } = await supabase
+        .from('contest_sessions')
+        .select('id, closes_at')
+        .eq('contest_id', contestId)
+        .eq('status', 'open')
+        .in('team_id', teamIds)
+        .limit(1);
+      const session = (sessionRows ?? [])[0] as { id: string; closes_at: string } | undefined;
+      if (session) {
+        sessionId = session.id;
+      }
+    }
+
+    if (!sessionId) {
+      return {
+        ok: false,
+        message: 'session_not_open', // i18n key for UI to localize
+      };
+    }
   }
 
   // Calcular max_possible_score sumando points de los contest_problems
