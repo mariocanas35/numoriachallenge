@@ -1,10 +1,10 @@
 'use client';
 
-import { updateSchoolDetails } from '@/lib/settings/actions';
+import { updateSchoolDetails, updateSchoolLogo } from '@/lib/settings/actions';
 import { Button } from '@numoria/ui';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 
 interface SchoolFormProps {
   initial: {
@@ -48,6 +48,17 @@ export function SchoolForm({ initial }: SchoolFormProps) {
   const [feedback, setFeedback] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
+  // Logo upload — estado separado del form principal porque es un upload
+  // independiente con su propio botón y feedback (no comparte el "Guardar
+  // cambios" del form de texto).
+  const [logoUrl, setLogoUrl] = useState<string | null>(initial.logo_url);
+  const [logoPending, startLogoTransition] = useTransition();
+  const [logoFeedback, setLogoFeedback] = useState<{
+    kind: 'ok' | 'error';
+    message: string;
+  } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   async function handleSubmit(formData: FormData) {
     setFeedback(null);
     setErrors({});
@@ -62,14 +73,34 @@ export function SchoolForm({ initial }: SchoolFormProps) {
     });
   }
 
+  function handleLogoSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLogoFeedback(null);
+    const formData = new FormData();
+    formData.append('logo', file);
+    startLogoTransition(async () => {
+      const result = await updateSchoolLogo(formData);
+      if (result.ok && result.data) {
+        setLogoUrl(result.data.logoUrl);
+        setLogoFeedback({ kind: 'ok', message: t('school.logoUploadSuccess') });
+      } else if (!result.ok) {
+        setLogoFeedback({ kind: 'error', message: result.message });
+      }
+      // Reset el input para permitir re-subir el mismo archivo si user lo desea
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    });
+  }
+
   return (
     <form action={handleSubmit} className="flex flex-col gap-5">
-      {/* Logo (read-only en esta iteración) */}
-      <div className="flex items-center gap-4 rounded-xl border-2 border-dashed border-numoria-gray bg-numoria-cloud p-4">
-        {initial.logo_url ? (
+      {/* Logo upload — fuera del form principal porque envía su propio
+          POST con file; el form de texto solo maneja strings. */}
+      <div className="flex flex-col gap-3 rounded-xl border-2 border-dashed border-numoria-gray bg-numoria-cloud p-4 sm:flex-row sm:items-center">
+        {logoUrl ? (
           <Image
-            src={initial.logo_url}
-            alt="Logo de la escuela"
+            src={logoUrl}
+            alt={t('school.logoLabel')}
             width={64}
             height={64}
             className="h-16 w-16 rounded-lg object-cover"
@@ -82,7 +113,37 @@ export function SchoolForm({ initial }: SchoolFormProps) {
         )}
         <div className="flex-1 text-xs text-numoria-mid">
           <p className="font-bold text-numoria-grafito">{t('school.logoLabel')}</p>
-          <p className="mt-1">{t('school.logoHint')}</p>
+          <p className="mt-1">{logoUrl ? t('school.logoHint') : t('school.logoNoFile')}</p>
+          {logoFeedback && (
+            <p
+              className={`mt-2 font-bold ${
+                logoFeedback.kind === 'ok' ? 'text-numoria-teal' : 'text-numoria-coral'
+              }`}
+            >
+              {logoFeedback.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/svg+xml"
+            onChange={handleLogoSelected}
+            disabled={logoPending}
+            className="hidden"
+            // Necesita id para que el label/button externo no lo confunda con el form
+            id="school-logo-input"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={logoPending}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {logoPending ? t('school.logoUploading') : t('school.logoUploadButton')}
+          </Button>
         </div>
       </div>
 

@@ -121,6 +121,83 @@ export async function updateSchoolDetails(formData: FormData): Promise<ActionRes
 }
 
 // ============================================================
+// School logo upload
+// ============================================================
+
+const ALLOWED_LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
+const ALLOWED_LOGO_EXTS = ['png', 'jpg', 'jpeg', 'webp', 'svg'] as const;
+const MAX_LOGO_SIZE_BYTES = 512 * 1024; // 512KB, igual que el bucket policy
+
+export async function updateSchoolLogo(
+  formData: FormData,
+): Promise<ActionResult<{ logoUrl: string }>> {
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: 'No autenticado' };
+
+  const file = formData.get('logo');
+  if (!(file instanceof File)) {
+    return { ok: false, message: 'Archivo de logo no recibido' };
+  }
+  if (file.size === 0) {
+    return { ok: false, message: 'El archivo está vacío' };
+  }
+  if (file.size > MAX_LOGO_SIZE_BYTES) {
+    return { ok: false, message: 'El archivo supera 512KB. Comprime o redimensiona la imagen.' };
+  }
+  if (!ALLOWED_LOGO_TYPES.includes(file.type)) {
+    return { ok: false, message: 'Formato no permitido. Usa PNG, JPG, WebP o SVG.' };
+  }
+
+  // Encuentra la escuela del teacher
+  const { data: schoolRow } = await supabase
+    .from('schools')
+    .select('id')
+    .eq('created_by', user.id)
+    .maybeSingle();
+
+  if (!schoolRow) {
+    return { ok: false, message: 'No tienes una escuela registrada' };
+  }
+  const schoolId = (schoolRow as { id: string }).id;
+
+  // Subir el archivo
+  const ext = (file.name.split('.').pop()?.toLowerCase() ??
+    'png') as (typeof ALLOWED_LOGO_EXTS)[number];
+  const safeExt = (ALLOWED_LOGO_EXTS as readonly string[]).includes(ext) ? ext : 'png';
+  const path = `${schoolId}/logo-${Date.now()}.${safeExt}`;
+
+  const { error: uploadError } = await supabase.storage.from('school-logos').upload(path, file, {
+    cacheControl: '3600',
+    upsert: false,
+  });
+
+  if (uploadError) {
+    return { ok: false, message: `Error al subir: ${uploadError.message}` };
+  }
+
+  // Obtener URL pública
+  const { data: urlData } = supabase.storage.from('school-logos').getPublicUrl(path);
+  const logoUrl = urlData.publicUrl;
+
+  // Actualizar schools.logo_url
+  const { error: updateError } = await supabase
+    .from('schools')
+    .update({ logo_url: logoUrl } as never)
+    .eq('id', schoolId);
+
+  if (updateError) {
+    return { ok: false, message: `No se guardó la URL: ${updateError.message}` };
+  }
+
+  revalidatePath('/[locale]/settings', 'page');
+  revalidatePath('/[locale]', 'page');
+  return { ok: true, data: { logoUrl } };
+}
+
+// ============================================================
 // User profile (display_name, locale)
 // ============================================================
 
