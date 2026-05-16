@@ -1,7 +1,7 @@
 import { JoinTeamCard } from '@/components/dashboard/JoinTeamCard';
 import { Link } from '@/i18n/navigation';
 import { createAdminClient, createServerClient } from '@numoria/database/server';
-import { NumaAvatar } from '@numoria/ui';
+import { NumaAvatar, ProgressRing, StatPill } from '@numoria/ui';
 import { getTranslations } from 'next-intl/server';
 
 interface StudentDashboardProps {
@@ -82,15 +82,40 @@ export async function StudentDashboard({
 
   const team = await fetchStudentTeam(userId);
 
+  // XP necesario para el siguiente nivel (fórmula: nivel actual * 100,
+  // se ajustará en Phase 5 cuando exista el sistema de niveles canónico).
+  const xpForNextLevel = level * 100;
+
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex items-center gap-4">
+      {/* Hero con stats inline + progress ring del nivel */}
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
         <NumaAvatar pose="wave" size="lg" />
-        <div>
+        <div className="flex-1">
           <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
             {t('greeting', { name: displayName })}
           </h1>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <StatPill icon="🏅" variant="indigo">
+              {tStudent('level', { level })}
+            </StatPill>
+            <StatPill icon="⭐" variant="teal">
+              {tStudent('xpTotal', { xp: xpTotal })}
+            </StatPill>
+            <StatPill icon="🔥" variant="coral">
+              {tStudent('streak', { days: currentStreak })}
+            </StatPill>
+          </div>
         </div>
+        {/* Ring de progreso al siguiente nivel (visual focal point del hero) */}
+        <ProgressRing
+          value={xpTotal % xpForNextLevel}
+          max={xpForNextLevel}
+          variant="orange"
+          label="XP"
+          showMax={false}
+          size={110}
+        />
       </header>
 
       {/* Team card o Join CTA */}
@@ -128,33 +153,8 @@ export async function StudentDashboard({
         </span>
       </Link>
 
-      {/* Stats */}
-      <section>
-        <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
-          ✨ {tStudent('myStats')}
-        </h2>
-        <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-xl border-2 border-numoria-gray bg-white p-4 text-center">
-            <div className="text-2xl">🏅</div>
-            <div className="mt-1 font-display text-xl font-bold text-numoria-ink">{level}</div>
-            <div className="text-xs text-numoria-mid">{tStudent('level', { level })}</div>
-          </div>
-          <div className="rounded-xl border-2 border-numoria-gray bg-white p-4 text-center">
-            <div className="text-2xl">⭐</div>
-            <div className="mt-1 font-display text-xl font-bold text-numoria-ink">{xpTotal}</div>
-            <div className="text-xs text-numoria-mid">{tStudent('xpTotal', { xp: xpTotal })}</div>
-          </div>
-          <div className="rounded-xl border-2 border-numoria-gray bg-white p-4 text-center">
-            <div className="text-2xl">🔥</div>
-            <div className="mt-1 font-display text-xl font-bold text-numoria-ink">
-              {currentStreak}
-            </div>
-            <div className="text-xs text-numoria-mid">
-              {tStudent('streak', { days: currentStreak })}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Stats movidas al hero como StatPills + ProgressRing — sección
+          legacy de 3-col cards eliminada para reducir redundancia visual. */}
 
       {/* Preview de contests activos */}
       <ContestsPreview teamDivision={team?.division ?? null} />

@@ -1,6 +1,6 @@
 import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
-import { Button, NumaAvatar } from '@numoria/ui';
+import { ActionCard, Button, NumaAvatar, StatPill } from '@numoria/ui';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
 interface TeacherDashboardProps {
@@ -207,19 +207,27 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex items-center gap-4">
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-center">
         <NumaAvatar pose="celebrate" size="lg" />
-        <div>
+        <div className="flex-1">
           <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
             {t('greeting', { name: displayName })}
           </h1>
           {teams.length > 0 && (
-            <p className="mt-1 text-sm text-numoria-mid">
-              {tTeacher('summary', {
-                teamCount: teams.length,
-                studentCount: totalStudents,
-              })}
-            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <StatPill icon="👥" variant="indigo">
+                {teams.length} {teams.length === 1 ? 'equipo' : 'equipos'}
+              </StatPill>
+              <StatPill icon="⭐" variant="teal">
+                {totalStudents} {totalStudents === 1 ? 'estudiante' : 'estudiantes'}
+              </StatPill>
+              {activeSessions.length > 0 && (
+                <StatPill icon="🟢" variant="dorado">
+                  {activeSessions.length}{' '}
+                  {activeSessions.length === 1 ? 'sesión activa' : 'sesiones activas'}
+                </StatPill>
+              )}
+            </div>
           )}
         </div>
       </header>
@@ -281,87 +289,56 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
         <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
           🚀 {tTeacher('quickActionsTitle')}
         </h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {/* PRÁCTICAS — destacado primero para que teachers las descubran fácilmente */}
-          <Link
-            href="/contests"
-            className="group flex items-start gap-3 rounded-xl border-2 border-numoria-teal/40 bg-numoria-teal/5 p-4 transition hover:border-numoria-teal hover:bg-numoria-teal/10"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ActionCard
+            variant="teal"
+            icon="📚"
+            title={tTeacher('actionPractices')}
+            description={tTeacher('actionPracticesDesc')}
+            asChild
           >
-            <span className="text-2xl">📚</span>
-            <div className="flex-1">
-              <p className="font-display text-base font-bold text-numoria-ink">
-                {tTeacher('actionPractices')}
-              </p>
-              <p className="mt-0.5 text-xs text-numoria-mid">{tTeacher('actionPracticesDesc')}</p>
-            </div>
-            <span className="text-numoria-teal opacity-0 transition group-hover:opacity-100">
-              →
-            </span>
-          </Link>
+            <Link href="/contests" />
+          </ActionCard>
 
-          <Link
-            href="/contests"
-            className="group flex items-start gap-3 rounded-xl border-2 border-numoria-orange/30 bg-numoria-orange/5 p-4 transition hover:border-numoria-orange hover:bg-numoria-orange/10"
+          <ActionCard
+            variant="orange"
+            icon="🏆"
+            title={tTeacher('actionContests')}
+            description={tTeacher('actionContestsDesc')}
+            asChild
           >
-            <span className="text-2xl">🏆</span>
-            <div className="flex-1">
-              <p className="font-display text-base font-bold text-numoria-ink">
-                {tTeacher('actionContests')}
-              </p>
-              <p className="mt-0.5 text-xs text-numoria-mid">{tTeacher('actionContestsDesc')}</p>
-            </div>
-            <span className="text-numoria-orange opacity-0 transition group-hover:opacity-100">
-              →
-            </span>
-          </Link>
+            <Link href="/contests" />
+          </ActionCard>
 
-          <Link
-            href="/teams"
-            className="group flex items-start gap-3 rounded-xl border-2 border-numoria-indigo/30 bg-numoria-indigo/5 p-4 transition hover:border-numoria-indigo hover:bg-numoria-indigo/10"
+          <ActionCard
+            variant="indigo"
+            icon="👥"
+            title={tTeacher('actionTeams')}
+            description={tTeacher('actionTeamsDesc')}
+            asChild
           >
-            <span className="text-2xl">👥</span>
-            <div className="flex-1">
-              <p className="font-display text-base font-bold text-numoria-ink">
-                {tTeacher('actionTeams')}
-              </p>
-              <p className="mt-0.5 text-xs text-numoria-mid">{tTeacher('actionTeamsDesc')}</p>
-            </div>
-            <span className="text-numoria-indigo opacity-0 transition group-hover:opacity-100">
-              →
-            </span>
-          </Link>
+            <Link href="/teams" />
+          </ActionCard>
 
-          <Link
-            href="/teams/new"
-            className="group flex items-start gap-3 rounded-xl border-2 border-numoria-teal/30 bg-numoria-teal/5 p-4 transition hover:border-numoria-teal hover:bg-numoria-teal/10"
+          <ActionCard
+            variant="dorado"
+            icon="➕"
+            title={tTeacher('actionNewTeam')}
+            description={tTeacher('actionNewTeamDesc')}
+            asChild
           >
-            <span className="text-2xl">➕</span>
-            <div className="flex-1">
-              <p className="font-display text-base font-bold text-numoria-ink">
-                {tTeacher('actionNewTeam')}
-              </p>
-              <p className="mt-0.5 text-xs text-numoria-mid">{tTeacher('actionNewTeamDesc')}</p>
-            </div>
-            <span className="text-numoria-teal opacity-0 transition group-hover:opacity-100">
-              →
-            </span>
-          </Link>
+            <Link href="/teams/new" />
+          </ActionCard>
 
-          <Link
-            href="/contests"
-            className="group flex items-start gap-3 rounded-xl border-2 border-numoria-coral/30 bg-numoria-coral/5 p-4 transition hover:border-numoria-coral hover:bg-numoria-coral/10"
+          <ActionCard
+            variant="coral"
+            icon="📝"
+            title={tTeacher('actionPaperEntry')}
+            description={tTeacher('actionPaperEntryDesc')}
+            asChild
           >
-            <span className="text-2xl">📝</span>
-            <div className="flex-1">
-              <p className="font-display text-base font-bold text-numoria-ink">
-                {tTeacher('actionPaperEntry')}
-              </p>
-              <p className="mt-0.5 text-xs text-numoria-mid">{tTeacher('actionPaperEntryDesc')}</p>
-            </div>
-            <span className="text-numoria-coral opacity-0 transition group-hover:opacity-100">
-              →
-            </span>
-          </Link>
+            <Link href="/contests" />
+          </ActionCard>
         </div>
       </section>
 
