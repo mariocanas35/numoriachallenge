@@ -8,16 +8,16 @@ type Contest = Tables<'contests'>;
 type Profile = Tables<'profiles'>;
 
 /**
- * /contests/paper-entry — Stub funcional Tarea 1.
+ * /contests/paper-entry — Tarea 1 (refinada 2026-05-16).
  *
- * Lista los contests activos del teacher para entrada manual de
- * respuestas en papel. Solo accesible para teachers. Cada contest
- * tiene un CTA "📝 Transcribir" que lleva a /contests/[id]/paper-entry
- * (página individual que ya existe desde Phase 4.2).
+ * Lista SOLO los contests OFICIALES del teacher (no practices) para
+ * entrada manual de respuestas en papel. Decisión del founder
+ * 2026-05-16: las prácticas no necesitan transcripción porque no
+ * cuentan para rankings — los students las hacen directo en la app.
+ * Solo los oficiales se administran en papel y requieren transcribir.
  *
- * Esta lista es un atajo desde el dashboard para no tener que entrar
- * a /contests, ubicar el contest y luego clickear el botón de paper
- * entry. El founder lo pidió como card propia en quick actions.
+ * Solo accesible para teachers. Cada contest tiene un CTA "📝
+ * Transcribir" que lleva a /contests/[id]/paper-entry (existente).
  */
 export default async function PaperEntryListPage({
   params,
@@ -46,13 +46,13 @@ export default async function PaperEntryListPage({
     redirect(`/${locale}/contests`);
   }
 
-  // Fetch todos los contests activos/scheduled (oficial + practice) que el
-  // teacher puede transcribir. Ordenados por scheduled_at desc.
+  // Solo oficiales (no practices). Status active/scheduled = administrables.
   const { data: contestsRows } = await supabase
     .from('contests')
     .select(
       'id, slug, title_es, title_en, division, scheduled_at, calculator_allowed, status, contest_type',
     )
+    .eq('contest_type', 'official')
     .in('status', ['active', 'scheduled'])
     .order('scheduled_at', { ascending: false });
 
@@ -78,22 +78,24 @@ export default async function PaperEntryListPage({
           📝 Entrada manual
         </h1>
         <p className="mt-2 text-sm text-numoria-mid">
-          Transcribe respuestas que tus estudiantes hicieron en papel. Selecciona el contest y luego
-          ingresa las respuestas estudiante por estudiante.
+          Transcribe a la plataforma las respuestas que tus estudiantes hicieron en papel para los
+          <strong> contests oficiales</strong>. Selecciona el contest y luego ingresa las respuestas
+          estudiante por estudiante. Las prácticas no requieren transcripción — los estudiantes las
+          completan directo en la app.
         </p>
       </header>
 
       {contests.length === 0 ? (
         <div className="rounded-xl border-2 border-dashed border-numoria-gray bg-white p-8 text-center">
           <p className="text-sm text-numoria-mid">
-            No hay contests activos en este momento. Cuando un contest oficial esté disponible,
-            podrás transcribir respuestas desde aquí.
+            No hay contests oficiales activos en este momento. El primer contest del ciclo académico
+            2026-2027 es el sábado 7 de Noviembre 2026.
           </p>
           <Link
-            href="/contests"
+            href="/contests/officials"
             className="mt-4 inline-block text-sm font-bold text-numoria-orange hover:underline"
           >
-            Ver todos los contests →
+            Ver calendario de contests oficiales →
           </Link>
         </div>
       ) : (
@@ -106,12 +108,11 @@ export default async function PaperEntryListPage({
               >
                 <div className="flex-1">
                   <p className="font-display text-base font-bold text-numoria-grafito">
-                    {c.contest_type === 'practice' ? '📚' : '🏆'} {c.title_es}
+                    🏆 {c.title_es}
                   </p>
                   <p className="mt-1 text-xs text-numoria-mid">
-                    {c.division === 'elementary' ? 'Elementary' : 'Middle'} ·{' '}
-                    {c.calculator_allowed ? 'Con calculadora' : 'Sin calculadora'} ·{' '}
-                    {c.contest_type === 'practice' ? 'Práctica' : 'Oficial'}
+                    {c.division === 'elementary' ? 'Primaria' : 'Secundaria'} ·{' '}
+                    {c.calculator_allowed ? 'Con calculadora' : 'Sin calculadora'}
                   </p>
                 </div>
                 <span className="rounded-full bg-numoria-coral/10 px-3 py-1 text-xs font-bold text-numoria-coral">
