@@ -94,11 +94,14 @@ export default async function ContestTakePage({
   // Crear/recuperar attempt
   const startResult = await startContestAttempt(contestId);
   if (!startResult.ok || !startResult.data) {
-    // Si ya está submitted → results page (cuando exista) o /contests
     if (startResult.message?.includes('already submitted')) {
       redirect(`/${locale}/contests/${contestId}/results`);
     }
-    redirect(`/${locale}/contests`);
+    // Antes hacíamos redirect silencioso a /contests, lo que dejaba al
+    // student sin entender por qué "no abre nada". Ahora pasamos la razón
+    // como query param para que /contests la muestre como banner.
+    const reason = startResult.message ?? 'unknown';
+    redirect(`/${locale}/contests?startError=${encodeURIComponent(reason)}`);
   }
 
   const attemptId = startResult.data.attemptId;

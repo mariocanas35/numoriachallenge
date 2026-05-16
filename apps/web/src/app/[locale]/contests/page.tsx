@@ -27,10 +27,13 @@ type Profile = Tables<'profiles'>;
  */
 export default async function ContestsListPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ startError?: string }>;
 }) {
   const { locale } = await params;
+  const { startError } = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations('contests');
 
@@ -228,6 +231,27 @@ export default async function ContestsListPage({
 
   return (
     <div className="flex flex-col gap-8">
+      {startError && (
+        <div className="rounded-xl border-2 border-numoria-coral/40 bg-numoria-coral/5 p-4">
+          <p className="text-sm font-bold text-numoria-coral">
+            ⚠️{' '}
+            {startError === 'session_not_open'
+              ? 'No hay una sesión abierta de este contest para tu equipo.'
+              : startError === 'Contest is not active'
+                ? 'Este contest no está activo en este momento.'
+                : startError === 'Contest has not started yet'
+                  ? 'Este contest aún no ha empezado.'
+                  : startError === 'Contest window has expired'
+                    ? 'La ventana de este contest ya expiró.'
+                    : `No se pudo empezar el contest: ${startError}`}
+          </p>
+          <p className="mt-1 text-xs text-numoria-mid">
+            Tu maestro debe abrir una sesión para tu equipo desde su dashboard. La sesión dura 35
+            minutos y permite que todos los students del equipo entren al contest.
+          </p>
+        </div>
+      )}
+
       <header>
         <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
           🏆 {t('listTitle')}
