@@ -83,7 +83,6 @@ export default async function PracticesPage({
           {byLevel.elementary.length > 0 && (
             <FolderSection
               title="Primaria"
-              icon="📁"
               accent="orange"
               description="Para estudiantes de 4° a 6° grado. Sin calculadora."
               cards={byLevel.elementary}
@@ -91,19 +90,30 @@ export default async function PracticesPage({
             />
           )}
 
-          {/* === 📁 Middle School (con sub-carpetas) === */}
+          {/* === 📁 Middle School (con sub-carpetas anidadas) === */}
           {(byLevel.middleNoCalc.length > 0 || byLevel.middleCalc.length > 0) && (
-            <div className="rounded-2xl border-2 border-numoria-indigo/20 bg-numoria-indigo/5 p-5">
-              <header className="mb-5">
-                <h2 className="font-display text-xl font-bold text-numoria-grafito">
-                  📁 Middle School
-                </h2>
-                <p className="mt-1 text-sm text-numoria-mid">
-                  Para estudiantes de 7° a 9° grado. Dos variantes según el uso de calculadora.
-                </p>
-              </header>
+            <details className="group rounded-2xl border-2 border-numoria-indigo/20 bg-numoria-indigo/5 p-5 [&_summary::-webkit-details-marker]:hidden">
+              <summary className="-m-5 flex cursor-pointer list-none items-center gap-3 rounded-2xl p-5 transition hover:bg-numoria-indigo/10">
+                <span
+                  className="text-numoria-indigo transition-transform group-open:rotate-90"
+                  aria-hidden
+                >
+                  ▶
+                </span>
+                <div className="flex-1">
+                  <h2 className="font-display text-xl font-bold text-numoria-grafito">
+                    📁 Middle School
+                  </h2>
+                  <p className="mt-1 text-sm text-numoria-mid">
+                    Para estudiantes de 7° a 9° grado. Dos variantes según el uso de calculadora.
+                  </p>
+                </div>
+                <span className="text-xs font-bold uppercase tracking-wide text-numoria-mid">
+                  {byLevel.middleNoCalc.length + byLevel.middleCalc.length} prácticas
+                </span>
+              </summary>
 
-              <div className="flex flex-col gap-5">
+              <div className="mt-5 flex flex-col gap-3">
                 {byLevel.middleNoCalc.length > 0 && (
                   <SubFolder
                     title="Sin calculadora"
@@ -123,7 +133,7 @@ export default async function PracticesPage({
                   />
                 )}
               </div>
-            </div>
+            </details>
           )}
         </div>
       )}
@@ -183,45 +193,53 @@ type Accent = 'orange' | 'indigo' | 'teal' | 'dorado';
 
 function FolderSection({
   title,
-  icon,
   accent,
   description,
   cards,
   contestById,
 }: {
   title: string;
-  icon: string;
   accent: Accent;
   description?: string;
   cards: ContestCardData[];
   contestById: (id: string) => ContestListContext | undefined;
 }) {
   const accentClasses = {
-    orange: 'border-numoria-orange/20 bg-numoria-orange/5',
-    indigo: 'border-numoria-indigo/20 bg-numoria-indigo/5',
-    teal: 'border-numoria-teal/20 bg-numoria-teal/5',
-    dorado: 'border-numoria-dorado/20 bg-numoria-dorado/5',
+    orange: 'border-numoria-orange/20 bg-numoria-orange/5 hover:bg-numoria-orange/10',
+    indigo: 'border-numoria-indigo/20 bg-numoria-indigo/5 hover:bg-numoria-indigo/10',
+    teal: 'border-numoria-teal/20 bg-numoria-teal/5 hover:bg-numoria-teal/10',
+    dorado: 'border-numoria-dorado/20 bg-numoria-dorado/5 hover:bg-numoria-dorado/10',
+  }[accent];
+
+  const chevronColor = {
+    orange: 'text-numoria-orange',
+    indigo: 'text-numoria-indigo',
+    teal: 'text-numoria-teal',
+    dorado: 'text-numoria-dorado',
   }[accent];
 
   return (
-    <section className={`rounded-2xl border-2 p-5 ${accentClasses}`}>
-      <header className="mb-4 flex items-baseline justify-between">
-        <div>
-          <h2 className="font-display text-xl font-bold text-numoria-grafito">
-            {icon} {title}
-          </h2>
+    <details
+      className={`group rounded-2xl border-2 p-5 [&_summary::-webkit-details-marker]:hidden ${accentClasses}`}
+    >
+      <summary className="-m-5 flex cursor-pointer list-none items-center gap-3 rounded-2xl p-5">
+        <span className={`transition-transform group-open:rotate-90 ${chevronColor}`} aria-hidden>
+          ▶
+        </span>
+        <div className="flex-1">
+          <h2 className="font-display text-xl font-bold text-numoria-grafito">📁 {title}</h2>
           {description && <p className="mt-1 text-sm text-numoria-mid">{description}</p>}
         </div>
         <span className="text-xs font-bold uppercase tracking-wide text-numoria-mid">
           {cards.length} {cards.length === 1 ? 'práctica' : 'prácticas'}
         </span>
-      </header>
-      <div className="grid gap-3 md:grid-cols-3">
+      </summary>
+      <div className="mt-5 grid gap-3 md:grid-cols-3">
         {cards.map((card) => (
           <PracticeCardWithNumber key={card.id} card={card} contestById={contestById} />
         ))}
       </div>
-    </section>
+    </details>
   );
 }
 
@@ -243,28 +261,40 @@ function SubFolder({
   contestById: (id: string) => ContestListContext | undefined;
 }) {
   const accentClasses = {
-    orange: 'border-numoria-orange/30 bg-white',
-    indigo: 'border-numoria-indigo/30 bg-white',
-    teal: 'border-numoria-teal/30 bg-white',
-    dorado: 'border-numoria-dorado/30 bg-white',
+    orange: 'border-numoria-orange/30 hover:bg-numoria-orange/5',
+    indigo: 'border-numoria-indigo/30 hover:bg-numoria-indigo/5',
+    teal: 'border-numoria-teal/30 hover:bg-numoria-teal/5',
+    dorado: 'border-numoria-dorado/30 hover:bg-numoria-dorado/5',
+  }[accent];
+
+  const chevronColor = {
+    orange: 'text-numoria-orange',
+    indigo: 'text-numoria-indigo',
+    teal: 'text-numoria-teal',
+    dorado: 'text-numoria-dorado',
   }[accent];
 
   return (
-    <div className={`rounded-xl border-2 p-4 ${accentClasses}`}>
-      <header className="mb-3 flex items-baseline justify-between">
-        <h3 className="font-display text-base font-bold text-numoria-grafito">
+    <details
+      className={`group rounded-xl border-2 bg-white p-4 [&_summary::-webkit-details-marker]:hidden ${accentClasses}`}
+    >
+      <summary className="-m-4 flex cursor-pointer list-none items-center gap-3 rounded-xl p-4 transition">
+        <span className={`transition-transform group-open:rotate-90 ${chevronColor}`} aria-hidden>
+          ▶
+        </span>
+        <h3 className="flex-1 font-display text-base font-bold text-numoria-grafito">
           {icon} {title}
         </h3>
         <span className="text-xs font-bold uppercase tracking-wide text-numoria-mid">
           {cards.length} {cards.length === 1 ? 'práctica' : 'prácticas'}
         </span>
-      </header>
-      <div className="grid gap-3 md:grid-cols-3">
+      </summary>
+      <div className="mt-4 grid gap-3 md:grid-cols-3">
         {cards.map((card) => (
           <PracticeCardWithNumber key={card.id} card={card} contestById={contestById} />
         ))}
       </div>
-    </div>
+    </details>
   );
 }
 
