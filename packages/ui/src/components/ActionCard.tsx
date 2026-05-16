@@ -1,4 +1,3 @@
-import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
@@ -12,17 +11,18 @@ import { cn } from '../lib/cn';
  * Variantes de color usan los acentos canónicos del Manual de Marca
  * Numoria (mismas tintes que StatPill).
  *
+ * Para navegación, envuelve con un Link externo (next-intl, next/link):
+ *
  * @example
- * <ActionCard
- *   variant="teal"
- *   title="Prácticas"
- *   description="5 tests disponibles ahora"
- *   icon="🎯"
- *   metadata="3 activas hoy"
- *   asChild
- * >
- *   <Link href="/contests">...</Link>
- * </ActionCard>
+ * <Link href="/contests" className="block">
+ *   <ActionCard
+ *     variant="teal"
+ *     title="Prácticas"
+ *     description="5 tests disponibles ahora"
+ *     icon="🎯"
+ *     metadata="3 activas hoy"
+ *   />
+ * </Link>
  */
 export interface ActionCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Color del bloque superior */
@@ -35,8 +35,6 @@ export interface ActionCardProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   /** Texto pequeño abajo (ej: "3 activos hoy") */
   metadata?: string;
-  /** Si true, renderiza como Slot para envolver Link de Next.js */
-  asChild?: boolean;
 }
 
 const blockColors = {
@@ -64,22 +62,9 @@ const metadataColors = {
 } as const;
 
 export const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
-  (
-    {
-      variant = 'orange',
-      icon,
-      title,
-      description,
-      metadata,
-      className,
-      asChild = false,
-      ...props
-    },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : 'div';
+  ({ variant = 'orange', icon, title, description, metadata, className, ...props }, ref) => {
     return (
-      <Comp
+      <div
         ref={ref}
         className={cn(
           'group block overflow-hidden rounded-2xl bg-white shadow-sm',
@@ -127,7 +112,7 @@ export const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
             </p>
           )}
         </div>
-      </Comp>
+      </div>
     );
   },
 );

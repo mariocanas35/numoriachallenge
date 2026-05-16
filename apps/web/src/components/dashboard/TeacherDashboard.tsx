@@ -290,55 +290,50 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
           🚀 {tTeacher('quickActionsTitle')}
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ActionCard
-            variant="teal"
-            icon="📚"
-            title={tTeacher('actionPractices')}
-            description={tTeacher('actionPracticesDesc')}
-            asChild
-          >
-            <Link href="/contests" />
-          </ActionCard>
+          <Link href="/contests" className="block">
+            <ActionCard
+              variant="teal"
+              icon="📚"
+              title={tTeacher('actionPractices')}
+              description={tTeacher('actionPracticesDesc')}
+            />
+          </Link>
 
-          <ActionCard
-            variant="orange"
-            icon="🏆"
-            title={tTeacher('actionContests')}
-            description={tTeacher('actionContestsDesc')}
-            asChild
-          >
-            <Link href="/contests" />
-          </ActionCard>
+          <Link href="/contests" className="block">
+            <ActionCard
+              variant="orange"
+              icon="🏆"
+              title={tTeacher('actionContests')}
+              description={tTeacher('actionContestsDesc')}
+            />
+          </Link>
 
-          <ActionCard
-            variant="indigo"
-            icon="👥"
-            title={tTeacher('actionTeams')}
-            description={tTeacher('actionTeamsDesc')}
-            asChild
-          >
-            <Link href="/teams" />
-          </ActionCard>
+          <Link href="/teams" className="block">
+            <ActionCard
+              variant="indigo"
+              icon="👥"
+              title={tTeacher('actionTeams')}
+              description={tTeacher('actionTeamsDesc')}
+            />
+          </Link>
 
-          <ActionCard
-            variant="dorado"
-            icon="➕"
-            title={tTeacher('actionNewTeam')}
-            description={tTeacher('actionNewTeamDesc')}
-            asChild
-          >
-            <Link href="/teams/new" />
-          </ActionCard>
+          <Link href="/teams/new" className="block">
+            <ActionCard
+              variant="dorado"
+              icon="➕"
+              title={tTeacher('actionNewTeam')}
+              description={tTeacher('actionNewTeamDesc')}
+            />
+          </Link>
 
-          <ActionCard
-            variant="coral"
-            icon="📝"
-            title={tTeacher('actionPaperEntry')}
-            description={tTeacher('actionPaperEntryDesc')}
-            asChild
-          >
-            <Link href="/contests" />
-          </ActionCard>
+          <Link href="/contests" className="block">
+            <ActionCard
+              variant="coral"
+              icon="📝"
+              title={tTeacher('actionPaperEntry')}
+              description={tTeacher('actionPaperEntryDesc')}
+            />
+          </Link>
         </div>
       </section>
 
