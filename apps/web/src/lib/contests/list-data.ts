@@ -264,6 +264,9 @@ export function groupContestsByNumber(
  * Metadata visual de cada variante de un contest (E sin-calc, M sin-calc,
  * M con-calc). Usado por las cards de prácticas y oficiales para mostrar
  * íconos diferenciados.
+ *
+ * Recibe un `t()` helper apuntando al namespace `contests.variants` para
+ * que las etiquetas se traduzcan según el locale activo.
  */
 export interface VariantMeta {
   icon: string;
@@ -271,15 +274,15 @@ export interface VariantMeta {
   shortLabel: string;
 }
 
-export function variantOf(contest: {
-  division: string;
-  calculator_allowed: boolean;
-}): VariantMeta {
+export function variantOf(
+  contest: { division: string; calculator_allowed: boolean },
+  t: (key: string) => string,
+): VariantMeta {
   if (contest.division === 'elementary') {
-    return { icon: '🧒', label: 'Primaria (sin calculadora)', shortLabel: 'Primaria' };
+    return { icon: '🧒', label: t('primaryFull'), shortLabel: t('primaryShort') };
   }
   if (contest.division === 'middle' && !contest.calculator_allowed) {
-    return { icon: '🧠', label: 'Secundaria (sin calculadora)', shortLabel: 'Sec. sin calc' };
+    return { icon: '🧠', label: t('middleNoCalcFull'), shortLabel: t('middleNoCalcShort') };
   }
-  return { icon: '🧮', label: 'Secundaria (con calculadora)', shortLabel: 'Sec. con calc' };
+  return { icon: '🧮', label: t('middleCalcFull'), shortLabel: t('middleCalcShort') };
 }

@@ -32,6 +32,8 @@ export default async function OfficialsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('contests');
+  const to = await getTranslations('contests.officialsPage');
+  const tv = await getTranslations('contests.variants');
   const format = await getFormatter();
 
   const supabase = await createServerClient();
@@ -60,15 +62,12 @@ export default async function OfficialsPage({
             🏆 {t('listTitle')}
           </Link>
           <span>›</span>
-          <span className="font-bold text-numoria-grafito">🏆 Contests oficiales</span>
+          <span className="font-bold text-numoria-grafito">{to('breadcrumb')}</span>
         </div>
         <h1 className="mt-3 font-display text-2xl font-bold text-numoria-grafito sm:text-3xl">
-          🏆 Contests oficiales 2026-2027
+          {to('title')}
         </h1>
-        <p className="mt-2 text-sm text-numoria-mid">
-          Seis competencias oficiales durante el ciclo académico. Los resultados se publican y
-          actualizan mensualmente, y cuentan para el ranking nacional y regional.
-        </p>
+        <p className="mt-2 text-sm text-numoria-mid">{to('description')}</p>
       </header>
 
       {grouped.length === 0 ? (
@@ -77,7 +76,7 @@ export default async function OfficialsPage({
         <div className="flex flex-col gap-6">
           {grouped.map(({ number, cards }) => {
             const firstContest = cards[0] ? contestById(cards[0].id) : undefined;
-            const status = officialStatusOf(firstContest);
+            const status = officialStatusOf(firstContest, to);
             return (
               <section
                 key={number}
@@ -86,11 +85,11 @@ export default async function OfficialsPage({
                 <header className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
                   <div>
                     <h2 className="font-display text-lg font-bold text-numoria-grafito">
-                      🏆 Contest oficial #{number}
+                      {to('officialHeader', { number })}
                     </h2>
                     {firstContest && (
                       <p className="mt-1 text-sm text-numoria-mid">
-                        Fecha programada:{' '}
+                        {to('scheduledDate')}
                         <strong className="text-numoria-grafito">
                           {format.dateTime(new Date(firstContest.scheduled_at), {
                             day: 'numeric',
@@ -107,7 +106,7 @@ export default async function OfficialsPage({
                   {cards.map((card) => {
                     const contest = contestById(card.id);
                     if (!contest) return null;
-                    const variant = variantOf(contest);
+                    const variant = variantOf(contest, tv);
                     return (
                       <div key={card.id} className="flex flex-col gap-2">
                         <div className="flex items-center gap-2 px-1 text-xs font-bold uppercase tracking-wide text-numoria-mid">
@@ -135,16 +134,19 @@ interface StatusInfo {
   tone: 'upcoming' | 'active' | 'closed';
 }
 
-function officialStatusOf(contest: ContestListContext | undefined): StatusInfo {
-  if (!contest) return { label: 'Próximamente', tone: 'upcoming' };
+function officialStatusOf(
+  contest: ContestListContext | undefined,
+  to: (key: string) => string,
+): StatusInfo {
+  if (!contest) return { label: to('statusFallback'), tone: 'upcoming' };
   const now = new Date();
   const scheduled = new Date(contest.scheduled_at);
   const windowEnd = new Date(
     scheduled.getTime() + (contest.calendar_window_days ?? 30) * 24 * 60 * 60 * 1000,
   );
-  if (now < scheduled) return { label: '🔵 Próximo', tone: 'upcoming' };
-  if (now <= windowEnd) return { label: '🟢 Abierto', tone: 'active' };
-  return { label: '⚫ Cerrado', tone: 'closed' };
+  if (now < scheduled) return { label: to('statusUpcoming'), tone: 'upcoming' };
+  if (now <= windowEnd) return { label: to('statusActive'), tone: 'active' };
+  return { label: to('statusClosed'), tone: 'closed' };
 }
 
 function StatusBadge({ label, tone }: StatusInfo) {
@@ -162,23 +164,19 @@ function StatusBadge({ label, tone }: StatusInfo) {
   );
 }
 
-function EmptyOfficials() {
+async function EmptyOfficials() {
+  const to = await getTranslations('contests.officialsPage');
   return (
     <div className="rounded-2xl border-2 border-dashed border-numoria-orange/40 bg-numoria-orange/5 p-8">
-      <h2 className="font-display text-lg font-bold text-numoria-grafito">
-        Calendario oficial 2026-2027
-      </h2>
-      <p className="mt-2 text-sm text-numoria-mid">
-        Aún no hay contests oficiales generados en el sistema. Los 6 contests del ciclo académico se
-        publicarán antes del primer evento.
-      </p>
+      <h2 className="font-display text-lg font-bold text-numoria-grafito">{to('emptyTitle')}</h2>
+      <p className="mt-2 text-sm text-numoria-mid">{to('emptyDescription')}</p>
       <ul className="mt-4 grid gap-2 text-sm text-numoria-mid sm:grid-cols-2">
-        <li>📅 Contest #1 — Primera semana de Noviembre 2026</li>
-        <li>📅 Contest #2 — Primera semana de Diciembre 2026</li>
-        <li>📅 Contest #3 — Segunda semana de Enero 2027</li>
-        <li>📅 Contest #4 — Primera semana de Febrero 2027</li>
-        <li>📅 Contest #5 — Primera semana de Marzo 2027</li>
-        <li>📅 Contest #6 — Primera semana de Abril 2027</li>
+        <li>{to('calendar.c1')}</li>
+        <li>{to('calendar.c2')}</li>
+        <li>{to('calendar.c3')}</li>
+        <li>{to('calendar.c4')}</li>
+        <li>{to('calendar.c5')}</li>
+        <li>{to('calendar.c6')}</li>
       </ul>
     </div>
   );

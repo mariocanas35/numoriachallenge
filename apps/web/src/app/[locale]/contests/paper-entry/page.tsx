@@ -1,7 +1,7 @@
 import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
 type Contest = Tables<'contests'>;
@@ -26,6 +26,8 @@ export default async function PaperEntryListPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const tp = await getTranslations('contests.paperEntryPage');
+  const tCard = await getTranslations('contests.card');
 
   const supabase = await createServerClient();
   const {
@@ -75,27 +77,19 @@ export default async function PaperEntryListPage({
     <div className="flex flex-col gap-6">
       <header>
         <h1 className="font-display text-2xl font-bold text-numoria-grafito sm:text-3xl">
-          📝 Entrada manual
+          {tp('title')}
         </h1>
-        <p className="mt-2 text-sm text-numoria-mid">
-          Transcribe a la plataforma las respuestas que tus estudiantes hicieron en papel para los
-          <strong> contests oficiales</strong>. Selecciona el contest y luego ingresa las respuestas
-          estudiante por estudiante. Las prácticas no requieren transcripción — los estudiantes las
-          completan directo en la app.
-        </p>
+        <p className="mt-2 text-sm text-numoria-mid">{tp('description')}</p>
       </header>
 
       {contests.length === 0 ? (
         <div className="rounded-xl border-2 border-dashed border-numoria-gray bg-white p-8 text-center">
-          <p className="text-sm text-numoria-mid">
-            No hay contests oficiales activos en este momento. El primer contest del ciclo académico
-            2026-2027 es el sábado 7 de Noviembre 2026.
-          </p>
+          <p className="text-sm text-numoria-mid">{tp('emptyMessage')}</p>
           <Link
             href="/contests/officials"
             className="mt-4 inline-block text-sm font-bold text-numoria-orange hover:underline"
           >
-            Ver calendario de contests oficiales →
+            {tp('viewOfficialsLink')}
           </Link>
         </div>
       ) : (
@@ -108,15 +102,15 @@ export default async function PaperEntryListPage({
               >
                 <div className="flex-1">
                   <p className="font-display text-base font-bold text-numoria-grafito">
-                    🏆 {c.title_es}
+                    🏆 {locale === 'en' ? c.title_en : c.title_es}
                   </p>
                   <p className="mt-1 text-xs text-numoria-mid">
-                    {c.division === 'elementary' ? 'Primaria' : 'Secundaria'} ·{' '}
-                    {c.calculator_allowed ? 'Con calculadora' : 'Sin calculadora'}
+                    {c.division === 'elementary' ? tCard('divisionE') : tCard('divisionM')} ·{' '}
+                    {c.calculator_allowed ? tCard('withCalc') : tCard('noCalc')}
                   </p>
                 </div>
                 <span className="rounded-full bg-numoria-coral/10 px-3 py-1 text-xs font-bold text-numoria-coral">
-                  Transcribir →
+                  {tp('transcribeButton')}
                 </span>
               </Link>
             </li>

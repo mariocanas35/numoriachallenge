@@ -24,6 +24,7 @@ export default async function ContestsListPage({
   const { startError } = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations('contests');
+  const te = await getTranslations('contests.startError');
 
   const supabase = await createServerClient();
   const {
@@ -67,19 +68,16 @@ export default async function ContestsListPage({
           <p className="text-sm font-bold text-numoria-coral">
             ⚠️{' '}
             {startError === 'session_not_open'
-              ? 'No hay una sesión abierta de este contest para tu equipo.'
+              ? te('noSession')
               : startError === 'Contest is not active'
-                ? 'Este contest no está activo en este momento.'
+                ? te('notActive')
                 : startError === 'Contest has not started yet'
-                  ? 'Este contest aún no ha empezado.'
+                  ? te('notStarted')
                   : startError === 'Contest window has expired'
-                    ? 'La ventana de este contest ya expiró.'
-                    : `No se pudo empezar el contest: ${startError}`}
+                    ? te('expired')
+                    : te('generic', { error: startError })}
           </p>
-          <p className="mt-1 text-xs text-numoria-mid">
-            Tu maestro debe abrir una sesión para tu equipo desde su dashboard. La sesión dura 35
-            minutos y permite que todos los students del equipo entren al contest.
-          </p>
+          <p className="mt-1 text-xs text-numoria-mid">{te('instructions')}</p>
         </div>
       )}
 

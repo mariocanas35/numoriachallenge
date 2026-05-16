@@ -216,15 +216,14 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
           {teams.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               <StatPill icon="👥" variant="indigo">
-                {teams.length} {teams.length === 1 ? 'equipo' : 'equipos'}
+                {tTeacher('pillTeams', { count: teams.length })}
               </StatPill>
               <StatPill icon="⭐" variant="teal">
-                {totalStudents} {totalStudents === 1 ? 'estudiante' : 'estudiantes'}
+                {tTeacher('pillStudents', { count: totalStudents })}
               </StatPill>
               {activeSessions.length > 0 && (
                 <StatPill icon="🟢" variant="dorado">
-                  {activeSessions.length}{' '}
-                  {activeSessions.length === 1 ? 'sesión activa' : 'sesiones activas'}
+                  {tTeacher('pillActiveSessions', { count: activeSessions.length })}
                 </StatPill>
               )}
             </div>

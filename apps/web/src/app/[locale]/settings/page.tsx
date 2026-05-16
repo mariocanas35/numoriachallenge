@@ -31,6 +31,7 @@ export default async function SettingsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('auth');
+  const ts = await getTranslations('settings');
 
   const supabase = await createServerClient();
   const {
@@ -92,21 +93,17 @@ export default async function SettingsPage({
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8 sm:px-10 sm:py-12">
         <header className="mb-8">
-          <h1 className="font-display text-3xl font-bold text-numoria-grafito">⚙️ Configuración</h1>
-          <p className="mt-2 text-sm text-numoria-mid">
-            Personaliza tu escuela, tu perfil y revisa tu suscripción.
-          </p>
+          <h1 className="font-display text-3xl font-bold text-numoria-grafito">{ts('title')}</h1>
+          <p className="mt-2 text-sm text-numoria-mid">{ts('subtitle')}</p>
         </header>
 
         <div className="flex flex-col gap-6">
           {/* === 🏫 ESCUELA === */}
           <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
             <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              🏫 Mi escuela
+              {ts('school.sectionTitle')}
             </h2>
-            <p className="mb-5 text-sm text-numoria-mid">
-              Información pública de tu institución educativa.
-            </p>
+            <p className="mb-5 text-sm text-numoria-mid">{ts('school.sectionDescription')}</p>
             {school ? (
               <SchoolForm
                 initial={{
@@ -121,16 +118,14 @@ export default async function SettingsPage({
                 }}
               />
             ) : (
-              <p className="text-sm text-numoria-mid">
-                No tienes una escuela registrada. Completa el onboarding para crear una.
-              </p>
+              <p className="text-sm text-numoria-mid">{ts('school.noSchool')}</p>
             )}
           </section>
 
           {/* === ✅ VERIFICACIÓN === */}
           <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
             <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              ✅ Verificación
+              {ts('verification.sectionTitle')}
             </h2>
             {school?.verified ? (
               <div className="mt-3 flex items-start gap-3 rounded-xl bg-numoria-teal/10 p-4">
@@ -138,10 +133,9 @@ export default async function SettingsPage({
                   ✅
                 </span>
                 <div>
-                  <p className="font-bold text-numoria-teal">Escuela verificada</p>
+                  <p className="font-bold text-numoria-teal">{ts('verification.verifiedTitle')}</p>
                   <p className="mt-1 text-sm text-numoria-mid">
-                    Tu escuela ha sido validada por el equipo de Numoria. Aparece con badge oficial
-                    en rankings y certificados.
+                    {ts('verification.verifiedDescription')}
                   </p>
                 </div>
               </div>
@@ -151,17 +145,18 @@ export default async function SettingsPage({
                   ⏳
                 </span>
                 <div className="flex-1">
-                  <p className="font-bold text-numoria-grafito">Verificación pendiente</p>
+                  <p className="font-bold text-numoria-grafito">
+                    {ts('verification.pendingTitle')}
+                  </p>
                   <p className="mt-1 text-sm text-numoria-mid">
-                    Para verificar tu escuela y aparecer con badge oficial, escríbenos a{' '}
+                    {ts('verification.pendingDescriptionBefore')}
                     <a
                       href="mailto:hola@numoria.app"
                       className="font-bold text-numoria-orange underline-offset-2 hover:underline"
                     >
                       hola@numoria.app
-                    </a>{' '}
-                    con el nombre completo de la institución y una credencial que valide tu rol como
-                    docente o director.
+                    </a>
+                    {ts('verification.pendingDescriptionAfter')}
                   </p>
                 </div>
               </div>
@@ -171,49 +166,47 @@ export default async function SettingsPage({
           {/* === 💳 SUSCRIPCIÓN === */}
           <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
             <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              💳 Suscripción
+              {ts('subscription.sectionTitle')}
             </h2>
-            <p className="mb-5 text-sm text-numoria-mid">Tu plan actual y opciones de upgrade.</p>
+            <p className="mb-5 text-sm text-numoria-mid">{ts('subscription.sectionDescription')}</p>
             <div className="rounded-xl bg-numoria-cloud p-5">
               <div className="flex items-baseline justify-between gap-3">
                 <div>
                   <p className="font-display text-2xl font-bold text-numoria-grafito">
-                    Plan Piloto
+                    {ts('subscription.planName')}
                   </p>
-                  <p className="mt-1 text-sm text-numoria-mid">Soft launch 2026-2027</p>
+                  <p className="mt-1 text-sm text-numoria-mid">{ts('subscription.planSubtitle')}</p>
                 </div>
                 <span className="rounded-full bg-numoria-teal/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-numoria-teal">
-                  Gratis
+                  {ts('subscription.priceBadge')}
                 </span>
               </div>
               <ul className="mt-4 flex flex-col gap-1.5 text-sm text-numoria-mid">
                 <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> Hasta 30 estudiantes por equipo
+                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature1')}
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> Acceso completo a las 3 prácticas
+                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature2')}
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> Acceso a los 6 contests oficiales del
-                  ciclo
+                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature3')}
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> Entrada manual de respuestas en papel
+                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature4')}
                 </li>
               </ul>
             </div>
             <p className="mt-4 rounded-xl border border-dashed border-numoria-orange/40 bg-numoria-orange/5 p-3 text-xs text-numoria-mid">
-              💡 Planes pagos con seats adicionales, branding personalizado y analíticas avanzadas
-              llegarán después del cierre del ciclo académico 2026-2027.
+              {ts('subscription.comingSoonNote')}
             </p>
           </section>
 
           {/* === 👤 MI PERFIL === */}
           <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
             <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              👤 Mi perfil
+              {ts('profile.sectionTitle')}
             </h2>
-            <p className="mb-5 text-sm text-numoria-mid">Cómo te ven tus estudiantes y colegas.</p>
+            <p className="mb-5 text-sm text-numoria-mid">{ts('profile.sectionDescription')}</p>
             <ProfileForm
               initial={{
                 display_name: profile.display_name,

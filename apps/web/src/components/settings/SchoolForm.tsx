@@ -2,6 +2,7 @@
 
 import { updateSchoolDetails } from '@/lib/settings/actions';
 import { Button } from '@numoria/ui';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useState, useTransition } from 'react';
 
@@ -42,6 +43,7 @@ const COUNTRIES = [
 ];
 
 export function SchoolForm({ initial }: SchoolFormProps) {
+  const t = useTranslations('settings');
   const [pending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -52,7 +54,7 @@ export function SchoolForm({ initial }: SchoolFormProps) {
     startTransition(async () => {
       const result = await updateSchoolDetails(formData);
       if (result.ok) {
-        setFeedback({ kind: 'ok', message: '✅ Datos de escuela guardados' });
+        setFeedback({ kind: 'ok', message: t('school.successMessage') });
       } else {
         setFeedback({ kind: 'error', message: result.message });
         if (result.fieldErrors) setErrors(result.fieldErrors);
@@ -79,16 +81,14 @@ export function SchoolForm({ initial }: SchoolFormProps) {
           </div>
         )}
         <div className="flex-1 text-xs text-numoria-mid">
-          <p className="font-bold text-numoria-grafito">Logo de la escuela</p>
-          <p className="mt-1">
-            Cambio de logo: próximamente. Por ahora muestra el subido en onboarding.
-          </p>
+          <p className="font-bold text-numoria-grafito">{t('school.logoLabel')}</p>
+          <p className="mt-1">{t('school.logoHint')}</p>
         </div>
       </div>
 
       {/* Nombre */}
       <Field
-        label="Nombre de la escuela"
+        label={t('school.nameLabel')}
         name="name"
         defaultValue={initial.name}
         required
@@ -99,7 +99,7 @@ export function SchoolForm({ initial }: SchoolFormProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="mb-1 block text-sm font-bold text-numoria-grafito">
-            País <span className="text-numoria-coral">*</span>
+            {t('school.countryLabel')} <span className="text-numoria-coral">*</span>
           </span>
           <select
             name="country_code"
@@ -117,30 +117,35 @@ export function SchoolForm({ initial }: SchoolFormProps) {
             <p className="mt-1 text-xs text-numoria-coral">{errors.country_code[0]}</p>
           )}
         </label>
-        <Field label="Ciudad" name="city" defaultValue={initial.city ?? ''} errors={errors.city} />
+        <Field
+          label={t('school.cityLabel')}
+          name="city"
+          defaultValue={initial.city ?? ''}
+          errors={errors.city}
+        />
       </div>
 
       <Field
-        label="Dirección"
+        label={t('school.addressLabel')}
         name="address"
         defaultValue={initial.address ?? ''}
-        placeholder="Calle, número, colonia"
+        placeholder={t('school.addressPlaceholder')}
         errors={errors.address}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field
-          label="Teléfono"
+          label={t('school.phoneLabel')}
           name="phone"
           defaultValue={initial.phone ?? ''}
-          placeholder="(+504) 1234-5678"
+          placeholder={t('school.phonePlaceholder')}
           errors={errors.phone}
         />
         <Field
-          label="Sitio web"
+          label={t('school.websiteLabel')}
           name="website"
           defaultValue={initial.website ?? ''}
-          placeholder="https://escuela.edu"
+          placeholder={t('school.websitePlaceholder')}
           errors={errors.website}
         />
       </div>
@@ -157,7 +162,7 @@ export function SchoolForm({ initial }: SchoolFormProps) {
 
       <div className="flex justify-end">
         <Button variant="primary" type="submit" disabled={pending}>
-          {pending ? 'Guardando...' : 'Guardar cambios'}
+          {pending ? t('saving') : t('saveButton')}
         </Button>
       </div>
     </form>

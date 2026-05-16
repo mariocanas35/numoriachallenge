@@ -283,7 +283,10 @@
       "actionPractices": "Prácticas",
       "actionPracticesDesc": "3 tests siempre disponibles para que tus estudiantes entrenen antes de los contests oficiales",
       "moreTeams": "más",
-      "settings": "Configuración"
+      "settings": "Configuración",
+      "pillTeams": "{count, plural, =1 {1 equipo} other {# equipos}}",
+      "pillStudents": "{count, plural, =1 {1 estudiante} other {# estudiantes}}",
+      "pillActiveSessions": "{count, plural, =1 {1 sesión activa} other {# sesiones activas}}"
     }
   },
   "contests": {
@@ -299,6 +302,63 @@
       "practiceGroupHeader": "📁 Práctica #{number}",
       "officials": "Contests oficiales",
       "officialsSubtitle": "Competencias oficiales con calendario fijo y ranking nacional."
+    },
+    "practicesPage": {
+      "title": "📚 Prácticas",
+      "description": "Tests siempre disponibles para entrenar antes de los contests oficiales. Las prácticas no cuentan para tu nivel ni para el ranking nacional — son para que tus estudiantes ganen confianza sin presión.",
+      "empty": "No hay prácticas disponibles en este momento.",
+      "primaryFolder": "Primaria",
+      "primaryDescription": "Para estudiantes de 4° a 6° grado. Sin calculadora.",
+      "middleFolder": "Middle School",
+      "middleDescription": "Para estudiantes de 7° a 9° grado. Dos variantes según el uso de calculadora.",
+      "subfolderNoCalc": "Sin calculadora",
+      "subfolderWithCalc": "Con calculadora",
+      "practiceLabel": "Práctica #{number}",
+      "practiceCount": "{count, plural, one {# práctica} other {# prácticas}}"
+    },
+    "officialsPage": {
+      "title": "🏆 Contests oficiales 2026-2027",
+      "breadcrumb": "🏆 Contests oficiales",
+      "description": "Seis competencias oficiales durante el ciclo académico. Los resultados se publican y actualizan mensualmente, y cuentan para el ranking nacional y regional.",
+      "officialHeader": "🏆 Contest oficial #{number}",
+      "scheduledDate": "Fecha programada: ",
+      "statusUpcoming": "🔵 Próximo",
+      "statusActive": "🟢 Abierto",
+      "statusClosed": "⚫ Cerrado",
+      "statusFallback": "Próximamente",
+      "emptyTitle": "Calendario oficial 2026-2027",
+      "emptyDescription": "Aún no hay contests oficiales generados en el sistema. Los 6 contests del ciclo académico se publicarán antes del primer evento.",
+      "calendar": {
+        "c1": "📅 Contest #1 — Primera semana de Noviembre 2026",
+        "c2": "📅 Contest #2 — Primera semana de Diciembre 2026",
+        "c3": "📅 Contest #3 — Segunda semana de Enero 2027",
+        "c4": "📅 Contest #4 — Primera semana de Febrero 2027",
+        "c5": "📅 Contest #5 — Primera semana de Marzo 2027",
+        "c6": "📅 Contest #6 — Primera semana de Abril 2027"
+      }
+    },
+    "paperEntryPage": {
+      "title": "📝 Entrada manual",
+      "description": "Transcribe a la plataforma las respuestas que tus estudiantes hicieron en papel para los contests oficiales. Selecciona el contest y luego ingresa las respuestas estudiante por estudiante. Las prácticas no requieren transcripción — los estudiantes las completan directo en la app.",
+      "emptyMessage": "No hay contests oficiales activos en este momento. El primer contest del ciclo académico 2026-2027 es el sábado 7 de Noviembre 2026.",
+      "viewOfficialsLink": "Ver calendario de contests oficiales →",
+      "transcribeButton": "Transcribir →"
+    },
+    "variants": {
+      "primaryShort": "Primaria",
+      "primaryFull": "Primaria (sin calculadora)",
+      "middleNoCalcShort": "Sec. sin calc",
+      "middleNoCalcFull": "Secundaria (sin calculadora)",
+      "middleCalcShort": "Sec. con calc",
+      "middleCalcFull": "Secundaria (con calculadora)"
+    },
+    "startError": {
+      "noSession": "No hay una sesión abierta de este contest para tu equipo.",
+      "notActive": "Este contest no está activo en este momento.",
+      "notStarted": "Este contest aún no ha empezado.",
+      "expired": "La ventana de este contest ya expiró.",
+      "generic": "No se pudo empezar el contest: {error}",
+      "instructions": "Tu maestro debe abrir una sesión para tu equipo desde su dashboard. La sesión dura 35 minutos y permite que todos los students del equipo entren al contest."
     },
     "card": {
       "contestNumber": "Contest #{number}",
@@ -589,5 +649,57 @@
   "metadata": {
     "title": "Numoria Challenge — Olimpiadas matemáticas online",
     "description": "Plataforma de olimpiadas matemáticas para estudiantes de 8 a 14 años. Compite, practica y gana medallas. 3 competencias gratis sin tarjeta."
+  },
+  "settings": {
+    "title": "⚙️ Configuración",
+    "subtitle": "Personaliza tu escuela, tu perfil y revisa tu suscripción.",
+    "saveButton": "Guardar cambios",
+    "saving": "Guardando...",
+    "school": {
+      "sectionTitle": "🏫 Mi escuela",
+      "sectionDescription": "Información pública de tu institución educativa.",
+      "noSchool": "No tienes una escuela registrada. Completa el onboarding para crear una.",
+      "successMessage": "✅ Datos de escuela guardados",
+      "logoLabel": "Logo de la escuela",
+      "logoHint": "Cambio de logo: próximamente. Por ahora muestra el subido en onboarding.",
+      "nameLabel": "Nombre de la escuela",
+      "countryLabel": "País",
+      "cityLabel": "Ciudad",
+      "addressLabel": "Dirección",
+      "addressPlaceholder": "Calle, número, colonia",
+      "phoneLabel": "Teléfono",
+      "phonePlaceholder": "(+504) 1234-5678",
+      "websiteLabel": "Sitio web",
+      "websitePlaceholder": "https://escuela.edu"
+    },
+    "verification": {
+      "sectionTitle": "✅ Verificación",
+      "verifiedTitle": "Escuela verificada",
+      "verifiedDescription": "Tu escuela ha sido validada por el equipo de Numoria. Aparece con badge oficial en rankings y certificados.",
+      "pendingTitle": "Verificación pendiente",
+      "pendingDescriptionBefore": "Para verificar tu escuela y aparecer con badge oficial, escríbenos a ",
+      "pendingDescriptionAfter": " con el nombre completo de la institución y una credencial que valide tu rol como docente o director."
+    },
+    "subscription": {
+      "sectionTitle": "💳 Suscripción",
+      "sectionDescription": "Tu plan actual y opciones de upgrade.",
+      "planName": "Plan Piloto",
+      "planSubtitle": "Soft launch 2026-2027",
+      "priceBadge": "Gratis",
+      "feature1": "Hasta 30 estudiantes por equipo",
+      "feature2": "Acceso completo a las 3 prácticas",
+      "feature3": "Acceso a los 6 contests oficiales del ciclo",
+      "feature4": "Entrada manual de respuestas en papel",
+      "comingSoonNote": "💡 Planes pagos con seats adicionales, branding personalizado y analíticas avanzadas llegarán después del cierre del ciclo académico 2026-2027."
+    },
+    "profile": {
+      "sectionTitle": "👤 Mi perfil",
+      "sectionDescription": "Cómo te ven tus estudiantes y colegas.",
+      "successMessage": "✅ Perfil actualizado",
+      "displayNameLabel": "Nombre visible",
+      "emailLabel": "Correo",
+      "emailReadOnly": "El correo no se puede cambiar desde aquí.",
+      "languageLabel": "Idioma preferido"
+    }
   }
 }

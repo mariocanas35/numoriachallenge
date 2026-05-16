@@ -283,7 +283,10 @@
       "actionPractices": "Practices",
       "actionPracticesDesc": "3 tests always available for your students to train before official contests",
       "moreTeams": "more",
-      "settings": "Settings"
+      "settings": "Settings",
+      "pillTeams": "{count, plural, =1 {1 team} other {# teams}}",
+      "pillStudents": "{count, plural, =1 {1 student} other {# students}}",
+      "pillActiveSessions": "{count, plural, =1 {1 active session} other {# active sessions}}"
     }
   },
   "contests": {
@@ -299,6 +302,63 @@
       "practiceGroupHeader": "📁 Practice #{number}",
       "officials": "Official contests",
       "officialsSubtitle": "Official competitions with fixed calendar and national ranking."
+    },
+    "practicesPage": {
+      "title": "📚 Practices",
+      "description": "Tests always available to train before official contests. Practices don't count toward your level or the national ranking — they're for your students to gain confidence without pressure.",
+      "empty": "No practices available at the moment.",
+      "primaryFolder": "Elementary",
+      "primaryDescription": "For students in grades 4-6. No calculator.",
+      "middleFolder": "Middle School",
+      "middleDescription": "For students in grades 7-9. Two variants depending on calculator use.",
+      "subfolderNoCalc": "No calculator",
+      "subfolderWithCalc": "With calculator",
+      "practiceLabel": "Practice #{number}",
+      "practiceCount": "{count, plural, one {# practice} other {# practices}}"
+    },
+    "officialsPage": {
+      "title": "🏆 Official Contests 2026-2027",
+      "breadcrumb": "🏆 Official contests",
+      "description": "Six official competitions during the school year. Results are published and updated monthly, and count toward the national and regional ranking.",
+      "officialHeader": "🏆 Official contest #{number}",
+      "scheduledDate": "Scheduled for: ",
+      "statusUpcoming": "🔵 Upcoming",
+      "statusActive": "🟢 Open",
+      "statusClosed": "⚫ Closed",
+      "statusFallback": "Coming soon",
+      "emptyTitle": "Official calendar 2026-2027",
+      "emptyDescription": "No official contests have been generated in the system yet. The 6 contests of the school year will be published before the first event.",
+      "calendar": {
+        "c1": "📅 Contest #1 — First week of November 2026",
+        "c2": "📅 Contest #2 — First week of December 2026",
+        "c3": "📅 Contest #3 — Second week of January 2027",
+        "c4": "📅 Contest #4 — First week of February 2027",
+        "c5": "📅 Contest #5 — First week of March 2027",
+        "c6": "📅 Contest #6 — First week of April 2027"
+      }
+    },
+    "paperEntryPage": {
+      "title": "📝 Manual entry",
+      "description": "Transcribe to the platform the answers your students wrote on paper for the official contests. Select the contest and then enter the answers student by student. Practices don't need transcription — students complete them directly in the app.",
+      "emptyMessage": "No active official contests at the moment. The first contest of the 2026-2027 school year is Saturday November 7, 2026.",
+      "viewOfficialsLink": "View official contests calendar →",
+      "transcribeButton": "Transcribe →"
+    },
+    "variants": {
+      "primaryShort": "Elementary",
+      "primaryFull": "Elementary (no calculator)",
+      "middleNoCalcShort": "Middle no calc",
+      "middleNoCalcFull": "Middle (no calculator)",
+      "middleCalcShort": "Middle w/ calc",
+      "middleCalcFull": "Middle (with calculator)"
+    },
+    "startError": {
+      "noSession": "There's no open session of this contest for your team.",
+      "notActive": "This contest is not active at the moment.",
+      "notStarted": "This contest hasn't started yet.",
+      "expired": "The window for this contest has expired.",
+      "generic": "Could not start the contest: {error}",
+      "instructions": "Your teacher must open a session for your team from their dashboard. The session lasts 35 minutes and allows all students on the team to enter the contest."
     },
     "card": {
       "contestNumber": "Contest #{number}",
@@ -589,5 +649,57 @@
   "metadata": {
     "title": "Numoria Challenge — Online math olympiads",
     "description": "Math olympiad platform for students aged 8 to 14. Compete, practice, and earn medals. 3 free competitions, no card needed."
+  },
+  "settings": {
+    "title": "⚙️ Settings",
+    "subtitle": "Customize your school, your profile and review your subscription.",
+    "saveButton": "Save changes",
+    "saving": "Saving...",
+    "school": {
+      "sectionTitle": "🏫 My school",
+      "sectionDescription": "Public information about your educational institution.",
+      "noSchool": "You don't have a registered school. Complete onboarding to create one.",
+      "successMessage": "✅ School details saved",
+      "logoLabel": "School logo",
+      "logoHint": "Logo change: coming soon. For now it shows the one uploaded during onboarding.",
+      "nameLabel": "School name",
+      "countryLabel": "Country",
+      "cityLabel": "City",
+      "addressLabel": "Address",
+      "addressPlaceholder": "Street, number, neighborhood",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "(+504) 1234-5678",
+      "websiteLabel": "Website",
+      "websitePlaceholder": "https://school.edu"
+    },
+    "verification": {
+      "sectionTitle": "✅ Verification",
+      "verifiedTitle": "School verified",
+      "verifiedDescription": "Your school has been validated by the Numoria team. It appears with an official badge in rankings and certificates.",
+      "pendingTitle": "Verification pending",
+      "pendingDescriptionBefore": "To verify your school and get the official badge, write to ",
+      "pendingDescriptionAfter": " with the full name of the institution and credentials proving your role as teacher or principal."
+    },
+    "subscription": {
+      "sectionTitle": "💳 Subscription",
+      "sectionDescription": "Your current plan and upgrade options.",
+      "planName": "Pilot Plan",
+      "planSubtitle": "Soft launch 2026-2027",
+      "priceBadge": "Free",
+      "feature1": "Up to 30 students per team",
+      "feature2": "Full access to the 3 practices",
+      "feature3": "Access to the 6 official contests of the year",
+      "feature4": "Manual entry for paper-based answers",
+      "comingSoonNote": "💡 Paid plans with additional seats, custom branding and advanced analytics will arrive after the end of the 2026-2027 school year."
+    },
+    "profile": {
+      "sectionTitle": "👤 My profile",
+      "sectionDescription": "How your students and colleagues see you.",
+      "successMessage": "✅ Profile updated",
+      "displayNameLabel": "Display name",
+      "emailLabel": "Email",
+      "emailReadOnly": "Email cannot be changed from here.",
+      "languageLabel": "Preferred language"
+    }
   }
 }

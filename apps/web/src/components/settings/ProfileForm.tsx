@@ -2,6 +2,7 @@
 
 import { updateUserProfile } from '@/lib/settings/actions';
 import { Button } from '@numoria/ui';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
 interface ProfileFormProps {
@@ -19,6 +20,7 @@ const LOCALES = [
 ];
 
 export function ProfileForm({ initial }: ProfileFormProps) {
+  const t = useTranslations('settings');
   const [pending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{ kind: 'ok' | 'error'; message: string } | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -29,7 +31,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
     startTransition(async () => {
       const result = await updateUserProfile(formData);
       if (result.ok) {
-        setFeedback({ kind: 'ok', message: '✅ Perfil actualizado' });
+        setFeedback({ kind: 'ok', message: t('profile.successMessage') });
       } else {
         setFeedback({ kind: 'error', message: result.message });
         if (result.fieldErrors) setErrors(result.fieldErrors);
@@ -41,7 +43,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
     <form action={handleSubmit} className="flex flex-col gap-5">
       <label className="block">
         <span className="mb-1 block text-sm font-bold text-numoria-grafito">
-          Nombre visible <span className="text-numoria-coral">*</span>
+          {t('profile.displayNameLabel')} <span className="text-numoria-coral">*</span>
         </span>
         <input
           type="text"
@@ -57,20 +59,22 @@ export function ProfileForm({ initial }: ProfileFormProps) {
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-sm font-bold text-numoria-grafito">Correo</span>
+        <span className="mb-1 block text-sm font-bold text-numoria-grafito">
+          {t('profile.emailLabel')}
+        </span>
         <input
           type="email"
           defaultValue={initial.email}
           disabled
           className="w-full cursor-not-allowed rounded-lg border-2 border-numoria-gray bg-numoria-cloud px-3 py-2 text-sm text-numoria-mid"
         />
-        <p className="mt-1 text-xs text-numoria-niebla">
-          El correo no se puede cambiar desde aquí.
-        </p>
+        <p className="mt-1 text-xs text-numoria-niebla">{t('profile.emailReadOnly')}</p>
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-sm font-bold text-numoria-grafito">Idioma preferido</span>
+        <span className="mb-1 block text-sm font-bold text-numoria-grafito">
+          {t('profile.languageLabel')}
+        </span>
         <select
           name="locale"
           defaultValue={initial.locale}
@@ -96,7 +100,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
 
       <div className="flex justify-end">
         <Button variant="primary" type="submit" disabled={pending}>
-          {pending ? 'Guardando...' : 'Guardar cambios'}
+          {pending ? t('saving') : t('saveButton')}
         </Button>
       </div>
     </form>

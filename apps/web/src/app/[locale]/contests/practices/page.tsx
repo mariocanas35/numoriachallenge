@@ -33,6 +33,7 @@ export default async function PracticesPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('contests');
+  const tp = await getTranslations('contests.practicesPage');
 
   const supabase = await createServerClient();
   const {
@@ -61,32 +62,29 @@ export default async function PracticesPage({
             🏆 {t('listTitle')}
           </Link>
           <span>›</span>
-          <span className="font-bold text-numoria-grafito">📚 Prácticas</span>
+          <span className="font-bold text-numoria-grafito">{tp('title')}</span>
         </div>
         <h1 className="mt-3 font-display text-2xl font-bold text-numoria-grafito sm:text-3xl">
-          📚 Prácticas
+          {tp('title')}
         </h1>
-        <p className="mt-2 text-sm text-numoria-mid">
-          Tests siempre disponibles para entrenar antes de los contests oficiales. Las prácticas no
-          cuentan para tu nivel ni para el ranking nacional — son para que tus estudiantes ganen
-          confianza sin presión.
-        </p>
+        <p className="mt-2 text-sm text-numoria-mid">{tp('description')}</p>
       </header>
 
       {practices.length === 0 ? (
         <div className="rounded-xl border-2 border-dashed border-numoria-gray bg-white p-8 text-center text-sm text-numoria-mid">
-          No hay prácticas disponibles en este momento.
+          {tp('empty')}
         </div>
       ) : (
         <div className="flex flex-col gap-6">
           {/* === 📁 Primaria === */}
           {byLevel.elementary.length > 0 && (
             <FolderSection
-              title="Primaria"
+              title={tp('primaryFolder')}
               accent="orange"
-              description="Para estudiantes de 4° a 6° grado. Sin calculadora."
+              description={tp('primaryDescription')}
               cards={byLevel.elementary}
               contestById={contestById}
+              countLabel={tp('practiceCount', { count: byLevel.elementary.length })}
             />
           )}
 
@@ -102,34 +100,38 @@ export default async function PracticesPage({
                 </span>
                 <div className="flex-1">
                   <h2 className="font-display text-xl font-bold text-numoria-grafito">
-                    📁 Middle School
+                    📁 {tp('middleFolder')}
                   </h2>
-                  <p className="mt-1 text-sm text-numoria-mid">
-                    Para estudiantes de 7° a 9° grado. Dos variantes según el uso de calculadora.
-                  </p>
+                  <p className="mt-1 text-sm text-numoria-mid">{tp('middleDescription')}</p>
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wide text-numoria-mid">
-                  {byLevel.middleNoCalc.length + byLevel.middleCalc.length} prácticas
+                  {tp('practiceCount', {
+                    count: byLevel.middleNoCalc.length + byLevel.middleCalc.length,
+                  })}
                 </span>
               </summary>
 
               <div className="mt-5 flex flex-col gap-3">
                 {byLevel.middleNoCalc.length > 0 && (
                   <SubFolder
-                    title="Sin calculadora"
+                    title={tp('subfolderNoCalc')}
                     icon="✏️"
                     accent="teal"
                     cards={byLevel.middleNoCalc}
                     contestById={contestById}
+                    countLabel={tp('practiceCount', { count: byLevel.middleNoCalc.length })}
+                    practiceLabel={tp}
                   />
                 )}
                 {byLevel.middleCalc.length > 0 && (
                   <SubFolder
-                    title="Con calculadora"
+                    title={tp('subfolderWithCalc')}
                     icon="🧮"
                     accent="dorado"
                     cards={byLevel.middleCalc}
                     contestById={contestById}
+                    countLabel={tp('practiceCount', { count: byLevel.middleCalc.length })}
+                    practiceLabel={tp}
                   />
                 )}
               </div>
@@ -197,12 +199,14 @@ function FolderSection({
   description,
   cards,
   contestById,
+  countLabel,
 }: {
   title: string;
   accent: Accent;
   description?: string;
   cards: ContestCardData[];
   contestById: (id: string) => ContestListContext | undefined;
+  countLabel: string;
 }) {
   const accentClasses = {
     orange: 'border-numoria-orange/20 bg-numoria-orange/5 hover:bg-numoria-orange/10',
@@ -231,7 +235,7 @@ function FolderSection({
           {description && <p className="mt-1 text-sm text-numoria-mid">{description}</p>}
         </div>
         <span className="text-xs font-bold uppercase tracking-wide text-numoria-mid">
-          {cards.length} {cards.length === 1 ? 'práctica' : 'prácticas'}
+          {countLabel}
         </span>
       </summary>
       <div className="mt-5 grid gap-3 md:grid-cols-3">
@@ -253,12 +257,16 @@ function SubFolder({
   accent,
   cards,
   contestById,
+  countLabel,
 }: {
   title: string;
   icon: string;
   accent: Accent;
   cards: ContestCardData[];
   contestById: (id: string) => ContestListContext | undefined;
+  countLabel: string;
+  // practiceLabel param removed — PracticeCardWithNumber uses its own t() call
+  practiceLabel?: unknown;
 }) {
   const accentClasses = {
     orange: 'border-numoria-orange/30 hover:bg-numoria-orange/5',
@@ -286,7 +294,7 @@ function SubFolder({
           {icon} {title}
         </h3>
         <span className="text-xs font-bold uppercase tracking-wide text-numoria-mid">
-          {cards.length} {cards.length === 1 ? 'práctica' : 'prácticas'}
+          {countLabel}
         </span>
       </summary>
       <div className="mt-4 grid gap-3 md:grid-cols-3">
@@ -302,19 +310,20 @@ function SubFolder({
 // PracticeCardWithNumber — wrapper para mostrar # de práctica arriba
 // ============================================================
 
-function PracticeCardWithNumber({
+async function PracticeCardWithNumber({
   card,
   contestById,
 }: {
   card: ContestCardData;
   contestById: (id: string) => ContestListContext | undefined;
 }) {
+  const tp = await getTranslations('contests.practicesPage');
   const ctx = contestById(card.id);
   const number = ctx?.contest_number ?? '?';
   return (
     <div className="flex flex-col gap-2">
       <div className="px-1 text-xs font-bold uppercase tracking-wide text-numoria-mid">
-        Práctica #{number}
+        {tp('practiceLabel', { number })}
       </div>
       <ContestCard data={card} />
     </div>
