@@ -281,8 +281,9 @@
       "actionPaperEntry": "Entrada manual",
       "actionPaperEntryDesc": "Transcribe respuestas de papel a la plataforma",
       "actionPractices": "Prácticas",
-      "actionPracticesDesc": "5 tests siempre disponibles para que tus estudiantes entrenen antes de los contests oficiales",
-      "moreTeams": "más"
+      "actionPracticesDesc": "3 tests siempre disponibles para que tus estudiantes entrenen antes de los contests oficiales",
+      "moreTeams": "más",
+      "settings": "Configuración"
     }
   },
   "contests": {

@@ -262,9 +262,11 @@ export default async function ContestsListPage({
       {/* Phase 4.5a — Sección PRÁCTICAS arriba (siempre disponibles, no expiran).
           Agrupadas en "carpetas" por contest_number — cada práctica tiene 3
           versiones (E sin-calc, M sin-calc, M con-calc) que se muestran lado
-          a lado en desktop, apiladas en móvil. */}
+          a lado en desktop, apiladas en móvil.
+
+          id="practices" → target del redirect /contests/practices (Tarea 1). */}
       {practices.length > 0 && (
-        <section>
+        <section id="practices" className="scroll-mt-6">
           <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
             📚 {t('sections.practices')}
           </h2>
@@ -289,8 +291,9 @@ export default async function ContestsListPage({
         </section>
       )}
 
-      {/* CONTESTS OFICIALES — agrupados por calendar state */}
-      <section>
+      {/* CONTESTS OFICIALES — agrupados por calendar state.
+          id="officials" → target del redirect /contests/officials (Tarea 1). */}
+      <section id="officials" className="scroll-mt-6">
         <h2 className="mb-3 font-display text-xl font-bold text-numoria-ink">
           🏆 {t('sections.officials')}
         </h2>

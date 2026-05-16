@@ -230,6 +230,14 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
             </div>
           )}
         </div>
+        {/* Botón ⚙️ Configuración — lleva a /settings (escuela + perfil + suscripción) */}
+        <Link
+          href="/settings"
+          className="inline-flex items-center gap-2 self-start rounded-full border-2 border-numoria-gray bg-white px-4 py-2 text-sm font-bold text-numoria-grafito transition hover:border-numoria-indigo hover:text-numoria-indigo sm:self-auto"
+        >
+          <span aria-hidden>⚙️</span>
+          {tTeacher('settings')}
+        </Link>
       </header>
 
       {/* === ACTIVE SESSIONS BANNER (Phase 4 MOEMS) === */}
@@ -289,8 +297,10 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
         <h2 className="mb-3 font-display text-lg font-bold text-numoria-ink">
           🚀 {tTeacher('quickActionsTitle')}
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Link href="/contests" className="block">
+        {/* 4 cards no redundantes — cada una con destino único.
+            La card "➕ Crear equipo" se elimina (ya hay CTA dentro de /teams). */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
+          <Link href="/contests/practices" className="block">
             <ActionCard
               variant="teal"
               icon="📚"
@@ -299,12 +309,21 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
             />
           </Link>
 
-          <Link href="/contests" className="block">
+          <Link href="/contests/officials" className="block">
             <ActionCard
               variant="orange"
               icon="🏆"
               title={tTeacher('actionContests')}
               description={tTeacher('actionContestsDesc')}
+            />
+          </Link>
+
+          <Link href="/contests/paper-entry" className="block">
+            <ActionCard
+              variant="coral"
+              icon="📝"
+              title={tTeacher('actionPaperEntry')}
+              description={tTeacher('actionPaperEntryDesc')}
             />
           </Link>
 
@@ -314,24 +333,6 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
               icon="👥"
               title={tTeacher('actionTeams')}
               description={tTeacher('actionTeamsDesc')}
-            />
-          </Link>
-
-          <Link href="/teams/new" className="block">
-            <ActionCard
-              variant="dorado"
-              icon="➕"
-              title={tTeacher('actionNewTeam')}
-              description={tTeacher('actionNewTeamDesc')}
-            />
-          </Link>
-
-          <Link href="/contests" className="block">
-            <ActionCard
-              variant="coral"
-              icon="📝"
-              title={tTeacher('actionPaperEntry')}
-              description={tTeacher('actionPaperEntryDesc')}
             />
           </Link>
         </div>
