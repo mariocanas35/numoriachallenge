@@ -3,27 +3,32 @@ import { Link } from '@/i18n/navigation';
 import { type ContestListContext, fetchContestsListData } from '@/lib/contests/list-data';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
 type Profile = Tables<'profiles'>;
 
 /**
- * /contests/practices — refinada 2026-05-16.
+ * /contests/practices — doble función desde 2026-05-16:
  *
- * Folder pattern jerárquico solicitado por el founder:
+ *  1. SUMMER BOWL 2026 (jun-jul, GRATIS) — Edición Inaugural, banner destacado
+ *     arriba de la página. Funnel de adquisición pre-ciclo pago agosto 2026.
+ *     Datos: tabla summer_bowls (sb1-2026, sb2-2026, sb3-2026).
  *
- *   📁 Primaria
- *     └ Práctica #1 D-E, Práctica #2 D-E, Práctica #3 D-E
+ *  2. PRÁCTICA LIBRE — material de entrenamiento permanente, organizado en
+ *     folders jerárquicos:
  *
- *   📁 Middle School
- *     ├ ✏️ Sin calculadora
- *     │  └ Práctica #1 D-M, #2, #3
- *     └ 🧮 Con calculadora
- *        └ Práctica #1 D-MC, #2, #3
+ *       📁 Primaria
+ *         └ Práctica #1 D-E, Práctica #2 D-E, Práctica #3 D-E
  *
- * Las prácticas NO requieren sesión MOEMS (fix d80f5aa) y NO cuentan
- * para XP/leaderboards/stats regionales (decisión 2026-05-15, Opción B).
+ *       📁 Middle School
+ *         ├ ✏️ Sin calculadora
+ *         │  └ Práctica #1 D-M, #2, #3
+ *         └ 🧮 Con calculadora
+ *            └ Práctica #1 D-MC, #2, #3
+ *
+ *     Las prácticas NO requieren sesión MOEMS y NO cuentan para XP/leaderboards
+ *     (decisión 2026-05-15, Opción B).
  */
 export default async function PracticesPage({
   params,
@@ -54,6 +59,14 @@ export default async function PracticesPage({
 
   const byLevel = groupPracticesByLevel(practices, contestById);
 
+  // Summer Bowl 2026 — 3 competencias gratis jun-jul. Tipado inline porque
+  // types.gen.ts aún no incluye summer_bowls (regenerar al final del Chunk).
+  const { data: summerBowlsRows } = await supabase
+    .from('summer_bowls' as never)
+    .select('id, bowl_number, starts_at, ends_at, theme_es, theme_en')
+    .order('bowl_number');
+  const summerBowls = ((summerBowlsRows as SummerBowl[] | null) ?? []) as SummerBowl[];
+
   return (
     <div className="flex flex-col gap-8">
       <header>
@@ -69,6 +82,8 @@ export default async function PracticesPage({
         </h1>
         <p className="mt-2 text-sm text-numoria-mid">{tp('description')}</p>
       </header>
+
+      {summerBowls.length > 0 && <SummerBowlSection bowls={summerBowls} locale={locale} />}
 
       {practices.length === 0 ? (
         <div className="rounded-xl border-2 border-dashed border-numoria-gray bg-white p-8 text-center text-sm text-numoria-mid">
@@ -327,5 +342,126 @@ async function PracticeCardWithNumber({
       </div>
       <ContestCard data={card} />
     </div>
+  );
+}
+
+// ============================================================
+// Summer Bowl 2026 — Edición Inaugural (banner + 3 bowls)
+// ============================================================
+// Inscripción/participación se cablea en Chunk 3. CTAs disabled aquí.
+
+interface SummerBowl {
+  id: string;
+  bowl_number: number;
+  starts_at: string;
+  ends_at: string;
+  theme_es: string | null;
+  theme_en: string | null;
+}
+
+async function SummerBowlSection({
+  bowls,
+  locale,
+}: {
+  bowls: SummerBowl[];
+  locale: string;
+}) {
+  const tsb = await getTranslations('contests.summerBowl');
+
+  return (
+    <section aria-labelledby="summer-bowl-heading" className="flex flex-col gap-4">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-numoria-orange via-numoria-coral to-numoria-indigo p-6 text-white shadow-md sm:p-8">
+        <span className="absolute right-4 top-4 rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-numoria-orange">
+          {tsb('freePill')}
+        </span>
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-90">
+          {tsb('heroEyebrow')}
+        </p>
+        <h2
+          id="summer-bowl-heading"
+          className="mt-2 font-display text-2xl font-bold leading-tight sm:text-3xl"
+        >
+          {tsb('heroTitle')}
+        </h2>
+        <p className="mt-3 max-w-prose text-sm leading-relaxed opacity-95 sm:text-base">
+          {tsb('heroBody')}
+        </p>
+        <p className="mt-4 inline-block rounded-lg bg-black/20 px-3 py-2 text-xs font-semibold sm:text-sm">
+          {tsb('heroPrize')}
+        </p>
+      </div>
+
+      <div>
+        <h3 className="mb-3 font-display text-sm font-bold uppercase tracking-wide text-numoria-mid">
+          {tsb('bowlsHeader')}
+        </h3>
+        <div className="grid gap-3 md:grid-cols-3">
+          {bowls.map((bowl) => (
+            <BowlCard key={bowl.id} bowl={bowl} locale={locale} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+async function BowlCard({ bowl, locale }: { bowl: SummerBowl; locale: string }) {
+  const tsb = await getTranslations('contests.summerBowl');
+  const format = await getFormatter();
+
+  const theme = locale === 'en' ? bowl.theme_en : bowl.theme_es;
+  const startDate = new Date(bowl.starts_at);
+  const endDate = new Date(bowl.ends_at);
+  const now = new Date();
+
+  const status: 'upcoming' | 'active' | 'closed' =
+    now < startDate ? 'upcoming' : now <= endDate ? 'active' : 'closed';
+
+  const statusLabel = {
+    upcoming: tsb('statusUpcoming'),
+    active: tsb('statusActive'),
+    closed: tsb('statusClosed'),
+  }[status];
+
+  const statusTone = {
+    upcoming: 'bg-numoria-indigo/10 text-numoria-indigo',
+    active: 'bg-numoria-green/15 text-[#0d6b3a]',
+    closed: 'bg-numoria-gray/40 text-numoria-mid',
+  }[status];
+
+  const ctaLabel = {
+    upcoming: tsb('ctaUpcoming'),
+    active: tsb('ctaParticipate'),
+    closed: tsb('ctaResults'),
+  }[status];
+
+  const dateLabel = tsb('dateRange', {
+    start: format.dateTime(startDate, { day: 'numeric', month: 'short' }),
+    end: format.dateTime(endDate, { day: 'numeric', month: 'short' }),
+  });
+
+  return (
+    <article className="flex flex-col gap-3 rounded-xl border-2 border-numoria-orange/30 bg-white p-4 shadow-sm">
+      <div className="flex items-baseline justify-between gap-2">
+        <h4 className="font-display text-base font-bold text-numoria-grafito">
+          {tsb('bowlLabel', { number: bowl.bowl_number })}
+        </h4>
+        <span
+          className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${statusTone}`}
+        >
+          {statusLabel}
+        </span>
+      </div>
+      <p className="text-xs font-semibold text-numoria-mid">{dateLabel}</p>
+      {theme && <p className="text-sm leading-snug text-numoria-grafito">{theme}</p>}
+      <button
+        type="button"
+        disabled
+        className="mt-auto inline-flex w-full cursor-not-allowed items-center justify-center rounded-lg border-2 border-numoria-orange/40 bg-numoria-orange/5 px-3 py-2 text-xs font-bold uppercase tracking-wide text-numoria-orange opacity-70"
+        aria-disabled="true"
+      >
+        {ctaLabel}
+      </button>
+    </article>
   );
 }
