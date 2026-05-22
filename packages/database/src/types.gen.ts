@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      bowl_registrations: {
+        Row: {
+          bowl_id: string
+          calculator_variant: boolean
+          division: Database["public"]["Enums"]["school_division"]
+          id: string
+          registered_at: string
+          user_id: string
+        }
+        Insert: {
+          bowl_id: string
+          calculator_variant?: boolean
+          division: Database["public"]["Enums"]["school_division"]
+          id?: string
+          registered_at?: string
+          user_id: string
+        }
+        Update: {
+          bowl_id?: string
+          calculator_variant?: boolean
+          division?: Database["public"]["Enums"]["school_division"]
+          id?: string
+          registered_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bowl_registrations_bowl_id_fkey"
+            columns: ["bowl_id"]
+            isOneToOne: false
+            referencedRelation: "summer_bowls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bowl_registrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contest_attempts: {
         Row: {
           contest_id: string
@@ -174,6 +216,7 @@ export type Database = {
       }
       contests: {
         Row: {
+          bowl_id: string | null
           calculator_allowed: boolean
           calendar_window_days: number
           contest_number: number
@@ -193,6 +236,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bowl_id?: string | null
           calculator_allowed?: boolean
           calendar_window_days?: number
           contest_number: number
@@ -212,6 +256,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bowl_id?: string | null
           calculator_allowed?: boolean
           calendar_window_days?: number
           contest_number?: number
@@ -229,6 +274,38 @@ export type Database = {
           title_en?: string
           title_es?: string
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contests_bowl_id_fkey"
+            columns: ["bowl_id"]
+            isOneToOne: false
+            referencedRelation: "summer_bowls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_captures: {
+        Row: {
+          captured_at: string
+          email: string
+          id: string
+          metadata: Json
+          source: string
+        }
+        Insert: {
+          captured_at?: string
+          email: string
+          id?: string
+          metadata?: Json
+          source: string
+        }
+        Update: {
+          captured_at?: string
+          email?: string
+          id?: string
+          metadata?: Json
+          source?: string
         }
         Relationships: []
       }
@@ -379,6 +456,7 @@ export type Database = {
           created_at: string
           current_streak: number
           display_name: string
+          founding_participant_2026: boolean
           grade: number | null
           id: string
           last_active_at: string | null
@@ -402,6 +480,7 @@ export type Database = {
           created_at?: string
           current_streak?: number
           display_name: string
+          founding_participant_2026?: boolean
           grade?: number | null
           id: string
           last_active_at?: string | null
@@ -425,6 +504,7 @@ export type Database = {
           created_at?: string
           current_streak?: number
           display_name?: string
+          founding_participant_2026?: boolean
           grade?: number | null
           id?: string
           last_active_at?: string | null
@@ -459,43 +539,211 @@ export type Database = {
       }
       schools: {
         Row: {
+          address: string | null
           city: string | null
           country_code: string
           created_at: string
           created_by: string | null
           id: string
+          institutional_verified: boolean
           logo_url: string | null
           name: string
+          phone: string | null
           primary_color: string | null
           slug: string
           updated_at: string
           verified: boolean
+          verified_at: string | null
+          verified_by: string | null
+          website: string | null
         }
         Insert: {
+          address?: string | null
           city?: string | null
           country_code: string
           created_at?: string
           created_by?: string | null
           id?: string
+          institutional_verified?: boolean
           logo_url?: string | null
           name: string
+          phone?: string | null
           primary_color?: string | null
           slug: string
           updated_at?: string
           verified?: boolean
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
         }
         Update: {
+          address?: string | null
           city?: string | null
           country_code?: string
           created_at?: string
           created_by?: string | null
           id?: string
+          institutional_verified?: boolean
           logo_url?: string | null
           name?: string
+          phone?: string | null
           primary_color?: string | null
           slug?: string
           updated_at?: string
           verified?: boolean
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schools_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_plans: {
+        Row: {
+          allows_online: boolean
+          allows_paper: boolean
+          annual_price_usd: number
+          created_at: string
+          id: string
+          max_seats: number
+          name_en: string
+          name_es: string
+          requires_institutional_verification: boolean
+          stats_scope: string
+        }
+        Insert: {
+          allows_online: boolean
+          allows_paper: boolean
+          annual_price_usd: number
+          created_at?: string
+          id: string
+          max_seats: number
+          name_en: string
+          name_es: string
+          requires_institutional_verification?: boolean
+          stats_scope: string
+        }
+        Update: {
+          allows_online?: boolean
+          allows_paper?: boolean
+          annual_price_usd?: number
+          created_at?: string
+          id?: string
+          max_seats?: number
+          name_en?: string
+          name_es?: string
+          requires_institutional_verification?: boolean
+          stats_scope?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          cycle_end: string
+          cycle_start: string
+          id: string
+          payment_method: string | null
+          payment_reference: string | null
+          plan_id: string
+          status: string
+          team_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          cycle_end: string
+          cycle_start: string
+          id?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          plan_id: string
+          status?: string
+          team_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          cycle_end?: string
+          cycle_start?: string
+          id?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          plan_id?: string
+          status?: string
+          team_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      summer_bowls: {
+        Row: {
+          bowl_number: number
+          created_at: string
+          ends_at: string
+          id: string
+          internal_testing_goal: string | null
+          starts_at: string
+          theme_en: string | null
+          theme_es: string | null
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          bowl_number: number
+          created_at?: string
+          ends_at: string
+          id: string
+          internal_testing_goal?: string | null
+          starts_at: string
+          theme_en?: string | null
+          theme_es?: string | null
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          bowl_number?: number
+          created_at?: string
+          ends_at?: string
+          id?: string
+          internal_testing_goal?: string | null
+          starts_at?: string
+          theme_en?: string | null
+          theme_es?: string | null
+          updated_at?: string
+          year?: number
         }
         Relationships: []
       }
@@ -606,6 +854,7 @@ export type Database = {
           created_at: string
           current_streak: number
           display_name: string
+          founding_participant_2026: boolean
           grade: number | null
           id: string
           last_active_at: string | null
@@ -628,6 +877,11 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      division_from_grade: {
+        Args: { p_grade: number }
+        Returns: Database["public"]["Enums"]["school_division"]
+      }
+      expire_old_contest_sessions: { Args: never; Returns: number }
       generate_team_invite_code: { Args: never; Returns: string }
       get_my_profile: {
         Args: never
@@ -639,6 +893,7 @@ export type Database = {
           created_at: string
           current_streak: number
           display_name: string
+          founding_participant_2026: boolean
           grade: number | null
           id: string
           last_active_at: string | null
@@ -714,7 +969,7 @@ export type Database = {
         | "with_units"
         | "multiple_choice"
       contest_status: "draft" | "scheduled" | "active" | "closed"
-      contest_type: "practice" | "official"
+      contest_type: "practice" | "official" | "summer_bowl"
       problem_category:
         | "algebra"
         | "number_theory"
@@ -876,6 +1131,7 @@ export const Constants = {
         "multiple_choice",
       ],
       contest_status: ["draft", "scheduled", "active", "closed"],
+      contest_type: ["practice", "official", "summer_bowl"],
       problem_category: [
         "algebra",
         "number_theory",
@@ -898,6 +1154,7 @@ export const Constants = {
         "pythagoras",
       ],
       school_division: ["elementary", "middle"],
+      session_status: ["open", "closed", "expired"],
       user_role: ["student", "parent", "teacher", "admin"],
     },
   },

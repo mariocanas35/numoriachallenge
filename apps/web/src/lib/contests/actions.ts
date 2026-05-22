@@ -518,7 +518,10 @@ export async function grantContestRetry(input: {
   const timestamp = new Date().toISOString();
   const auditLine = `[${timestamp}] Retry otorgado a student ${attempt.student_id}`;
   const newNotes = session.notes ? `${session.notes}\n${auditLine}` : auditLine;
-  await supabase.from('contest_sessions').update({ notes: newNotes }).eq('id', session.id);
+  await supabase
+    .from('contest_sessions')
+    .update({ notes: newNotes } as never)
+    .eq('id', session.id);
 
   // Revalidate UI
   revalidatePath('/contests');
@@ -811,7 +814,9 @@ export async function submitPaperBatch(input: {
   const existingNotes = (sessionNotes as { notes: string | null } | null)?.notes;
   await supabase
     .from('contest_sessions')
-    .update({ notes: existingNotes ? `${existingNotes}\n${auditLine}` : auditLine })
+    .update({
+      notes: existingNotes ? `${existingNotes}\n${auditLine}` : auditLine,
+    } as never)
     .eq('id', session.id);
 
   // Revalidate UI

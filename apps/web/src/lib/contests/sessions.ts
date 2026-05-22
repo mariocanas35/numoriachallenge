@@ -123,7 +123,7 @@ export async function openContestSession(
       opened_by: user.id,
       closes_at: effectiveCloses.toISOString(),
       notes: input.notes ?? null,
-    })
+    } as never)
     .select('id, closes_at')
     .single();
 
@@ -154,7 +154,7 @@ export async function closeContestSession(
 
   const { data: updated, error } = await supabase
     .from('contest_sessions')
-    .update({ status: 'closed' })
+    .update({ status: 'closed' } as never)
     .eq('id', sessionId)
     .eq('opened_by', user.id)
     .eq('status', 'open')
@@ -201,7 +201,7 @@ export async function getActiveSessionForTeam(
     .eq('status', 'open')
     .limit(1);
 
-  return ((rows ?? [])[0] as ContestSession) ?? null;
+  return ((rows ?? [])[0] as unknown as ContestSession) ?? null;
 }
 
 /**
@@ -237,7 +237,7 @@ export async function getActiveSessionForStudent(
     .in('team_id', teamIds)
     .limit(1);
 
-  return ((sessionRows ?? [])[0] as ContestSession) ?? null;
+  return ((sessionRows ?? [])[0] as unknown as ContestSession) ?? null;
 }
 
 /**
