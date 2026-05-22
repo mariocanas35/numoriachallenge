@@ -253,10 +253,7 @@
     },
     "teacher": {
       "schoolTitle": "Your school",
-      "schoolUnverified": "Unverified",
-      "schoolVerified": "Verified ✓",
       "teamsTitle": "Your teams",
-      "noTeamsYet": "No teams created yet.",
       "createFirstTeam": "Create my first team",
       "createAnotherTeam": "+ Create another team",
       "teamMembersCount": "{count, plural, =0 {No members} =1 {1 member} other {# members}} / {max}",
@@ -286,7 +283,19 @@
       "settings": "Settings",
       "pillTeams": "{count, plural, =1 {1 team} other {# teams}}",
       "pillStudents": "{count, plural, =1 {1 student} other {# students}}",
-      "pillActiveSessions": "{count, plural, =1 {1 active session} other {# active sessions}}"
+      "pillActiveSessions": "{count, plural, =1 {1 active session} other {# active sessions}}",
+      "helloName": "Hello, {name}",
+      "ctaOpenPractice": "Open practice",
+      "schoolVerified": "School verified",
+      "schoolUnverified": "School not verified",
+      "viewAll": "View all →",
+      "noTeamsYet": "You don't have any teams yet. Create one to start inviting students.",
+      "tableTeam": "Team",
+      "tableMembers": "Members",
+      "tableLastActivity": "Last practice",
+      "tableTeamCode": "Code · {code}",
+      "tableNoActivity": "No activity yet",
+      "tableOpen": "Open"
     }
   },
   "contests": {
@@ -303,9 +312,26 @@
       "officials": "Official contests",
       "officialsSubtitle": "Official competitions with fixed calendar and national ranking."
     },
+    "summerBowl": {
+      "heroEyebrow": "Inaugural Edition — Free participation",
+      "heroTitle": "Numoria Challenge: Summer Bowl 2026",
+      "heroBody": "Three free competitions this summer (June–July) before the 2026-2027 official cycle opens. Compete in any of the three bowls and earn a diploma with the \"Inaugural Edition\" seal plus the permanent Founding Participant 2026 badge on your profile.",
+      "heroPrize": "🏆 Top 10 per division per bowl wins 1 year free of the 2026-2027 official cycle",
+      "bowlsHeader": "The 3 Summer Bowls",
+      "bowlLabel": "Summer Bowl #{number}",
+      "dateRange": "{start} – {end}",
+      "statusUpcoming": "🔵 Coming soon",
+      "statusActive": "🟢 Live now",
+      "statusClosed": "⚫ Ended",
+      "ctaRegister": "Register free",
+      "ctaUpcoming": "Registration opens soon",
+      "ctaParticipate": "Participate",
+      "ctaResults": "View results",
+      "freePill": "FREE"
+    },
     "practicesPage": {
-      "title": "📚 Practices",
-      "description": "Tests always available to train before official contests. Practices don't count toward your level or the national ranking — they're for your students to gain confidence without pressure.",
+      "title": "📚 Free Practice",
+      "description": "Always-available training tests. They don't count toward the official ranking or XP — they're for your students to build confidence before the contests.",
       "empty": "No practices available at the moment.",
       "primaryFolder": "Elementary",
       "primaryDescription": "For students in grades 4-6. No calculator.",

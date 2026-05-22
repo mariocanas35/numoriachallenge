@@ -87,7 +87,7 @@ export default async function HomePage({
 
   if (profile.role === 'teacher' && profile.school_id) {
     return (
-      <DashboardShell>
+      <DashboardShell wide>
         <TeacherDashboard
           userId={profile.id}
           displayName={profile.display_name}

@@ -253,10 +253,7 @@
     },
     "teacher": {
       "schoolTitle": "Tu escuela",
-      "schoolUnverified": "No verificada",
-      "schoolVerified": "Verificada ✓",
       "teamsTitle": "Tus equipos",
-      "noTeamsYet": "Aún no has creado equipos.",
       "createFirstTeam": "Crear mi primer equipo",
       "createAnotherTeam": "+ Crear otro equipo",
       "teamMembersCount": "{count, plural, =0 {Sin miembros} =1 {1 miembro} other {# miembros}} / {max}",
@@ -286,7 +283,19 @@
       "settings": "Configuración",
       "pillTeams": "{count, plural, =1 {1 equipo} other {# equipos}}",
       "pillStudents": "{count, plural, =1 {1 estudiante} other {# estudiantes}}",
-      "pillActiveSessions": "{count, plural, =1 {1 sesión activa} other {# sesiones activas}}"
+      "pillActiveSessions": "{count, plural, =1 {1 sesión activa} other {# sesiones activas}}",
+      "helloName": "Hola, {name}",
+      "ctaOpenPractice": "Abrir práctica",
+      "schoolVerified": "Escuela verificada",
+      "schoolUnverified": "Escuela no verificada",
+      "viewAll": "Ver todos →",
+      "noTeamsYet": "Aún no tienes equipos. Crea uno para empezar a invitar estudiantes.",
+      "tableTeam": "Equipo",
+      "tableMembers": "Miembros",
+      "tableLastActivity": "Última práctica",
+      "tableTeamCode": "Código · {code}",
+      "tableNoActivity": "Sin actividad aún",
+      "tableOpen": "Abrir"
     }
   },
   "contests": {
@@ -303,9 +312,26 @@
       "officials": "Contests oficiales",
       "officialsSubtitle": "Competencias oficiales con calendario fijo y ranking nacional."
     },
+    "summerBowl": {
+      "heroEyebrow": "Edición Inaugural — Participación gratuita",
+      "heroTitle": "Numoria Challenge: Summer Bowl 2026",
+      "heroBody": "Tres competencias gratuitas este verano (junio–julio) antes de que abra el ciclo oficial 2026-2027. Compite en cualquiera de los tres bowls y obtén un diploma con sello \"Edición Inaugural\" más el badge permanente Founding Participant 2026 en tu perfil.",
+      "heroPrize": "🏆 Top 10 por división de cada bowl gana 1 año gratis del ciclo oficial 2026-2027",
+      "bowlsHeader": "Los 3 Summer Bowls",
+      "bowlLabel": "Summer Bowl #{number}",
+      "dateRange": "{start} – {end}",
+      "statusUpcoming": "🔵 Próximamente",
+      "statusActive": "🟢 Activo ahora",
+      "statusClosed": "⚫ Finalizado",
+      "ctaRegister": "Inscribirme gratis",
+      "ctaUpcoming": "Inscripciones abren pronto",
+      "ctaParticipate": "Participar",
+      "ctaResults": "Ver resultados",
+      "freePill": "GRATIS"
+    },
     "practicesPage": {
-      "title": "📚 Prácticas",
-      "description": "Tests siempre disponibles para entrenar antes de los contests oficiales. Las prácticas no cuentan para tu nivel ni para el ranking nacional — son para que tus estudiantes ganen confianza sin presión.",
+      "title": "📚 Práctica Libre",
+      "description": "Tests de entrenamiento siempre disponibles. No cuentan para el ranking oficial ni para XP — son para que tus estudiantes ganen confianza antes de los contests.",
       "empty": "No hay prácticas disponibles en este momento.",
       "primaryFolder": "Primaria",
       "primaryDescription": "Para estudiantes de 4° a 6° grado. Sin calculadora.",
