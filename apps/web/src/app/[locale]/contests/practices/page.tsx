@@ -348,7 +348,6 @@ async function PracticeCardWithNumber({
 // ============================================================
 // Summer Bowl 2026 — Edición Inaugural (banner + 3 bowls)
 // ============================================================
-// Inscripción/participación se cablea en Chunk 3. CTAs disabled aquí.
 
 interface SummerBowl {
   id: string;
@@ -454,14 +453,23 @@ async function BowlCard({ bowl, locale }: { bowl: SummerBowl; locale: string }) 
       </div>
       <p className="text-xs font-semibold text-numoria-mid">{dateLabel}</p>
       {theme && <p className="text-sm leading-snug text-numoria-grafito">{theme}</p>}
-      <button
-        type="button"
-        disabled
-        className="mt-auto inline-flex w-full cursor-not-allowed items-center justify-center rounded-lg border-2 border-numoria-orange/40 bg-numoria-orange/5 px-3 py-2 text-xs font-bold uppercase tracking-wide text-numoria-orange opacity-70"
-        aria-disabled="true"
-      >
-        {ctaLabel}
-      </button>
+      {status === 'active' ? (
+        <a
+          href={`/${locale}/contests/summer-bowl/${bowl.id}`}
+          className="mt-auto inline-flex w-full items-center justify-center rounded-lg border-2 border-numoria-orange bg-numoria-orange px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition-all hover:border-numoria-coral hover:bg-numoria-coral"
+        >
+          {ctaLabel}
+        </a>
+      ) : (
+        <button
+          type="button"
+          disabled
+          className="mt-auto inline-flex w-full cursor-not-allowed items-center justify-center rounded-lg border-2 border-numoria-orange/40 bg-numoria-orange/5 px-3 py-2 text-xs font-bold uppercase tracking-wide text-numoria-orange opacity-70"
+          aria-disabled="true"
+        >
+          {ctaLabel}
+        </button>
+      )}
     </article>
   );
 }

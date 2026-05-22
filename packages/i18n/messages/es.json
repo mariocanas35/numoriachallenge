@@ -327,7 +327,12 @@
       "ctaUpcoming": "Inscripciones abren pronto",
       "ctaParticipate": "Participar",
       "ctaResults": "Ver resultados",
-      "freePill": "GRATIS"
+      "freePill": "GRATIS",
+      "division": {
+        "elementary": "Primaria (Grados 4-6)",
+        "middle": "Middle School (Grados 7-9)",
+        "high": "High School (Grados 10-12)"
+      }
     },
     "practicesPage": {
       "title": "📚 Práctica Libre",

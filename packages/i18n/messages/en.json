@@ -327,7 +327,12 @@
       "ctaUpcoming": "Registration opens soon",
       "ctaParticipate": "Participate",
       "ctaResults": "View results",
-      "freePill": "FREE"
+      "freePill": "FREE",
+      "division": {
+        "elementary": "Elementary (Grades 4-6)",
+        "middle": "Middle School (Grades 7-9)",
+        "high": "High School (Grades 10-12)"
+      }
     },
     "practicesPage": {
       "title": "📚 Free Practice",

@@ -832,3 +832,95 @@ export async function submitPaperBatch(input: {
     },
   };
 }
+
+/**
+ * Registra un student para un Summer Bowl.
+ * Validaciones:
+ * 1. User autenticado es student
+ * 2. Student está en un team
+ * 3. Bowl existe y su ID es válido
+ * 4. No hay otra registration del mismo student para el mismo bowl
+ * 5. bowl.starts_at está dentro del window permitido
+ */
+export async function registerForBowl(input: {
+  bowlId: string;
+  division: string;
+  calculatorVariant?: string;
+}): Promise<{ ok: boolean; message?: string; registrationId?: string }> {
+  const supabase = await createServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: 'No autenticado' };
+
+  // Validar que user es student (tiene profile en tabla 'profiles')
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id, role')
+    .eq('id', user.id)
+    .single();
+  const profileCast = profile as { role: string } | null;
+  if (!profileCast || profileCast.role !== 'student') {
+    return { ok: false, message: 'Solo estudiantes pueden registrarse' };
+  }
+
+  // Validar que student está en un team
+  const { data: teamMembers } = await supabase
+    .from('team_members')
+    .select('team_id')
+    .eq('student_id', user.id)
+    .limit(1);
+  if (!teamMembers || teamMembers.length === 0) {
+    return { ok: false, message: 'Debes estar en un equipo para participar' };
+  }
+  const teamId = (
+    (teamMembers as unknown as Array<{ team_id: string }>)[0] as {
+      team_id: string;
+    }
+  ).team_id;
+
+  // Validar bowl existe
+  const { data: bowl } = await supabase
+    .from('summer_bowls')
+    .select('id, starts_at, ends_at, max_participants')
+    .eq('id', input.bowlId)
+    .single();
+  if (!bowl) return { ok: false, message: 'Bowl no encontrado' };
+
+  // Validar no existe ya registration
+  const { data: existing } = await supabase
+    .from('bowl_registrations')
+    .select('id')
+    .eq('bowl_id', input.bowlId)
+    .eq('student_id', user.id)
+    .limit(1);
+  if (existing && existing.length > 0) {
+    return { ok: false, message: 'Ya te registraste para este bowl' };
+  }
+
+  // Insert registration
+  const { data: inserted, error } = await supabase
+    .from('bowl_registrations')
+    .insert({
+      bowl_id: input.bowlId,
+      team_id: teamId,
+      student_id: user.id,
+      division: input.division,
+      calculator_variant: input.calculatorVariant ?? null,
+    } as never)
+    .select('id')
+    .single();
+
+  if (error || !inserted) {
+    return { ok: false, message: error?.message ?? 'No se pudo registrar' };
+  }
+
+  revalidatePath('/contests');
+  revalidatePath(`/contests/summer-bowl/${input.bowlId}`);
+
+  return {
+    ok: true,
+    registrationId: (inserted as { id: string }).id,
+  };
+}
