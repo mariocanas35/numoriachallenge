@@ -7,9 +7,9 @@
 
 ## 📌 Estado actual
 
-**Fase:** Fase 3 cerrada ✅ — Fase 4 pendiente de arranque
-**Última actualización:** 2026-05-11
-**Próximo hito:** Fase 4 Chunk 4.1 — MOEMS sessions (teacher activa contest + grant retry)
+**Fase:** Fase 4.5 cerrada ✅ — Fase 5b (Summer Bowl + Subscriptions) en progreso
+**Última actualización:** 2026-05-22
+**Próximo hito:** Chunk 5b.3 — Server action `registerForBowl()` + activar CTAs en /practices
 
 ---
 
@@ -811,3 +811,99 @@ fue posible.
 - Página `/problems` con listado filtrable por division/difficulty
 - Página `/problems/[slug]` para resolver (input numérico, validación)
 - Server action `submitAnswer` con scoring server-side (anti-cheat)
+
+---
+
+## 🏁 Fase 3 — Cerrada (2026-05-15 a 2026-05-17)
+
+**Resumen**: Contest system end-to-end completo — 35 migrations, 2 official contests seed, 14 problems, take page con KaTeX + timer, scoring server-side, results page con explanations, teacher leaderboard + CSV export.
+
+**Chunks cerrados (6/6)**:
+- ✅ 3.1 Banco de problemas (divisions, difficulties, tags, seed 14 problemas)
+- ✅ 3.2 Página /contests + ContestCard + StudentDashboard preview
+- ✅ 3.3 Take page con timer, KaTeX, autosave, manual submit
+- ✅ 3.4 Results page con spoiler reveal + per-problem explanations
+- ✅ 3.5 Teacher leaderboard + team filter + CSV export (BOM UTF-8 + CRLF)
+- ✅ 3.6 Vitest setup (23/23 tests passing) + production build + E2E real student
+
+**Migrations (0001-0016)**: Schema inicial, migrations, auth, onboarding, teams, problem banking, contest system.
+
+**Tests**: 23 passing. Production build OK con `typescript.ignoreBuildErrors=true`.
+
+---
+
+## 🏁 Fase 4.1-4.5 — Cerrada (2026-05-18 a 2026-05-22)
+
+**Resumen**: Practices + Officials dual system con paper-entry support, teacher session management, leaderboard enhancements, full-stack wiring.
+
+**Chunks cerrados (15+)**:
+- ✅ 4.1a Practices table + 3 seed (tier 1 easiest)
+- ✅ 4.1b Student attempt flow con auto-retry + session management
+- ✅ 4.1c Teacher view changes (practices vs officials toggle)
+- ✅ 4.1d Retry button + session-gating logic
+- ✅ 4.2 Paper entry flow (teacher inputs student answers manually)
+- ✅ 4.3 Leaderboard enhancements (medal icons, XP display, sorting)
+- ✅ 4.4 Contest session lifecycle (open/close/expire states)
+- ✅ 4.4a Calendar window validation (contest.scheduled_at + calendar_window_days)
+- ✅ 4.4b RLS policies for session management (19 policies total)
+- ✅ 4.5 Teacher dashboard redesign (hero section, quick actions, live session count)
+
+**Migrations (0017-0035)**: 19 new migrations including paper_entry, contest_sessions, session_status enum, calendar validations.
+
+**Dashboard redesign**: 
+- Unified hero with hour-based greeting
+- School logo + verification badge display
+- 4 QuickActionTiles (Practices, Contests, Paper Entry, Teams)
+- MathBackdrop decorative component
+- i18n strings for dashboard UI
+
+**E2E validated**: Full contest lifecycle (student takes practice/official, teacher opens session, paper entry, results, leaderboard).
+
+---
+
+## 🚀 Fase 5b (Summer Bowl + Subscriptions) — EN PROGRESO
+
+**Estado**: Chunk 1 (schema) + Chunk 2 (UI display) completos. Chunk 3 (wiring) iniciando.
+
+**Chunks completados (2/5)**:
+- ✅ 5b.1 Schema (summer_bowls, bowl_registrations, subscription_plans, email_captures)
+- ✅ 5b.1a RLS policies (19 policies covering all new tables)
+- ✅ 5b.1b Helper function: division_from_grade()
+- ✅ 5b.1c School verification fields + Founding Participant badge trigger
+- ✅ 5b.2 UI display: SummerBowlSection en /practices con 3 BowlCards
+- ✅ 5b.2a BowlCard component (status, dates, CTA disabled pending wiring)
+
+**Migrations (0031b, 0032)**: 
+- 0031b: Add 'summer_bowl' to contest_type enum (isolated migration)
+- 0032: Summer Bowl + Subscription framework (447 lines, 19 policies)
+
+**Pending (Chunks 3-5)**:
+- ⏳ 5b.3 Server action `registerForBowl(bowl_id, division, calculator_variant)` + activate CTAs
+- ⏳ 5b.3a Page `/contests/summer-bowl/[id]` con registration form
+- ⏳ 5b.4 Email capture + public landing page
+- ⏳ 5b.5 Payment integration (Stripe o manual)
+
+**Model de negocio confirmado**:
+- 3 subscription plans: Individual $15, Team Paper $50, Team Online $90
+- Summer Bowl 2026 gratuito (funnel pre-ciclo pago agosto)
+- Founding Participant badge para participantes bowl 2026
+
+**GitHub**: 22+ commits pushed (activates CI). Latest 3 commits:
+1. `51aa3eb` fix(types): regenerate types.gen.ts + fix 6 typecheck errors
+2. `546cdec` feat(dashboard): rediseño visual teacher
+3. `deb0f1f` feat(contests): Summer Bowl 2026 schema + display
+
+---
+
+## 📝 Próximos pasos del founder
+
+**Ahora (Chunk 5b.3 — this session)**:
+1. Implementar server action `registerForBowl()`
+2. Crear página `/contests/summer-bowl/[id]` con registration form
+3. Activar CTAs en /practices BowlCards
+4. E2E test: student intenta registrarse a Summer Bowl
+
+**Luego**:
+- Email capture + landing page
+- Stripe/manual payment wiring
+- Full soft launch de Summer Bowl 2026
