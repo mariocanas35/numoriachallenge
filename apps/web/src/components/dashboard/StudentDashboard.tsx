@@ -90,7 +90,7 @@ export async function StudentDashboard({
     <div className="flex flex-col gap-8">
       {/* Hero con stats inline + progress ring del nivel */}
       <header className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
-        <NumaAvatar pose="wave" size="lg" />
+        <NumaAvatar pose="wave" size="xl" animateIn />
         <div className="flex-1">
           <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
             {t('greeting', { name: displayName })}

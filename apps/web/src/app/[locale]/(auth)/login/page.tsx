@@ -19,7 +19,7 @@ export default async function LoginPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-3 text-center">
-        <NumaAvatar pose="wave" size="lg" animateIn />
+        <NumaAvatar pose="wave" size="xl" animateIn />
         <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
           {t('loginTitle')}
         </h1>

@@ -114,36 +114,17 @@ function NumaBase({ children }: { children?: React.ReactNode }) {
 }
 
 function NumaWave() {
+  // Arte refinado de Numa (zorrito saludando) — reemplazó el SVG placeholder
+  // el 2026-05-22. Archivo: apps/web/public/numa-wave.jpg
   return (
-    <NumaBase>
-      {/* Eyes — open, looking forward */}
-      <circle cx="40" cy="50" r="4" fill={INK} />
-      <circle cx="60" cy="50" r="4" fill={INK} />
-      <circle cx="41.5" cy="48.5" r="1.3" fill={BELLY} />
-      <circle cx="61.5" cy="48.5" r="1.3" fill={BELLY} />
-      {/* Nose */}
-      <ellipse cx="50" cy="60" rx="2.5" ry="1.8" fill={INK} />
-      {/* Smile */}
-      <path
-        d="M 44 67 Q 50 72 56 67"
-        stroke={INK}
-        strokeWidth="1.8"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* Waving paw */}
-      <ellipse
-        cx="86"
-        cy="32"
-        rx="6.5"
-        ry="9"
-        fill={FUR}
-        stroke={FUR_DARK}
-        strokeWidth="1.5"
-        transform="rotate(-25 86 32)"
-      />
-      <ellipse cx="86" cy="29" rx="3" ry="4" fill={BELLY} transform="rotate(-25 86 29)" />
-    </NumaBase>
+    <img
+      src="/numa-wave.jpg"
+      alt=""
+      aria-hidden="true"
+      className="h-full w-full object-contain"
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 

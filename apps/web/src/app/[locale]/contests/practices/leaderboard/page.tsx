@@ -5,6 +5,7 @@ import {
 } from '@/lib/contests/leaderboard';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
+import { NumaAvatar } from '@numoria/ui';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
@@ -236,9 +237,10 @@ export default async function PracticesLeaderboardPage({
 
       {/* Leaderboard table */}
       {leaderboardData.entries.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-numoria-gray bg-white p-10 text-center">
-          <p className="font-display text-lg font-bold text-numoria-grafito">🌱 Aún no hay datos</p>
-          <p className="mt-2 text-sm text-numoria-mid">
+        <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-numoria-gray bg-white p-10 text-center">
+          <NumaAvatar pose="wave" size="xl" animateIn />
+          <p className="font-display text-lg font-bold text-numoria-grafito">Aún no hay datos</p>
+          <p className="text-sm text-numoria-mid">
             Cuando los estudiantes completen prácticas, aparecerán aquí ordenados por puntaje
             acumulado.
           </p>

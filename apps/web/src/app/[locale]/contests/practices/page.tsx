@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { type ContestListContext, fetchContestsListData } from '@/lib/contests/list-data';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
+import { NumaAvatar } from '@numoria/ui';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
@@ -98,8 +99,9 @@ export default async function PracticesPage({
       {summerBowls.length > 0 && <SummerBowlSection bowls={summerBowls} locale={locale} />}
 
       {practices.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-numoria-gray bg-white p-8 text-center text-sm text-numoria-mid">
-          {tp('empty')}
+        <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-numoria-gray bg-white p-10 text-center">
+          <NumaAvatar pose="wave" size="xl" animateIn />
+          <p className="text-sm text-numoria-mid">{tp('empty')}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">
