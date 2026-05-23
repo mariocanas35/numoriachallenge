@@ -100,7 +100,16 @@ export async function fetchContestsListData(
     .neq('status', 'draft')
     .order('scheduled_at', { ascending: false });
 
-  const contests = (contestsRows ?? []) as ContestListContext[];
+  const allContests = (contestsRows ?? []) as ContestListContext[];
+
+  // Filtrar contests por team_division del estudiante:
+  // - Si el estudiante pertenece a un team → solo ve contests de la división de su team
+  // - Si NO tiene team → ve todos (puede practicar antes de unirse a un team)
+  // - Teachers ven todos para administrar sus equipos
+  const contests =
+    profile.role === 'student' && teamDivision
+      ? allContests.filter((c) => c.division === teamDivision)
+      : allContests;
 
   if (contests.length === 0) {
     return {
