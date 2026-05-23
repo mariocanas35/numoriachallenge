@@ -1,5 +1,7 @@
 import { JoinTeamCard } from '@/components/dashboard/JoinTeamCard';
+import { StudentPracticeStats } from '@/components/dashboard/StudentPracticeStats';
 import { Link } from '@/i18n/navigation';
+import { getStudentPracticeStats } from '@/lib/contests/student-stats';
 import { createAdminClient, createServerClient } from '@numoria/database/server';
 import { NumaAvatar, ProgressRing, StatPill } from '@numoria/ui';
 import { getTranslations } from 'next-intl/server';
@@ -18,6 +20,8 @@ interface TeamWithCoachAndSchool {
   division: 'elementary' | 'middle';
   coach_display_name: string;
   school_name: string;
+  /** Country code de la escuela (ej: 'HN', 'MX') — para stats nacionales */
+  country_code: string | null;
 }
 
 async function fetchStudentTeam(userId: string): Promise<TeamWithCoachAndSchool | null> {
@@ -58,15 +62,18 @@ async function fetchStudentTeam(userId: string): Promise<TeamWithCoachAndSchool 
   const admin = createAdminClient();
   const [coachRes, schoolRes] = await Promise.all([
     admin.from('profiles').select('display_name').eq('id', team.coach_id).single(),
-    supabase.from('schools').select('name').eq('id', team.school_id).single(),
+    supabase.from('schools').select('name, country_code').eq('id', team.school_id).single(),
   ]);
+
+  const schoolData = schoolRes.data as { name: string; country_code: string } | null;
 
   return {
     id: team.id,
     name: team.name,
     division: team.division,
     coach_display_name: (coachRes.data as { display_name: string } | null)?.display_name ?? '—',
-    school_name: (schoolRes.data as { name: string } | null)?.name ?? '—',
+    school_name: schoolData?.name ?? '—',
+    country_code: schoolData?.country_code ?? null,
   };
 }
 
@@ -81,6 +88,18 @@ export async function StudentDashboard({
   const tStudent = await getTranslations('dashboard.student');
 
   const team = await fetchStudentTeam(userId);
+
+  // Stats de prácticas del estudiante (solo si tiene team — el filtro por
+  // división requiere conocer la división, que viene del team)
+  const supabaseForStats = await createServerClient();
+  const practiceStats = team
+    ? await getStudentPracticeStats(supabaseForStats, {
+        studentId: userId,
+        studentTeamId: team.id,
+        studentDivision: team.division,
+        studentCountryCode: team.country_code,
+      })
+    : null;
 
   // XP necesario para el siguiente nivel (fórmula: nivel actual * 100,
   // se ajustará en Phase 5 cuando exista el sistema de niveles canónico).
@@ -135,6 +154,9 @@ export async function StudentDashboard({
       ) : (
         <JoinTeamCard />
       )}
+
+      {/* Stats de prácticas con comparación (solo si tiene team) */}
+      {practiceStats && <StudentPracticeStats stats={practiceStats} />}
 
       {/* PRÁCTICAS — CTA destacado para que students entrenen */}
       <Link
