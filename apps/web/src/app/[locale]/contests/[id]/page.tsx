@@ -43,7 +43,7 @@ export default async function ContestTakePage({
   const { data: contestRow, error: contestErr } = await supabase
     .from('contests')
     .select(
-      'id, slug, status, scheduled_at, duration_minutes, calculator_allowed, title_es, title_en, division',
+      'id, slug, status, scheduled_at, duration_minutes, calendar_window_days, calculator_allowed, title_es, title_en, division',
     )
     .eq('id', contestId)
     .single();
@@ -59,6 +59,7 @@ export default async function ContestTakePage({
     | 'status'
     | 'scheduled_at'
     | 'duration_minutes'
+    | 'calendar_window_days'
     | 'calculator_allowed'
     | 'title_es'
     | 'title_en'
@@ -70,9 +71,13 @@ export default async function ContestTakePage({
     notFound();
   }
 
+  // El "calendar window" es la ventana de días durante la cual el contest está
+  // disponible (ej: prácticas = 365 días, oficiales = 30 días). NO confundir con
+  // duration_minutes (cuánto dura UNA sesión del student tomando el contest).
   const now = new Date();
   const scheduledDate = new Date(contest.scheduled_at);
-  const endDate = new Date(scheduledDate.getTime() + contest.duration_minutes * 60_000);
+  const calendarDays = contest.calendar_window_days ?? 30;
+  const endDate = new Date(scheduledDate.getTime() + calendarDays * 24 * 60 * 60 * 1000);
 
   if (now > endDate || contest.status === 'closed') {
     // Contest expirado — redirigir a results (que se construirá en Chunk 3.4)

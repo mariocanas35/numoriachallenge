@@ -77,22 +77,24 @@ export async function startContestAttempt(
     return { ok: false, message: 'Contest window has expired' };
   }
 
-  // Verificar si ya hay attempt
-  const { data: existingRow } = await supabase
-    .from('contest_attempts')
-    .select('id, submitted_at')
-    .eq('contest_id', contestId)
-    .eq('student_id', user.id)
-    .maybeSingle();
+  // Verificar si ya hay attempt — usamos RPC con SECURITY DEFINER para evitar
+  // edge cases donde la query directa retorna NULL aunque el row existe
+  // (causa duplicate key error en el INSERT subsiguiente).
+  const { data: existingRows } = await supabase.rpc('get_my_contest_attempt', {
+    p_contest_id: contestId,
+  });
+
+  const existingRowsArr =
+    (existingRows as Array<{ id: string; submitted_at: string | null }> | null) ?? [];
+  const existingRow = existingRowsArr[0];
 
   if (existingRow) {
-    const existing = existingRow as { id: string; submitted_at: string | null };
-    if (existing.submitted_at) {
+    if (existingRow.submitted_at) {
       return { ok: false, message: 'You have already submitted this contest' };
     }
     // Resume — no re-validamos session (si la session cerró mid-attempt,
     // el student aún puede ver/submitear lo que tiene)
-    return { ok: true, data: { attemptId: existing.id } };
+    return { ok: true, data: { attemptId: existingRow.id } };
   }
 
   // Phase 4 MOEMS: solo los contests OFICIALES requieren una contest_session

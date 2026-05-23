@@ -883,6 +883,13 @@ export type Database = {
       }
       expire_old_contest_sessions: { Args: never; Returns: number }
       generate_team_invite_code: { Args: never; Returns: string }
+      get_my_contest_attempt: {
+        Args: { p_contest_id: string }
+        Returns: {
+          id: string
+          submitted_at: string
+        }[]
+      }
       get_my_profile: {
         Args: never
         Returns: {
