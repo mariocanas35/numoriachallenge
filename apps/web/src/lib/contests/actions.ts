@@ -80,7 +80,8 @@ export async function startContestAttempt(
   // Verificar si ya hay attempt — usamos RPC con SECURITY DEFINER para evitar
   // edge cases donde la query directa retorna NULL aunque el row existe
   // (causa duplicate key error en el INSERT subsiguiente).
-  const { data: existingRows } = await supabase.rpc('get_my_contest_attempt', {
+  // biome-ignore lint/suspicious/noExplicitAny: RPC type narrowing edge case with @supabase/ssr
+  const { data: existingRows } = await (supabase.rpc as any)('get_my_contest_attempt', {
     p_contest_id: contestId,
   });
 

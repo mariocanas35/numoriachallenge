@@ -77,10 +77,22 @@ export default async function PracticesPage({
           <span>›</span>
           <span className="font-bold text-numoria-grafito">{tp('title')}</span>
         </div>
-        <h1 className="mt-3 font-display text-2xl font-bold text-numoria-grafito sm:text-3xl">
-          {tp('title')}
-        </h1>
-        <p className="mt-2 text-sm text-numoria-mid">{tp('description')}</p>
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl font-bold text-numoria-grafito sm:text-3xl">
+              {tp('title')}
+            </h1>
+            <p className="mt-2 text-sm text-numoria-mid">{tp('description')}</p>
+          </div>
+          {practices.length > 0 && (
+            <Link
+              href="/contests/practices/leaderboard"
+              className="inline-flex items-center gap-2 rounded-lg bg-numoria-orange px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-numoria-orange/90"
+            >
+              🏅 Ver resumen acumulado
+            </Link>
+          )}
+        </div>
       </header>
 
       {summerBowls.length > 0 && <SummerBowlSection bowls={summerBowls} locale={locale} />}

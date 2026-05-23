@@ -230,3 +230,280 @@ export async function getLeaderboardData(
 
   return { entries, summary, teacherTeams };
 }
+
+// ============================================================
+// Aggregated Practices Leaderboard
+// ============================================================
+
+export interface AggregatedLeaderboardEntry {
+  rank: number;
+  studentId: string;
+  studentName: string;
+  studentGrade: number | null;
+  teamId: string;
+  teamName: string;
+  /** Suma de scores en todas las prácticas completadas */
+  totalScore: number;
+  /** Suma de máximos posibles (para calcular %) */
+  totalMaxPossible: number;
+  /** Número de prácticas en las que participó (con attempt submitted) */
+  practicesCompleted: number;
+  /** Última actividad — fecha más reciente de submitted_at */
+  lastActivityAt: string | null;
+  /** True si esta entry es del usuario logueado (para highlight UI) */
+  isCurrentUser: boolean;
+}
+
+export interface AggregatedLeaderboardData {
+  entries: AggregatedLeaderboardEntry[];
+  /** Cantidad total de prácticas activas en este scope (denominador para "X de Y") */
+  totalPractices: number;
+  /** División de los entries (elementary o middle) */
+  division: 'elementary' | 'middle' | 'mixed';
+  /** Si filtró por teamId, nombre del team. Sino, null. */
+  teamName: string | null;
+  /** Rank del usuario actual en el leaderboard (1-indexed). Null si no aparece. */
+  currentUserRank: number | null;
+}
+
+/**
+ * Leaderboard AGREGADO de todas las prácticas — suma scores acumulados.
+ *
+ * Cobertura:
+ *   - Solo contests con contest_type='practice'
+ *   - Solo attempts con submitted_at IS NOT NULL
+ *
+ * Scope:
+ *   - Si teamId se especifica → solo estudiantes de ese team
+ *   - Si no → todos los estudiantes de la división (vista pública/global)
+ *
+ * Métrica:
+ *   - totalScore = SUM(contest_attempts.total_score)
+ *   - practicesCompleted = COUNT(DISTINCT contest_id)
+ *   - Ranking: ORDER BY totalScore DESC, practicesCompleted DESC, lastActivity ASC
+ */
+export async function getPracticesAggregatedLeaderboard(
+  supabase: ServerClient,
+  opts: {
+    /** ID del usuario actual — para detectar isCurrentUser */
+    currentUserId: string;
+    /** Si se especifica, filtra a estudiantes de ese team */
+    teamId?: string;
+    /** Si se especifica (y teamId no), filtra a estudiantes de esa división */
+    division?: 'elementary' | 'middle';
+  },
+): Promise<AggregatedLeaderboardData> {
+  const { currentUserId, teamId, division } = opts;
+
+  // Step 1: Identificar contests de tipo 'practice' activas
+  const { data: practiceContestsRows } = await supabase
+    .from('contests')
+    .select('id, division')
+    .eq('contest_type', 'practice')
+    .neq('status', 'draft');
+
+  const practiceContests =
+    (practiceContestsRows as Array<{ id: string; division: 'elementary' | 'middle' }> | null) ?? [];
+  const practiceIds = practiceContests.map((c) => c.id);
+
+  if (practiceIds.length === 0) {
+    return {
+      entries: [],
+      totalPractices: 0,
+      division: division ?? 'mixed',
+      teamName: null,
+      currentUserRank: null,
+    };
+  }
+
+  // Step 2: Identificar los students target (filtro por team o division)
+  let teamName: string | null = null;
+  let targetStudentIds: string[] = [];
+  const studentTeamMap = new Map<string, { teamId: string; teamName: string }>();
+
+  if (teamId) {
+    // Filtro por team específico
+    const { data: teamRow } = await supabase
+      .from('teams')
+      .select('id, name, division')
+      .eq('id', teamId)
+      .single();
+    const team = teamRow as { id: string; name: string; division: 'elementary' | 'middle' } | null;
+    if (!team) {
+      return {
+        entries: [],
+        totalPractices: 0,
+        division: 'mixed',
+        teamName: null,
+        currentUserRank: null,
+      };
+    }
+    teamName = team.name;
+
+    const { data: membersRows } = await supabase
+      .from('team_members')
+      .select('student_id')
+      .eq('team_id', teamId);
+    const members = (membersRows as Array<{ student_id: string }> | null) ?? [];
+    targetStudentIds = members.map((m) => m.student_id);
+    for (const m of members) {
+      studentTeamMap.set(m.student_id, { teamId: team.id, teamName: team.name });
+    }
+  } else {
+    // Filtro por division (todos los teams de esa division)
+    const targetDivision = division ?? 'elementary';
+    const { data: teamsRows } = await supabase
+      .from('teams')
+      .select('id, name, division')
+      .eq('division', targetDivision);
+    const teams =
+      (teamsRows as Array<{
+        id: string;
+        name: string;
+        division: 'elementary' | 'middle';
+      }> | null) ?? [];
+    const teamIds = teams.map((t) => t.id);
+
+    if (teamIds.length > 0) {
+      const { data: membersRows } = await supabase
+        .from('team_members')
+        .select('student_id, team_id')
+        .in('team_id', teamIds);
+      const members = (membersRows as Array<{ student_id: string; team_id: string }> | null) ?? [];
+      targetStudentIds = members.map((m) => m.student_id);
+      const teamById = new Map(teams.map((t) => [t.id, t]));
+      for (const m of members) {
+        const t = teamById.get(m.team_id);
+        if (t) studentTeamMap.set(m.student_id, { teamId: t.id, teamName: t.name });
+      }
+    }
+  }
+
+  if (targetStudentIds.length === 0) {
+    return {
+      entries: [],
+      totalPractices: practiceIds.length,
+      division: division ?? 'mixed',
+      teamName,
+      currentUserRank: null,
+    };
+  }
+
+  // Step 3: Fetch attempts submitted por los target students en esas prácticas
+  const { data: attemptsRows } = await supabase
+    .from('contest_attempts')
+    .select('id, student_id, contest_id, total_score, max_possible_score, submitted_at')
+    .in('student_id', targetStudentIds)
+    .in('contest_id', practiceIds)
+    .not('submitted_at', 'is', null);
+
+  const attempts =
+    (attemptsRows as Array<{
+      id: string;
+      student_id: string;
+      contest_id: string;
+      total_score: number;
+      max_possible_score: number;
+      submitted_at: string;
+    }> | null) ?? [];
+
+  // Step 4: Resolve student names + grades
+  const { data: profilesRows } = await supabase
+    .from('profiles')
+    .select('id, display_name, grade')
+    .in('id', targetStudentIds);
+  const profilesMap = new Map(
+    (
+      (profilesRows as Array<{ id: string; display_name: string; grade: number | null }> | null) ??
+      []
+    ).map((p) => [p.id, p]),
+  );
+
+  // Step 5: Aggregate por student
+  const aggregateByStudent = new Map<
+    string,
+    {
+      totalScore: number;
+      totalMaxPossible: number;
+      practiceIds: Set<string>;
+      lastActivityAt: string | null;
+    }
+  >();
+
+  for (const a of attempts) {
+    const existing = aggregateByStudent.get(a.student_id) ?? {
+      totalScore: 0,
+      totalMaxPossible: 0,
+      practiceIds: new Set<string>(),
+      lastActivityAt: null as string | null,
+    };
+    existing.totalScore += a.total_score;
+    existing.totalMaxPossible += a.max_possible_score;
+    existing.practiceIds.add(a.contest_id);
+    if (!existing.lastActivityAt || a.submitted_at > existing.lastActivityAt) {
+      existing.lastActivityAt = a.submitted_at;
+    }
+    aggregateByStudent.set(a.student_id, existing);
+  }
+
+  // Step 6: Build entries (incluir TODOS los target students, incluso los que no han hecho nada)
+  const rawEntries: Array<Omit<AggregatedLeaderboardEntry, 'rank'>> = targetStudentIds.map(
+    (studentId) => {
+      const profile = profilesMap.get(studentId);
+      const teamInfo = studentTeamMap.get(studentId);
+      const agg = aggregateByStudent.get(studentId);
+      return {
+        studentId,
+        studentName: profile?.display_name ?? 'Estudiante',
+        studentGrade: profile?.grade ?? null,
+        teamId: teamInfo?.teamId ?? '',
+        teamName: teamInfo?.teamName ?? '—',
+        totalScore: agg?.totalScore ?? 0,
+        totalMaxPossible: agg?.totalMaxPossible ?? 0,
+        practicesCompleted: agg?.practiceIds.size ?? 0,
+        lastActivityAt: agg?.lastActivityAt ?? null,
+        isCurrentUser: studentId === currentUserId,
+      };
+    },
+  );
+
+  // Step 7: Sort + rank
+  rawEntries.sort((a, b) => {
+    if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+    if (b.practicesCompleted !== a.practicesCompleted)
+      return b.practicesCompleted - a.practicesCompleted;
+    // Tiebreaker: quien envió antes (lastActivity más temprana) gana
+    if (a.lastActivityAt && b.lastActivityAt) {
+      return a.lastActivityAt < b.lastActivityAt ? -1 : 1;
+    }
+    return 0;
+  });
+
+  const entries: AggregatedLeaderboardEntry[] = rawEntries.map((e, idx) => ({
+    ...e,
+    rank: idx + 1,
+  }));
+
+  const currentUserEntry = entries.find((e) => e.isCurrentUser);
+  const currentUserRank = currentUserEntry?.rank ?? null;
+
+  // Determinar division mostrada (si el filtro fue por team, usar la division de ese team)
+  let displayDivision: 'elementary' | 'middle' | 'mixed' = division ?? 'mixed';
+  if (teamId) {
+    const { data: teamDivRow } = await supabase
+      .from('teams')
+      .select('division')
+      .eq('id', teamId)
+      .single();
+    const td = (teamDivRow as { division: 'elementary' | 'middle' } | null)?.division;
+    if (td) displayDivision = td;
+  }
+
+  return {
+    entries,
+    totalPractices: practiceIds.length,
+    division: displayDivision,
+    teamName,
+    currentUserRank,
+  };
+}
