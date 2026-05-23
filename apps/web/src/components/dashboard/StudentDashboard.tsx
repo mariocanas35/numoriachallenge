@@ -22,6 +22,8 @@ interface TeamWithCoachAndSchool {
   school_name: string;
   /** Country code de la escuela (ej: 'HN', 'MX') — para stats nacionales */
   country_code: string | null;
+  /** URL del logo de la escuela. null si la escuela no tiene logo subido. */
+  school_logo_url: string | null;
 }
 
 async function fetchStudentTeam(userId: string): Promise<TeamWithCoachAndSchool | null> {
@@ -62,10 +64,18 @@ async function fetchStudentTeam(userId: string): Promise<TeamWithCoachAndSchool 
   const admin = createAdminClient();
   const [coachRes, schoolRes] = await Promise.all([
     admin.from('profiles').select('display_name').eq('id', team.coach_id).single(),
-    supabase.from('schools').select('name, country_code').eq('id', team.school_id).single(),
+    supabase
+      .from('schools')
+      .select('name, country_code, logo_url')
+      .eq('id', team.school_id)
+      .single(),
   ]);
 
-  const schoolData = schoolRes.data as { name: string; country_code: string } | null;
+  const schoolData = schoolRes.data as {
+    name: string;
+    country_code: string;
+    logo_url: string | null;
+  } | null;
 
   return {
     id: team.id,
@@ -74,6 +84,7 @@ async function fetchStudentTeam(userId: string): Promise<TeamWithCoachAndSchool 
     coach_display_name: (coachRes.data as { display_name: string } | null)?.display_name ?? '—',
     school_name: schoolData?.name ?? '—',
     country_code: schoolData?.country_code ?? null,
+    school_logo_url: schoolData?.logo_url ?? null,
   };
 }
 
@@ -143,13 +154,32 @@ export async function StudentDashboard({
           <h2 className="font-display text-lg font-bold text-numoria-ink">
             👥 {tStudent('teamTitle')}
           </h2>
-          <p className="mt-2 font-display text-xl font-bold text-numoria-ink">{team.name}</p>
-          <p className="mt-1 text-sm text-numoria-mid">
-            {tStudent('teamCoach', { name: team.coach_display_name })}
-          </p>
-          <p className="text-sm text-numoria-mid">
-            {tStudent('teamSchool', { name: team.school_name })}
-          </p>
+          <div className="mt-3 flex items-center gap-4">
+            {/* Logo de la escuela — placeholder si no hay logo */}
+            {team.school_logo_url ? (
+              <img
+                src={team.school_logo_url}
+                alt={`Logo de ${team.school_name}`}
+                className="h-16 w-16 shrink-0 rounded-lg border-2 border-white bg-white object-contain shadow-sm sm:h-20 sm:w-20"
+              />
+            ) : (
+              <div
+                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border-2 border-white bg-white text-3xl shadow-sm sm:h-20 sm:w-20"
+                aria-label={`Sin logo de ${team.school_name}`}
+              >
+                🏫
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="font-display text-xl font-bold text-numoria-ink">{team.name}</p>
+              <p className="mt-1 text-sm text-numoria-mid">
+                {tStudent('teamCoach', { name: team.coach_display_name })}
+              </p>
+              <p className="text-sm text-numoria-mid">
+                {tStudent('teamSchool', { name: team.school_name })}
+              </p>
+            </div>
+          </div>
         </section>
       ) : (
         <JoinTeamCard />
