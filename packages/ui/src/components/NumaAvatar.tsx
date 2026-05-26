@@ -129,104 +129,32 @@ function NumaWave() {
 }
 
 function NumaThink() {
+  // Arte refinado de Numa (zorrito pensando con libro) — reemplazó el SVG
+  // placeholder el 2026-05-25. Archivo: apps/web/public/numa-think.png
   return (
-    <NumaBase>
-      {/* Eyes — looking up-right (thinking) */}
-      <circle cx="42" cy="49" r="4" fill={INK} />
-      <circle cx="62" cy="49" r="4" fill={INK} />
-      <circle cx="44" cy="47" r="1.3" fill={BELLY} />
-      <circle cx="64" cy="47" r="1.3" fill={BELLY} />
-      {/* Eyebrow raised */}
-      <path
-        d="M 56 42 Q 62 39 68 42"
-        stroke={INK}
-        strokeWidth="1.5"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* Nose */}
-      <ellipse cx="50" cy="60" rx="2.5" ry="1.8" fill={INK} />
-      {/* Slight pucker mouth (thinking) */}
-      <ellipse cx="50" cy="68" rx="3" ry="2" fill={INK} />
-      {/* Paw on chin */}
-      <ellipse
-        cx="62"
-        cy="78"
-        rx="6"
-        ry="8"
-        fill={FUR}
-        stroke={FUR_DARK}
-        strokeWidth="1.5"
-        transform="rotate(-15 62 78)"
-      />
-      {/* Thought bubble */}
-      <circle cx="80" cy="22" r="3" fill={BELLY} stroke={INK} strokeWidth="1" opacity="0.8" />
-      <circle cx="86" cy="14" r="5" fill={BELLY} stroke={INK} strokeWidth="1" opacity="0.8" />
-    </NumaBase>
+    <img
+      src="/numa-think.png"
+      alt=""
+      aria-hidden="true"
+      className="h-full w-full object-contain"
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 
 function NumaCelebrate() {
+  // Arte refinado de Numa (zorrito celebrando con medalla) — reemplazó el SVG
+  // placeholder el 2026-05-25. Archivo: apps/web/public/numa-celebrate.png
   return (
-    <NumaBase>
-      {/* Eyes — squinted with joy (^_^) */}
-      <path
-        d="M 36 50 Q 40 46 44 50"
-        stroke={INK}
-        strokeWidth="2.2"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 56 50 Q 60 46 64 50"
-        stroke={INK}
-        strokeWidth="2.2"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* Nose */}
-      <ellipse cx="50" cy="60" rx="2.5" ry="1.8" fill={INK} />
-      {/* Big open mouth */}
-      <path
-        d="M 42 66 Q 50 78 58 66 Q 50 71 42 66 Z"
-        fill={INK}
-        stroke={INK}
-        strokeWidth="1"
-        strokeLinejoin="round"
-      />
-      <path d="M 47 70 Q 50 73 53 70" fill="#FF6B7A" />
-      {/* Both paws raised */}
-      <ellipse
-        cx="18"
-        cy="28"
-        rx="6"
-        ry="9"
-        fill={FUR}
-        stroke={FUR_DARK}
-        strokeWidth="1.5"
-        transform="rotate(-30 18 28)"
-      />
-      <ellipse
-        cx="82"
-        cy="28"
-        rx="6"
-        ry="9"
-        fill={FUR}
-        stroke={FUR_DARK}
-        strokeWidth="1.5"
-        transform="rotate(30 82 28)"
-      />
-      {/* Sparkles */}
-      <text x="14" y="14" fontSize="10" fill="#FBBF24">
-        ✦
-      </text>
-      <text x="78" y="14" fontSize="10" fill="#FBBF24">
-        ✦
-      </text>
-      <text x="50" y="10" fontSize="8" fill="#FBBF24">
-        ✦
-      </text>
-    </NumaBase>
+    <img
+      src="/numa-celebrate.png"
+      alt=""
+      aria-hidden="true"
+      className="h-full w-full object-contain"
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 
