@@ -64,23 +64,25 @@ export default async function SummerBowlLandingPage({
         {/* === HERO === */}
         <section className="relative px-6 pt-28 pb-12 sm:px-10 sm:pt-32">
           <div className="mx-auto max-w-4xl">
-            <div className="rounded-3xl bg-gradient-to-br from-numoria-orange via-numoria-coral to-numoria-indigo p-8 text-white shadow-xl sm:p-14">
-              <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-10">
+            <div className="rounded-3xl bg-gradient-to-br from-numoria-orange via-numoria-coral to-numoria-indigo p-8 text-numoria-ink shadow-xl sm:p-14">
+              <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:gap-6">
                 <div className="shrink-0">
-                  <NumaAvatar pose="wave" size="2xl" animateIn />
+                  <NumaAvatar pose="wave" size="lg" animateIn />
                 </div>
                 <div className="flex-1 text-center sm:text-left">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-95">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-numoria-ink/80">
                     {t('edition')}
                   </p>
-                  <h1 className="mt-2 font-display text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+                  <h1 className="mt-2 font-display text-4xl font-bold leading-tight text-numoria-ink sm:text-5xl md:text-6xl">
                     {t('title')} {t('trophy')}
                   </h1>
-                  <p className="mt-4 font-display text-xl font-semibold leading-snug sm:text-2xl md:text-3xl">
+                  <p className="mt-4 font-display text-xl font-semibold leading-snug text-numoria-ink sm:text-2xl md:text-3xl">
                     {t('tagline')}
                   </p>
-                  <p className="mt-5 text-base font-semibold opacity-95 sm:text-lg">{t('specs')}</p>
-                  <p className="mt-5 inline-block rounded-lg bg-black/25 px-4 py-2 text-xs font-semibold sm:text-sm">
+                  <p className="mt-5 text-base font-semibold text-numoria-ink sm:text-lg">
+                    {t('specs')}
+                  </p>
+                  <p className="mt-5 inline-block rounded-lg bg-white/95 px-4 py-2 text-xs font-semibold text-numoria-ink shadow-sm sm:text-sm">
                     {t('prize')}
                   </p>
                 </div>
