@@ -1,6 +1,5 @@
 import { Footer } from '@/components/landing/Footer';
 import { LandingHeader } from '@/components/landing/LandingHeader';
-import { EmailCaptureForm } from '@/components/summer-bowl/EmailCaptureForm';
 import { createServerClient } from '@numoria/database/server';
 import { NumaAvatar } from '@numoria/ui';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -119,13 +118,6 @@ export default async function SummerBowlLandingPage({
           </div>
         </section>
 
-        {/* === EMAIL CAPTURE === */}
-        <section className="px-6 py-12 sm:px-10">
-          <div className="mx-auto max-w-2xl">
-            <EmailCaptureForm locale={locale} />
-          </div>
-        </section>
-
         {/* === LOS 3 BOWLS === */}
         {bowls.length > 0 && (
           <section className="px-6 py-12 sm:px-10">
@@ -219,11 +211,23 @@ export default async function SummerBowlLandingPage({
               {t('finalCtaHeader')}
             </h2>
             <p className="mx-auto mt-3 max-w-md text-sm text-numoria-mid sm:text-base">
-              {t('finalCtaBody')}
+              {t('finalCtaBodyShort')}
             </p>
-            <div className="mt-6">
-              <EmailCaptureForm locale={locale} />
+            <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 rounded-xl bg-numoria-orange px-6 py-3 text-base font-bold text-white shadow-sm transition hover:bg-numoria-orange/90"
+              >
+                🚀 {t('studentWayCta')}
+              </Link>
+              <a
+                href={b2bMailto}
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-numoria-indigo bg-white px-6 py-3 text-base font-bold text-numoria-indigo shadow-sm transition hover:bg-numoria-indigo/5"
+              >
+                🎓 {t('teacherWayCta')}
+              </a>
             </div>
+            <p className="mt-4 text-xs text-numoria-mid">{t('finalCtaTipInstitutional')}</p>
           </div>
         </section>
       </main>
