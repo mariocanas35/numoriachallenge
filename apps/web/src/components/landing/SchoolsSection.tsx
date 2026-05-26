@@ -47,7 +47,7 @@ const representativeSchools: RepresentativeSchool[] = [
     countryCode: 'HN',
   },
   {
-    name: 'The American School Foundation',
+    name: 'Greengates School',
     city: 'Ciudad de México',
     countryCode: 'MX',
   },
@@ -65,11 +65,6 @@ const representativeSchools: RepresentativeSchool[] = [
     name: 'Colegio Menor San Francisco de Quito',
     city: 'Quito',
     countryCode: 'EC',
-  },
-  {
-    name: 'Colegio Americano de Guatemala',
-    city: 'Ciudad de Guatemala',
-    countryCode: 'GT',
   },
 ];
 
