@@ -165,13 +165,60 @@ export async function verifyEmailOtp(formData: FormData): Promise<AuthActionResu
   const { email, token } = parsed.data;
   const supabase = await createServerClient();
 
-  const { error } = await supabase.auth.verifyOtp({
+  // Supabase usa distinto `type` según cómo se generó el token:
+  //   - 'email'  → OTP de login / magic link (usuario ya existente)
+  //   - 'signup' → confirmación de cuenta nueva (cuando "Confirm email" está on)
+  // signInWithOtp puede emitir cualquiera de los dos según la config del
+  // proyecto, así que intentamos 'email' y, si falla, reintentamos 'signup'.
+  // Esto elimina el fallo específico de "las cuentas NUEVAS no entran".
+  const first = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+
+  let error = first.error;
+  if (error) {
+    const second = await supabase.auth.verifyOtp({ email, token, type: 'signup' });
+    error = second.error;
+  }
+
+  if (error) {
+    console.error('verifyEmailOtp failed:', {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+    return { ok: false, message: error.message };
+  }
+
+  return { ok: true };
+}
+
+// ============================================================
+// RESEND OTP — reenvía un código fresco a un usuario que ya existe
+//
+// Se usa desde la página /check-email cuando el correo no llegó o el
+// código expiró. El usuario YA fue creado por el signUp inicial, así que
+// shouldCreateUser:false evita duplicados.
+// ============================================================
+
+const resendSchema = z.object({ email: emailSchema });
+
+export async function resendSignupOtp(formData: FormData): Promise<AuthActionResult> {
+  const parsed = resendSchema.safeParse({ email: formData.get('email') });
+  if (!parsed.success) {
+    return { ok: false, fieldErrors: parsed.error.flatten().fieldErrors };
+  }
+
+  const { email } = parsed.data;
+  const supabase = await createServerClient();
+  const origin = await getOrigin();
+  const callbackUrl = `${origin}/auth/callback`;
+
+  const { error } = await supabase.auth.signInWithOtp({
     email,
-    token,
-    type: 'email',
+    options: { emailRedirectTo: callbackUrl, shouldCreateUser: false },
   });
 
   if (error) {
+    console.error('resendSignupOtp failed:', { code: error.code, message: error.message });
     return { ok: false, message: error.message };
   }
 

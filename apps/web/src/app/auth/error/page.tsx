@@ -24,6 +24,11 @@ export default async function AuthErrorPage({
       title: 'No pudimos completar tu inicio de sesión',
       description: 'El enlace mágico expiró o ya fue usado. Solicita uno nuevo.',
     },
+    no_profile: {
+      title: 'Tu cuenta está casi lista',
+      description:
+        'Creamos tu cuenta pero no pudimos cargar tu perfil. Cierra sesión e inicia de nuevo. Si el problema persiste, escríbenos a mimathonline@gmail.com.',
+    },
     default: {
       title: 'Algo salió mal',
       description: 'No pudimos completar tu inicio de sesión. Inténtalo de nuevo.',

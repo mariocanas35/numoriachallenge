@@ -35,8 +35,10 @@ export default async function OnboardingRouterPage({
   const profile = rpcResult.data as Profile | null;
 
   if (!profile) {
-    // Edge case: user existe en auth pero no profile (trigger falló?)
-    redirect(`/${locale}/auth-error`);
+    // Edge case: user existe en auth pero no profile (trigger falló o el JWT
+    // no se propagó). Antes redirigía a `/${locale}/auth-error`, una ruta que
+    // NO existe (404). La página real de error vive fuera de [locale].
+    redirect('/auth/error?reason=no_profile');
   }
 
   if (profile.onboarding_completed) {

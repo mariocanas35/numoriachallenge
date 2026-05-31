@@ -59,8 +59,33 @@ export default async function HomePage({
   const profile = rpcResult.data as Profile | null;
 
   if (!profile) {
-    // Defensa: si el RPC falla por alguna razón, mostrar landing
-    return <Landing />;
+    // El usuario SÍ está autenticado pero no pudimos leer su profile (RPC
+    // devolvió null: trigger aún pendiente o JWT no propagado en este request).
+    // NO mostrar la landing pública aquí — al usuario le parecería que "no
+    // entró". Mostramos un estado claro de "preparando tu cuenta" con opción
+    // de recargar o cerrar sesión. Evitamos un redirect para no arriesgar un
+    // loop con /onboarding si la lectura del profile fluctúa.
+    const tSetup = await getTranslations('auth.setupPending');
+    return (
+      <main className="flex min-h-dvh flex-col items-center justify-center gap-6 px-6 text-center">
+        <h1 className="font-display text-2xl font-bold text-numoria-ink">{tSetup('title')}</h1>
+        <p className="max-w-md text-numoria-mid">{tSetup('description')}</p>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/"
+            className="rounded-full bg-numoria-blue px-5 py-2.5 text-sm font-bold text-white transition hover:bg-numoria-blue/90"
+          >
+            {tSetup('retry')}
+          </Link>
+          <a
+            href="/auth/logout"
+            className="rounded-full border-2 border-numoria-gray px-5 py-2.5 text-sm font-bold text-numoria-grafito transition hover:border-numoria-mid"
+          >
+            {tSetup('logout')}
+          </a>
+        </div>
+      </main>
+    );
   }
 
   // Dashboard según rol

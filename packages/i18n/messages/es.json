@@ -64,7 +64,17 @@
       "verifying": "Verificando...",
       "errorIncomplete": "El código debe tener 6 dígitos",
       "errorInvalid": "Código incorrecto o expirado. Verifica el correo o solicita uno nuevo.",
-      "errorGeneric": "No pudimos verificar el código. Inténtalo de nuevo."
+      "errorGeneric": "No pudimos verificar el código. Inténtalo de nuevo.",
+      "errorRateLimit": "Demasiados intentos. Espera un minuto antes de pedir otro código.",
+      "resend": "¿No te llegó? Reenviar código",
+      "resending": "Reenviando...",
+      "resent": "✓ Código reenviado. Revisa tu bandeja (y la carpeta de spam)."
+    },
+    "setupPending": {
+      "title": "Estamos preparando tu cuenta",
+      "description": "Tu sesión está activa, pero todavía estamos terminando de configurar tu perfil. Espera unos segundos y recarga. Si no avanza, cierra sesión e inténtalo de nuevo.",
+      "retry": "Recargar",
+      "logout": "Cerrar sesión"
     },
     "checkEmail": "Revisa tu correo",
     "checkEmailTitle": "¡Revisa tu correo!",

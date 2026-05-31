@@ -64,7 +64,17 @@
       "verifying": "Verifying...",
       "errorIncomplete": "The code must be 6 digits",
       "errorInvalid": "Invalid or expired code. Check your email or request a new one.",
-      "errorGeneric": "We couldn't verify the code. Please try again."
+      "errorGeneric": "We couldn't verify the code. Please try again.",
+      "errorRateLimit": "Too many attempts. Wait a minute before requesting another code.",
+      "resend": "Didn't get it? Resend code",
+      "resending": "Resending...",
+      "resent": "✓ Code resent. Check your inbox (and spam folder)."
+    },
+    "setupPending": {
+      "title": "We're setting up your account",
+      "description": "Your session is active, but we're still finishing your profile. Wait a few seconds and reload. If it doesn't move, sign out and try again.",
+      "retry": "Reload",
+      "logout": "Sign out"
     },
     "checkEmail": "Check your email",
     "checkEmailTitle": "Check your email!",

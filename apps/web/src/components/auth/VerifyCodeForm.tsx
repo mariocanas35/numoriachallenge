@@ -1,10 +1,10 @@
 'use client';
 
 import { useRouter } from '@/i18n/navigation';
-import { verifyEmailOtp } from '@/lib/auth/actions';
+import { resendSignupOtp, verifyEmailOtp } from '@/lib/auth/actions';
 import { Button } from '@numoria/ui';
 import { useTranslations } from 'next-intl';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 interface VerifyCodeFormProps {
   email: string;
@@ -27,9 +27,32 @@ export function VerifyCodeForm({ email, next }: VerifyCodeFormProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
+  // Reenvío de código + cooldown para no spamear el rate limit del proveedor.
+  const [isResending, startResending] = useTransition();
+  const [resentMsg, setResentMsg] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(id);
+  }, [cooldown]);
+
+  const messageToError = (rawMessage?: string): string => {
+    const msg = (rawMessage ?? '').toLowerCase();
+    if (msg.includes('rate') || msg.includes('too many') || msg.includes('429')) {
+      return t('errorRateLimit');
+    }
+    if (msg.includes('expired') || msg.includes('invalid')) {
+      return t('errorInvalid');
+    }
+    return t('errorGeneric');
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    setResentMsg(null);
 
     if (code.length !== 6) {
       setError(t('errorIncomplete'));
@@ -44,12 +67,7 @@ export function VerifyCodeForm({ email, next }: VerifyCodeFormProps) {
       const result = await verifyEmailOtp(formData);
 
       if (!result.ok) {
-        const msg = (result.message ?? '').toLowerCase();
-        if (msg.includes('expired') || msg.includes('invalid')) {
-          setError(t('errorInvalid'));
-        } else {
-          setError(t('errorGeneric'));
-        }
+        setError(messageToError(result.message));
         return;
       }
 
@@ -57,6 +75,24 @@ export function VerifyCodeForm({ email, next }: VerifyCodeFormProps) {
       const safeNext = next?.startsWith('/') ? next : '/';
       router.replace(safeNext);
       router.refresh();
+    });
+  };
+
+  const handleResend = () => {
+    setError(null);
+    setResentMsg(null);
+
+    const formData = new FormData();
+    formData.set('email', email);
+
+    startResending(async () => {
+      const result = await resendSignupOtp(formData);
+      if (!result.ok) {
+        setError(messageToError(result.message));
+        return;
+      }
+      setResentMsg(t('resent'));
+      setCooldown(30); // 30s antes de permitir otro reenvío
     });
   };
 
@@ -94,6 +130,19 @@ export function VerifyCodeForm({ email, next }: VerifyCodeFormProps) {
           {error}
         </p>
       )}
+
+      {resentMsg && (
+        <output className="block text-center text-sm text-numoria-green">{resentMsg}</output>
+      )}
+
+      <button
+        type="button"
+        onClick={handleResend}
+        disabled={isResending || cooldown > 0}
+        className="text-center text-sm font-semibold text-numoria-blue underline-offset-2 hover:underline disabled:opacity-50 disabled:no-underline"
+      >
+        {isResending ? t('resending') : cooldown > 0 ? `${t('resend')} (${cooldown})` : t('resend')}
+      </button>
     </form>
   );
 }
