@@ -16,8 +16,19 @@ const intlMiddleware = createMiddleware(routing);
  * `/join/*` permite ver la landing de invitación incluso si el user
  * no ha terminado onboarding — la vista detecta el estado y muestra
  * el CTA adecuado (volver a onboarding con el código pre-llenado).
+ *
+ * Las páginas informativas públicas (about, help, privacy, terms,
+ * contact) son accesibles para cualquiera, incluso sin onboarding.
  */
-const ONBOARDING_EXEMPT_PATHS = ['/onboarding', '/join'];
+const ONBOARDING_EXEMPT_PATHS = [
+  '/onboarding',
+  '/join',
+  '/about',
+  '/help',
+  '/privacy',
+  '/terms',
+  '/contact',
+];
 
 function isExemptFromOnboarding(pathname: string, locale: string): boolean {
   const localePrefix = `/${locale}`;
@@ -45,15 +56,29 @@ export default async function middleware(request: NextRequest) {
 
   // Path sin prefijo de locale → detectar y redirigir
   if (!isActiveLocale(firstSegment)) {
+    const cookieLocale = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
     const detected = detectLocale({
-      cookieLocale: request.cookies.get(LOCALE_COOKIE_NAME)?.value,
+      cookieLocale,
       countryCode:
         request.headers.get('cf-ipcountry') ?? request.headers.get('x-vercel-ip-country'),
       acceptLanguage: request.headers.get('accept-language'),
     });
     const url = request.nextUrl.clone();
     url.pathname = pathname === '/' ? `/${detected}` : `/${detected}${pathname}`;
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+
+    // Persistir el locale la PRIMERA vez que se detecta (aún sin cookie).
+    // A partir de ahí el idioma queda "establecido" y solo cambia cuando el
+    // usuario lo configura explícitamente vía LocaleSwitcher — no vuelve a
+    // re-detectarse por país/navegador en visitas posteriores.
+    if (!cookieLocale) {
+      redirectResponse.cookies.set(LOCALE_COOKIE_NAME, detected, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+      });
+    }
+    return redirectResponse;
   }
 
   // Path ya localizado → next-intl

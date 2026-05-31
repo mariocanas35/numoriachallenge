@@ -12,6 +12,14 @@ type JoinTeamArgs = Database['public']['Functions']['join_team']['Args'];
 const SCHOOL_DIVISIONS = ['elementary', 'middle'] as const;
 type SchoolDivision = (typeof SCHOOL_DIVISIONS)[number];
 
+// Límites del plan por defecto (piloto):
+//   - 2 equipos por escuela
+//   - 15 estudiantes por equipo
+//   → 30 estudiantes máximo por escuela
+// Cuando existan planes de pago, esto se hará configurable por escuela/plan.
+const MAX_TEAMS_PER_SCHOOL = 2;
+const MAX_MEMBERS_PER_TEAM = 15;
+
 // ============================================================
 // createTeam — Teacher crea un equipo nuevo
 // ============================================================
@@ -19,7 +27,7 @@ type SchoolDivision = (typeof SCHOOL_DIVISIONS)[number];
 const createTeamSchema = z.object({
   name: z.string().trim().min(1).max(100),
   division: z.enum(SCHOOL_DIVISIONS),
-  max_members: z.coerce.number().int().min(1).max(100).optional(),
+  max_members: z.coerce.number().int().min(1).max(MAX_MEMBERS_PER_TEAM).optional(),
 });
 
 export interface CreateTeamResult {
@@ -77,6 +85,20 @@ export async function createTeam(formData: FormData): Promise<CreateTeamResult> 
     return { ok: false, message: 'You must register a school before creating teams' };
   }
 
+  // 1b. Límite de equipos por escuela (plan por defecto del piloto: 2 equipos)
+  const { count: teamCount, error: countError } = await supabase
+    .from('teams')
+    .select('*', { count: 'exact', head: true })
+    .eq('school_id', profile.school_id);
+
+  if (countError) {
+    console.error('Team count check failed:', countError);
+    return { ok: false, message: countError.message };
+  }
+  if ((teamCount ?? 0) >= MAX_TEAMS_PER_SCHOOL) {
+    return { ok: false, message: 'TEAM_LIMIT_REACHED' };
+  }
+
   // 2. Generar invite_code único (RPC retries hasta 100 veces internamente)
   const { data: codeData, error: codeError } = await supabase.rpc('generate_team_invite_code');
   if (codeError || !codeData) {
@@ -92,7 +114,7 @@ export async function createTeam(formData: FormData): Promise<CreateTeamResult> 
     school_id: profile.school_id,
     coach_id: user.id,
     invite_code: inviteCode,
-    max_members: max_members ?? 35,
+    max_members: max_members ?? MAX_MEMBERS_PER_TEAM,
   };
 
   const { data: teamRow, error: insertError } = await supabase

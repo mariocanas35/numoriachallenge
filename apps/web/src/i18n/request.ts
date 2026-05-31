@@ -14,9 +14,18 @@ import { routing } from './routing';
  */
 type ActiveLocale = (typeof routing.locales)[number];
 
-const messagesByLocale: Record<ActiveLocale, typeof esMessages> = {
-  es: esMessages,
-  en: enMessages,
+/**
+ * Estructura recursiva que espera next-intl (`AbstractIntlMessages`):
+ * solo strings u objetos anidados. Los mensajes informativos contienen
+ * arrays (p.ej. `pages.help.faqs`, `pages.*.points`) que se leen con
+ * `t.raw()` — next-intl los soporta en runtime, pero su tipo no admite
+ * arrays, de ahí el cast `as unknown`.
+ */
+type IntlMessages = { [key: string]: string | IntlMessages };
+
+const messagesByLocale: Record<ActiveLocale, IntlMessages> = {
+  es: esMessages as unknown as IntlMessages,
+  en: enMessages as unknown as IntlMessages,
 };
 
 export default getRequestConfig(async ({ requestLocale }) => {

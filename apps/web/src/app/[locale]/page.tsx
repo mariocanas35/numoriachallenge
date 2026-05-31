@@ -7,9 +7,10 @@ import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { SchoolsSection } from '@/components/landing/SchoolsSection';
+import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 function Landing() {
   return (
@@ -86,8 +87,20 @@ export default async function HomePage({
   }
 
   if (profile.role === 'teacher' && profile.school_id) {
+    const tTeacher = await getTranslations('dashboard.teacher');
     return (
-      <DashboardShell wide>
+      <DashboardShell
+        wide
+        topbarRight={
+          <Link
+            href="/settings"
+            className="inline-flex items-center gap-1.5 rounded-full border-2 border-numoria-gray bg-white px-4 py-2 text-sm font-bold text-numoria-grafito transition hover:border-numoria-indigo hover:text-numoria-indigo"
+          >
+            <span aria-hidden>⚙️</span>
+            <span className="hidden sm:inline">{tTeacher('settings')}</span>
+          </Link>
+        }
+      >
         <TeacherDashboard
           userId={profile.id}
           displayName={profile.display_name}

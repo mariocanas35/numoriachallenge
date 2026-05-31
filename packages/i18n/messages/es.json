@@ -675,16 +675,17 @@
       "divisionElementary": "Primaria",
       "divisionMiddle": "Secundaria",
       "maxMembers": "Capacidad máxima (opcional)",
-      "maxMembersHelp": "Default: 30. Hasta 100 estudiantes por equipo. Cobro adicional por cada estudiante sobre 30.",
+      "maxMembersHelp": "Máximo 15 estudiantes por equipo. Puedes crear hasta 2 equipos por escuela.",
       "submit": "Crear equipo",
       "saving": "Creando equipo...",
       "errors": {
         "nameRequired": "El nombre del equipo es requerido",
         "nameTooLong": "El nombre debe tener máximo 100 caracteres",
         "divisionRequired": "Selecciona una división",
-        "maxMembersInvalid": "Capacidad inválida (1-100)",
+        "maxMembersInvalid": "Capacidad inválida (1-15)",
         "noSchool": "Debes registrar tu escuela antes de crear equipos.",
-        "createFailed": "No pudimos crear el equipo. Inténtalo de nuevo."
+        "createFailed": "No pudimos crear el equipo. Inténtalo de nuevo.",
+        "teamLimitReached": "Has alcanzado el límite de 2 equipos por escuela."
       }
     },
     "view": {
@@ -736,6 +737,111 @@
     "help": "Ayuda",
     "blog": "Blog",
     "careers": "Trabaja con nosotros"
+  },
+  "pages": {
+    "backToHome": "← Volver al inicio",
+    "about": {
+      "title": "Acerca de Numoria",
+      "intro": "Numoria Challenge es una plataforma de olimpiadas matemáticas en línea para estudiantes de 8 a 14 años. Convertimos la práctica de matemáticas en una aventura: competencias, medallas y un personaje guía llamado Numa que acompaña a cada estudiante.",
+      "missionTitle": "Nuestra misión",
+      "mission": "Creemos que todos los niños pueden disfrutar las matemáticas cuando aprenden jugando. Queremos que escuelas de toda Latinoamérica tengan acceso a competencias matemáticas de calidad, sin importar su presupuesto ni su ubicación.",
+      "forWhoTitle": "¿Para quién es?",
+      "forWho": [
+        "Estudiantes de primaria y secundaria (8 a 14 años) que quieren retarse y mejorar.",
+        "Docentes que buscan motivar a sus grupos con competencias listas para usar.",
+        "Escuelas que quieren ofrecer olimpiadas matemáticas sin montar toda la logística."
+      ]
+    },
+    "help": {
+      "title": "Centro de ayuda",
+      "intro": "Resolvemos las dudas más comunes. Si no encuentras lo que buscas, escríbenos y te ayudamos.",
+      "faqs": [
+        {
+          "q": "¿Cómo creo una cuenta?",
+          "a": "Haz clic en \"Crear cuenta\" desde la página de inicio, elige si eres estudiante o docente, y sigue los pasos. Es gratis para empezar."
+        },
+        {
+          "q": "¿Cómo se une un estudiante a un equipo?",
+          "a": "El docente crea el equipo y comparte un código de invitación de 8 caracteres. El estudiante ingresa ese código desde su cuenta para unirse."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "Puedes empezar gratis con varias competencias de prueba, sin tarjeta de crédito. Más adelante ofreceremos planes para escuelas con más equipos y funciones."
+        },
+        {
+          "q": "¿Cuántos equipos y estudiantes puedo tener?",
+          "a": "Por defecto cada escuela puede crear hasta 2 equipos, con un máximo de 15 estudiantes por equipo (30 estudiantes en total)."
+        },
+        {
+          "q": "¿Necesito instalar algo?",
+          "a": "No. Numoria funciona desde el navegador en computadoras, tabletas y celulares. Solo necesitas conexión a internet."
+        }
+      ],
+      "contactNote": "¿Tu pregunta no está aquí? Escríbenos a mimathonline@gmail.com y te responderemos lo antes posible."
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "updated": "Última actualización: mayo de 2026",
+      "intro": "Esta es una versión breve mientras preparamos la versión completa. En Numoria Challenge cuidamos los datos de estudiantes, docentes y escuelas. Solo recopilamos lo necesario para que la plataforma funcione.",
+      "points": [
+        {
+          "h": "Qué datos recopilamos",
+          "t": "Nombre o apodo, correo electrónico, rol (estudiante o docente), escuela y resultados de las competencias. No pedimos datos sensibles innecesarios."
+        },
+        {
+          "h": "Para qué los usamos",
+          "t": "Para crear tu cuenta, organizar equipos y competencias, mostrar tus resultados y mejorar la plataforma. No vendemos tus datos a terceros."
+        },
+        {
+          "h": "Datos de menores",
+          "t": "Numoria está pensado para niños. Recomendamos que docentes y familias acompañen el registro. Los estudiantes pueden usar un apodo en lugar de su nombre real."
+        },
+        {
+          "h": "Tus derechos",
+          "t": "Puedes pedir acceso, corrección o eliminación de tus datos en cualquier momento escribiendo a mimathonline@gmail.com."
+        },
+        {
+          "h": "Seguridad",
+          "t": "Guardamos la información en servidores seguros y limitamos el acceso solo a quienes lo necesitan para operar el servicio."
+        }
+      ],
+      "note": "Al usar Numoria Challenge aceptas esta política. Si tienes dudas, escríbenos a mimathonline@gmail.com."
+    },
+    "terms": {
+      "title": "Términos de servicio",
+      "updated": "Última actualización: mayo de 2026",
+      "intro": "Esta es una versión breve de nuestros términos mientras preparamos la versión completa. Al usar Numoria Challenge aceptas estas condiciones.",
+      "points": [
+        {
+          "h": "Uso de la plataforma",
+          "t": "Numoria Challenge es para fines educativos. Te comprometes a usarla de forma respetuosa y a no hacer trampa en las competencias."
+        },
+        {
+          "h": "Cuentas",
+          "t": "Eres responsable de mantener la confidencialidad de tu cuenta. Los docentes son responsables de los equipos que crean y de los códigos que comparten."
+        },
+        {
+          "h": "Contenido y resultados",
+          "t": "Los problemas, materiales y la marca Numoria son nuestros. Tus resultados te pertenecen y los mostramos dentro de la plataforma para tu seguimiento."
+        },
+        {
+          "h": "Disponibilidad",
+          "t": "Durante la etapa de prueba el servicio puede tener interrupciones o cambios. Haremos lo posible por avisar con tiempo cualquier cambio importante."
+        },
+        {
+          "h": "Cambios en los términos",
+          "t": "Podemos actualizar estos términos. Publicaremos la fecha de la última actualización y, si el cambio es importante, te avisaremos."
+        }
+      ],
+      "note": "¿Dudas sobre estos términos? Escríbenos a mimathonline@gmail.com."
+    },
+    "contact": {
+      "title": "Contacto",
+      "intro": "¿Tienes preguntas, ideas o quieres llevar Numoria a tu escuela? Nos encantará saber de ti.",
+      "emailLabel": "Correo",
+      "email": "mimathonline@gmail.com",
+      "responseTime": "Respondemos normalmente en 1 a 2 días hábiles."
+    }
   },
   "metadata": {
     "title": "Numoria Challenge — Olimpiadas matemáticas online",

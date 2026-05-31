@@ -27,7 +27,10 @@ export function CreateTeamForm() {
         if (result.fieldErrors) setErrors(result.fieldErrors);
         if (result.message && !result.fieldErrors) {
           // Mapear errores conocidos a strings traducidos
-          if (result.message.toLowerCase().includes('school')) {
+          const msg = result.message.toLowerCase();
+          if (msg.includes('team_limit')) {
+            setServerError(tErr('teamLimitReached'));
+          } else if (msg.includes('school')) {
             setServerError(tErr('noSchool'));
           } else {
             setServerError(tErr('createFailed'));
@@ -109,8 +112,8 @@ export function CreateTeamForm() {
           type="number"
           name="max_members"
           min={1}
-          max={100}
-          defaultValue={30}
+          max={15}
+          defaultValue={15}
           className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base text-numoria-ink focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
         />
         <span className="text-xs text-numoria-mid">{t('maxMembersHelp')}</span>
