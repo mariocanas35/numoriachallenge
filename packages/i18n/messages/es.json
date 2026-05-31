@@ -706,7 +706,13 @@
       "membersEmpty": "Todavía no se ha unido nadie. Comparte el código.",
       "memberJoined": "se unió {date}",
       "memberCount": "{count, plural, =0 {Sin miembros} =1 {1 miembro} other {# miembros}} de {max}",
-      "createAnother": "+ Crear otro equipo"
+      "createAnother": "+ Crear otro equipo",
+      "deleteTitle": "Eliminar equipo",
+      "deleteWarning": "Esta acción no se puede deshacer. Se eliminará el equipo, su código de invitación y se quitará a todos sus miembros.",
+      "deleteButton": "Eliminar este equipo",
+      "deleting": "Eliminando...",
+      "deleteConfirm": "¿Eliminar \"{name}\"? Esta acción no se puede deshacer. {count, plural, =0 {El equipo no tiene miembros.} =1 {Se quitará a 1 miembro.} other {Se quitará a # miembros.}}",
+      "deleteFailed": "No pudimos eliminar el equipo. Intenta de nuevo."
     },
     "join": {
       "loadingTitle": "Validando código...",

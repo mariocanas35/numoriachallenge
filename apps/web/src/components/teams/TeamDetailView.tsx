@@ -1,7 +1,7 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
-import { regenerateInviteCode } from '@/lib/teams/actions';
+import { Link, useRouter } from '@/i18n/navigation';
+import { deleteTeam, regenerateInviteCode } from '@/lib/teams/actions';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
@@ -34,12 +34,15 @@ export function TeamDetailView({
   const tNew = useTranslations('teams.new');
   const format = useFormatter();
   const locale = useLocale();
+  const router = useRouter();
 
   const [inviteCode, setInviteCode] = useState(initialInviteCode);
   const [isPending, startTransition] = useTransition();
+  const [isDeleting, startDeleting] = useTransition();
   const [codeCopied, setCodeCopied] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
   const [regenError, setRegenError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const baseUrl = typeof window === 'undefined' ? '' : window.location.origin;
   const joinUrl = `${baseUrl}/${locale}/join/${inviteCode}`;
@@ -74,6 +77,19 @@ export function TeamDetailView({
         return;
       }
       setInviteCode(result.inviteCode);
+    });
+  };
+
+  const handleDelete = () => {
+    if (!confirm(t('deleteConfirm', { name: teamName, count: members.length }))) return;
+    setDeleteError(null);
+    startDeleting(async () => {
+      const result = await deleteTeam(teamId);
+      if (!result.ok) {
+        setDeleteError(t('deleteFailed'));
+        return;
+      }
+      router.replace('/teams');
     });
   };
 
@@ -187,6 +203,27 @@ export function TeamDetailView({
             ))}
           </ul>
         )}
+      </section>
+
+      {/* DANGER ZONE — eliminar equipo */}
+      <section className="rounded-xl border-2 border-numoria-red/30 bg-numoria-red/5 p-6">
+        <h2 className="font-display text-lg font-bold text-numoria-red">{t('deleteTitle')}</h2>
+        <p className="mt-1 text-sm text-numoria-mid">{t('deleteWarning')}</p>
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="rounded-md border-2 border-numoria-red bg-white px-4 py-2 text-sm font-bold text-numoria-red transition hover:bg-numoria-red hover:text-white disabled:opacity-50"
+          >
+            {isDeleting ? `🗑️ ${t('deleting')}` : `🗑️ ${t('deleteButton')}`}
+          </button>
+          {deleteError && (
+            <span role="alert" className="text-xs text-numoria-red">
+              {deleteError}
+            </span>
+          )}
+        </div>
       </section>
 
       <Link

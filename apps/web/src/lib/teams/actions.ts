@@ -232,3 +232,52 @@ export async function joinTeam(inviteCode: string): Promise<JoinTeamResult> {
   const team = data as { id: string; name: string };
   return { ok: true, teamId: team.id, teamName: team.name };
 }
+
+// ============================================================
+// deleteTeam — Coach elimina uno de sus equipos
+// ============================================================
+
+const deleteTeamSchema = z.object({
+  team_id: z.string().uuid(),
+});
+
+export interface DeleteTeamResult {
+  ok: boolean;
+  message?: string;
+}
+
+/**
+ * Elimina un team. Solo el coach (creador) puede hacerlo.
+ *
+ * La FK de team_members, contest_sessions y subscriptions hacia teams usa
+ * ON DELETE CASCADE, así que el borrado limpia automáticamente miembros,
+ * sesiones y suscripciones asociadas. RLS (coach_or_admin_deletes_team)
+ * restringe el borrado al coach; añadimos el filtro coach_id como defensa
+ * en profundidad.
+ */
+export async function deleteTeam(teamId: string): Promise<DeleteTeamResult> {
+  const parsed = deleteTeamSchema.safeParse({ team_id: teamId });
+  if (!parsed.success) {
+    return { ok: false, message: 'Invalid team id' };
+  }
+
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { ok: false, message: 'No authenticated user' };
+
+  const { error } = await supabase
+    .from('teams')
+    .delete()
+    .eq('id', parsed.data.team_id)
+    .eq('coach_id', user.id);
+
+  if (error) {
+    console.error('Team delete failed:', error);
+    return { ok: false, message: error.message };
+  }
+
+  return { ok: true };
+}
