@@ -162,30 +162,6 @@ export default async function SummerBowlLandingPage({
           </div>
         </section>
 
-        {/* === SECCIÓN B2B PROFESORES / COLEGIOS === */}
-        <section className="px-6 py-16 sm:px-10">
-          <div className="mx-auto max-w-3xl rounded-2xl border-2 border-numoria-indigo/30 bg-numoria-indigo/5 p-8 text-center sm:p-12">
-            <div className="text-4xl" aria-hidden>
-              🏫
-            </div>
-            <h2 className="mt-4 font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
-              {t('b2bHeader')}
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-numoria-mid sm:text-base">
-              {t('b2bBody')}
-            </p>
-            <div className="mt-6">
-              <a
-                href={b2bMailto}
-                className="inline-flex items-center gap-2 rounded-xl bg-numoria-indigo px-6 py-3 text-base font-bold text-white shadow-sm transition hover:bg-numoria-indigo/90"
-              >
-                {t('b2bCta')}
-              </a>
-            </div>
-            <p className="mt-4 text-xs text-numoria-mid">{t('b2bResponseTime')}</p>
-          </div>
-        </section>
-
         {/* === FAQ === */}
         <section className="bg-white px-6 py-16 sm:px-10">
           <div className="mx-auto max-w-3xl">
