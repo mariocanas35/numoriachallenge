@@ -235,6 +235,16 @@
       "title": "Numoria Summer Bowl 🏆",
       "subtitle": "Entra al Bowl. Sal campeón. — Conoce los detalles →"
     },
+    "teacherStart": {
+      "title": "Bienvenido, profe — así funciona el Summer Bowl",
+      "intro": "Son 3 competencias gratis (junio–julio) para Primaria (4°-6°) y Middle School (7°-9°). 7 problemas, 100% en línea.",
+      "step1": "Crea tu equipo (agrupa a tus estudiantes por división).",
+      "step2": "Comparte el código de invitación que se genera con tus estudiantes.",
+      "step3": "Tus estudiantes se unen con ese código (crean su cuenta gratis).",
+      "step4": "Compitan en el próximo Bowl — sigue sus resultados desde aquí.",
+      "ctaCreateTeam": "Crear mi primer equipo",
+      "ctaLearnMore": "Conoce el Summer Bowl"
+    },
     "student": {
       "noTeamTitle": "Aún no estás en un equipo",
       "noTeamDescription": "Pídele a tu profesor el código de 8 letras del equipo y pégalo aquí.",

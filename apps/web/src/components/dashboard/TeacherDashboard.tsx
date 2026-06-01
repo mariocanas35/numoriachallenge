@@ -1,4 +1,5 @@
 import { SummerBowlBanner } from '@/components/dashboard/SummerBowlBanner';
+import { TeacherGettingStarted } from '@/components/dashboard/TeacherGettingStarted';
 import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import { Button, NumaAvatar } from '@numoria/ui';
@@ -294,6 +295,9 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
 
       {/* === SUMMER BOWL CTA === */}
       <SummerBowlBanner />
+
+      {/* === PRIMEROS PASOS (solo para profes sin equipos aún) === */}
+      {teams.length === 0 && <TeacherGettingStarted />}
 
       {/* === ACTIVE SESSIONS BANNER (solo si hay sesiones abiertas) === */}
       {activeSessions.length > 0 && (

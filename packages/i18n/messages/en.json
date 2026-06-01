@@ -235,6 +235,16 @@
       "title": "Numoria Summer Bowl 🏆",
       "subtitle": "Enter the Bowl. Leave a champion. — See the details →"
     },
+    "teacherStart": {
+      "title": "Welcome, teacher — here's how the Summer Bowl works",
+      "intro": "Three free competitions (June–July) for Elementary (grades 4-6) and Middle School (grades 7-9). 7 problems, 100% online.",
+      "step1": "Create your team (group your students by division).",
+      "step2": "Share the invite code that's generated with your students.",
+      "step3": "Your students join with that code (free account).",
+      "step4": "Compete in the next Bowl — track their results from here.",
+      "ctaCreateTeam": "Create my first team",
+      "ctaLearnMore": "Learn about the Summer Bowl"
+    },
     "student": {
       "noTeamTitle": "You're not in a team yet",
       "noTeamDescription": "Ask your teacher for the 8-letter team code and paste it here.",
