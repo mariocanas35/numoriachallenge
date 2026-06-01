@@ -96,20 +96,11 @@ export default async function SummerBowlLandingPage({
             <h2 className="mb-6 text-center font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
               {t('twoWaysHeader')}
             </h2>
-            <div className="grid gap-5 md:grid-cols-2">
-              <WayCard
-                icon={t('teacherWayIcon')}
-                title={t('teacherWayTitle')}
-                body={t('teacherWayBody')}
-                ctaLabel={t('teacherWayCta')}
-                href={b2bMailto}
-                external
-                accent="indigo"
-              />
+            <div className="mx-auto max-w-md">
               <WayCard
                 icon={t('studentWayIcon')}
-                title={t('studentWayTitle')}
-                body={t('studentWayBody')}
+                title={t('signupTitle')}
+                body={t('signupBody')}
                 ctaLabel={t('studentWayCta')}
                 href="/register"
                 accent="orange"
