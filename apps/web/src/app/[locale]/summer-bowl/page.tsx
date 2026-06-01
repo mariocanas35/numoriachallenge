@@ -46,16 +46,6 @@ export default async function SummerBowlLandingPage({
     .order('bowl_number');
   const bowls = ((bowlsRows as SummerBowl[] | null) ?? []) as SummerBowl[];
 
-  const b2bMailtoBody =
-    locale === 'en'
-      ? 'Hello Numoria Challenge,\n\nI am [your name] from [your school] and I would like to register my students in Summer Bowl 2026.\n\nSchool info:\n- Name:\n- City / Country:\n- Levels participating (Elementary 4-6 and/or Middle School 7-9):\n- Approximate number of students:\n\nMy info:\n- Name:\n- Role:\n- WhatsApp / phone:\n\nThanks!'
-      : 'Hola Numoria Challenge,\n\nSoy [tu nombre] de [tu colegio] y me interesa inscribir a mis estudiantes en el Summer Bowl 2026.\n\nDatos del colegio:\n- Nombre:\n- Ciudad / País:\n- Niveles que participarían (Primaria 4°-6° y/o Middle School 7°-9°):\n- Número aproximado de estudiantes:\n\nMis datos:\n- Nombre:\n- Cargo:\n- WhatsApp / teléfono:\n\nGracias!';
-  const b2bMailtoSubject =
-    locale === 'en'
-      ? 'School Registration — Summer Bowl 2026'
-      : 'Inscripción Colegio — Summer Bowl 2026';
-  const b2bMailto = `mailto:support@numoriachallenge.com?subject=${encodeURIComponent(b2bMailtoSubject)}&body=${encodeURIComponent(b2bMailtoBody)}`;
-
   return (
     <>
       <LandingHeader />
@@ -187,12 +177,6 @@ export default async function SummerBowlLandingPage({
               >
                 🚀 {t('studentWayCta')}
               </Link>
-              <a
-                href={b2bMailto}
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-numoria-indigo bg-white px-6 py-3 text-base font-bold text-numoria-indigo shadow-sm transition hover:bg-numoria-indigo/5"
-              >
-                🎓 {t('teacherWayCta')}
-              </a>
             </div>
             <p className="mt-4 text-xs text-numoria-mid">{t('finalCtaTipInstitutional')}</p>
           </div>
