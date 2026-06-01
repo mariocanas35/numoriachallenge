@@ -27,7 +27,7 @@ export default async function AuthErrorPage({
     no_profile: {
       title: 'Tu cuenta está casi lista',
       description:
-        'Creamos tu cuenta pero no pudimos cargar tu perfil. Cierra sesión e inicia de nuevo. Si el problema persiste, escríbenos a mimathonline@gmail.com.',
+        'Creamos tu cuenta pero no pudimos cargar tu perfil. Cierra sesión e inicia de nuevo. Si el problema persiste, escríbenos a support@numoriachallenge.com.',
     },
     default: {
       title: 'Algo salió mal',

@@ -1,3 +1,4 @@
+import { SummerBowlBanner } from '@/components/dashboard/SummerBowlBanner';
 import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import { Button, NumaAvatar } from '@numoria/ui';
@@ -290,6 +291,9 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
           </Link>
         </div>
       </section>
+
+      {/* === SUMMER BOWL CTA === */}
+      <SummerBowlBanner />
 
       {/* === ACTIVE SESSIONS BANNER (solo si hay sesiones abiertas) === */}
       {activeSessions.length > 0 && (

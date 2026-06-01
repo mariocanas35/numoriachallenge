@@ -54,7 +54,7 @@ export default async function SummerBowlLandingPage({
     locale === 'en'
       ? 'School Registration — Summer Bowl 2026'
       : 'Inscripción Colegio — Summer Bowl 2026';
-  const b2bMailto = `mailto:mimathonline@gmail.com?subject=${encodeURIComponent(b2bMailtoSubject)}&body=${encodeURIComponent(b2bMailtoBody)}`;
+  const b2bMailto = `mailto:support@numoriachallenge.com?subject=${encodeURIComponent(b2bMailtoSubject)}&body=${encodeURIComponent(b2bMailtoBody)}`;
 
   return (
     <>

@@ -83,7 +83,7 @@ export default function TeamsNewError({
       <p className="mt-6 text-center text-xs text-numoria-mid">
         Si el problema persiste, comparte el mensaje y el digest con{' '}
         <a
-          href="mailto:mimathonline@gmail.com?subject=Error /teams/new"
+          href="mailto:support@numoriachallenge.com?subject=Error /teams/new"
           className="text-numoria-orange underline"
         >
           soporte

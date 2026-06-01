@@ -1,5 +1,6 @@
 import { JoinTeamCard } from '@/components/dashboard/JoinTeamCard';
 import { StudentPracticeStats } from '@/components/dashboard/StudentPracticeStats';
+import { SummerBowlBanner } from '@/components/dashboard/SummerBowlBanner';
 import { Link } from '@/i18n/navigation';
 import { getStudentPracticeStats } from '@/lib/contests/student-stats';
 import { createAdminClient, createServerClient } from '@numoria/database/server';
@@ -120,7 +121,7 @@ export async function StudentDashboard({
     <div className="flex flex-col gap-8">
       {/* Hero con stats inline + progress ring del nivel */}
       <header className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
-        <NumaAvatar pose="wave" size="xl" animateIn />
+        <NumaAvatar pose="wave" size="xl" animateIn className="sm:h-16 sm:w-16" />
         <div className="flex-1">
           <h1 className="font-display text-2xl font-bold text-numoria-ink sm:text-3xl">
             {t('greeting', { name: displayName })}
@@ -147,6 +148,9 @@ export async function StudentDashboard({
           size={110}
         />
       </header>
+
+      {/* Summer Bowl — banner colorido a la página informativa */}
+      <SummerBowlBanner />
 
       {/* Team card o Join CTA */}
       {team ? (

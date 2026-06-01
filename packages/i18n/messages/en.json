@@ -231,6 +231,10 @@
   },
   "dashboard": {
     "greeting": "Hi, {name}! 👋",
+    "summerBowl": {
+      "title": "Numoria Summer Bowl 🏆",
+      "subtitle": "Enter the Bowl. Leave a champion. — See the details →"
+    },
     "student": {
       "noTeamTitle": "You're not in a team yet",
       "noTeamDescription": "Ask your teacher for the 8-letter team code and paste it here.",
@@ -793,7 +797,7 @@
           "a": "No. Numoria works from your browser on computers, tablets, and phones. All you need is an internet connection."
         }
       ],
-      "contactNote": "Question not listed here? Write to us at mimathonline@gmail.com and we'll reply as soon as possible."
+      "contactNote": "Question not listed here? Write to us at support@numoriachallenge.com and we'll reply as soon as possible."
     },
     "privacy": {
       "title": "Privacy policy",
@@ -814,14 +818,14 @@
         },
         {
           "h": "Your rights",
-          "t": "You can request access, correction, or deletion of your data at any time by writing to mimathonline@gmail.com."
+          "t": "You can request access, correction, or deletion of your data at any time by writing to support@numoriachallenge.com."
         },
         {
           "h": "Security",
           "t": "We store information on secure servers and limit access only to those who need it to operate the service."
         }
       ],
-      "note": "By using Numoria Challenge you accept this policy. If you have questions, write to us at mimathonline@gmail.com."
+      "note": "By using Numoria Challenge you accept this policy. If you have questions, write to us at support@numoriachallenge.com."
     },
     "terms": {
       "title": "Terms of service",
@@ -849,13 +853,13 @@
           "t": "We may update these terms. We'll post the date of the last update and, if the change is important, we'll let you know."
         }
       ],
-      "note": "Questions about these terms? Write to us at mimathonline@gmail.com."
+      "note": "Questions about these terms? Write to us at support@numoriachallenge.com."
     },
     "contact": {
       "title": "Contact",
       "intro": "Have questions, ideas, or want to bring Numoria to your school? We'd love to hear from you.",
       "emailLabel": "Email",
-      "email": "mimathonline@gmail.com",
+      "email": "support@numoriachallenge.com",
       "responseTime": "We usually reply within 1 to 2 business days."
     }
   },
