@@ -1,6 +1,7 @@
 import { Link } from '@/i18n/navigation';
-import { Button, NumaAvatar } from '@numoria/ui';
+import { Button } from '@numoria/ui';
 import { getTranslations } from 'next-intl/server';
+import { NumaHero } from './NumaHero';
 
 export async function Hero() {
   const tHero = await getTranslations('landing.hero');
@@ -33,8 +34,8 @@ export async function Hero() {
           </span>
         </Link>
 
-        {/* Mascota */}
-        <NumaAvatar pose="wave" size="2xl" animateIn />
+        {/* Mascota — video animado si existe /numa-hero.mp4, si no, avatar estático */}
+        <NumaHero />
 
         {/* Hero copy */}
         <h1
