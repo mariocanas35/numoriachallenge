@@ -57,6 +57,12 @@ export default async function AdminLayout({
               Competencias
             </Link>
             <Link
+              href="/admin/analytics"
+              className="rounded-md px-3 py-1.5 text-numoria-grafito transition hover:bg-numoria-cloud"
+            >
+              Visitas
+            </Link>
+            <Link
               href="/admin/leads"
               className="rounded-md px-3 py-1.5 text-numoria-grafito transition hover:bg-numoria-cloud"
             >

@@ -1,3 +1,4 @@
+import { SiteAnalytics } from '@/components/analytics/SiteAnalytics';
 import { routing } from '@/i18n/routing';
 import { BRAND_NAME } from '@numoria/i18n';
 import type { Metadata } from 'next';
@@ -95,6 +96,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
+          <SiteAnalytics />
         </NextIntlClientProvider>
       </body>
     </html>
