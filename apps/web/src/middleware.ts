@@ -114,9 +114,12 @@ export default async function middleware(request: NextRequest) {
   // Onboarding check — solo si user logueado y path no exento
   if (user && !isExemptFromOnboarding(pathname, firstSegment)) {
     const rpcResult = await supabase.rpc('get_my_profile');
-    const profile = rpcResult.data as { onboarding_completed: boolean } | null;
+    const profile = rpcResult.data as { onboarding_completed: boolean; role: string } | null;
 
-    if (profile && !profile.onboarding_completed) {
+    // Los admins no pasan por onboarding (van a /admin). El filtro role !=
+    // 'admin' evita un bucle /onboarding ↔ home para cuentas admin con
+    // onboarding incompleto.
+    if (profile && !profile.onboarding_completed && profile.role !== 'admin') {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = `/${firstSegment}/onboarding`;
       return NextResponse.redirect(redirectUrl);

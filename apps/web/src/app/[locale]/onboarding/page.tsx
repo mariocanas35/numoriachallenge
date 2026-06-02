@@ -45,6 +45,11 @@ export default async function OnboardingRouterPage({
     redirect(`/${locale}`);
   }
 
+  // Admin → su panel (los admins no pasan por onboarding)
+  if (profile.role === 'admin') {
+    redirect(`/${locale}/admin`);
+  }
+
   // Los sign-ups con Google entran con rol 'student' por defecto (Google no
   // pasa el rol elegido en el registro). Si es un usuario de Google que sigue
   // como 'student', le pedimos confirmar su rol primero — así los maestros no
