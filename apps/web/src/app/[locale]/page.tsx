@@ -11,6 +11,7 @@ import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 
 function Landing() {
   return (
@@ -86,6 +87,11 @@ export default async function HomePage({
         </div>
       </main>
     );
+  }
+
+  // Admin → su panel privado de administración
+  if (profile.role === 'admin') {
+    redirect(`/${locale}/admin`);
   }
 
   // Dashboard según rol
