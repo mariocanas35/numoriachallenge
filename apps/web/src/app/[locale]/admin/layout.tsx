@@ -62,6 +62,12 @@ export default async function AdminLayout({
             >
               Leads
             </Link>
+            <Link
+              href="/admin/activity"
+              className="rounded-md px-3 py-1.5 text-numoria-grafito transition hover:bg-numoria-cloud"
+            >
+              Actividad
+            </Link>
           </nav>
         </div>
         <a
