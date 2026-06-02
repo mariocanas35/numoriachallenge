@@ -128,3 +128,55 @@ export async function changeUserRole(userId: string, role: string): Promise<Admi
   revalidatePath('/[locale]/admin/users', 'page');
   return { ok: true };
 }
+
+// ============================================================
+// Competencias — editar fecha y cambiar estado (activar)
+// ============================================================
+const contestIdSchema = z.string().uuid();
+const contestStatusSchema = z.enum(['draft', 'scheduled', 'active', 'closed']);
+
+export async function setContestStatus(
+  contestId: string,
+  status: string,
+): Promise<AdminActionResult> {
+  const caller = await getAdminCaller();
+  if (!caller.ok) return { ok: false, message: 'No autorizado' };
+  if (!contestIdSchema.safeParse(contestId).success) return { ok: false, message: 'ID inválido' };
+  const parsed = contestStatusSchema.safeParse(status);
+  if (!parsed.success) return { ok: false, message: 'Estado inválido' };
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from('contests')
+    .update({ status: parsed.data } as never)
+    .eq('id', contestId);
+  if (error) {
+    console.error('setContestStatus failed:', error);
+    return { ok: false, message: error.message };
+  }
+  revalidatePath('/[locale]/admin/contests', 'page');
+  return { ok: true };
+}
+
+export async function updateContestDate(
+  contestId: string,
+  scheduledAt: string,
+): Promise<AdminActionResult> {
+  const caller = await getAdminCaller();
+  if (!caller.ok) return { ok: false, message: 'No autorizado' };
+  if (!contestIdSchema.safeParse(contestId).success) return { ok: false, message: 'ID inválido' };
+  const d = new Date(scheduledAt);
+  if (Number.isNaN(d.getTime())) return { ok: false, message: 'Fecha inválida' };
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from('contests')
+    .update({ scheduled_at: d.toISOString() } as never)
+    .eq('id', contestId);
+  if (error) {
+    console.error('updateContestDate failed:', error);
+    return { ok: false, message: error.message };
+  }
+  revalidatePath('/[locale]/admin/contests', 'page');
+  return { ok: true };
+}

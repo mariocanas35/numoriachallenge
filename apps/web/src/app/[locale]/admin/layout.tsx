@@ -50,6 +50,12 @@ export default async function AdminLayout({
             >
               Usuarios
             </Link>
+            <Link
+              href="/admin/contests"
+              className="rounded-md px-3 py-1.5 text-numoria-grafito transition hover:bg-numoria-cloud"
+            >
+              Competencias
+            </Link>
           </nav>
         </div>
         <a
