@@ -38,6 +38,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
   return {
+    metadataBase: new URL('https://www.numoriachallenge.com'),
     title: t('title'),
     description: t('description'),
     applicationName: BRAND_NAME,
@@ -56,11 +57,13 @@ export async function generateMetadata({
       description: t('description'),
       siteName: BRAND_NAME,
       locale,
+      images: ['/og-image.png'],
     },
     twitter: {
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
+      images: ['/og-image.png'],
     },
   };
 }
