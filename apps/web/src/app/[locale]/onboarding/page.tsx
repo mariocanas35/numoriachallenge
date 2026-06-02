@@ -45,6 +45,14 @@ export default async function OnboardingRouterPage({
     redirect(`/${locale}`);
   }
 
+  // Los sign-ups con Google entran con rol 'student' por defecto (Google no
+  // pasa el rol elegido en el registro). Si es un usuario de Google que sigue
+  // como 'student', le pedimos confirmar su rol primero — así los maestros no
+  // quedan atrapados como estudiantes.
+  if (user.app_metadata?.provider === 'google' && profile.role === 'student') {
+    redirect(`/${locale}/onboarding/role`);
+  }
+
   // Redirigir al flow específico del rol
   // Nota: redirect() de Next.js lanza internamente, pero Biome no infiere
   // que retorna `never` — usamos if/else para evitar warning de fallthrough.

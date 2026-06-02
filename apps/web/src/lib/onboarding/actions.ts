@@ -392,3 +392,56 @@ export async function completeTeacherOnboarding(
 
   return { ok: true, schoolId: school.id, schoolSlug: school.slug };
 }
+
+// ============================================================
+// chooseRole — el usuario elige/confirma su rol durante el onboarding
+//
+// Necesario sobre todo para sign-ups con Google, que entran con rol
+// 'student' por defecto (Google no pasa el rol elegido en el registro).
+// La política RLS de profiles BLOQUEA el cambio de rol desde el cliente
+// (anti-escalada), así que usamos el admin client server-side. Es seguro:
+//   - Zod restringe a los 3 roles no-admin (no se puede llegar a 'admin').
+//   - Solo cambia el rol del usuario AUTENTICADO actual.
+//   - Solo durante el onboarding (antes de completarlo).
+// ============================================================
+
+const chooseRoleSchema = z.object({
+  role: z.enum(['student', 'parent', 'teacher']),
+});
+
+export async function chooseRole(role: string): Promise<OnboardingResult> {
+  const parsed = chooseRoleSchema.safeParse({ role });
+  if (!parsed.success) {
+    return { ok: false, message: 'Invalid role' };
+  }
+
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, message: 'No authenticated user' };
+  }
+
+  // Solo permitir elegir rol durante el onboarding (no después de completarlo)
+  const rpcProfile = await supabase.rpc('get_my_profile');
+  const currentProfile = rpcProfile.data as { onboarding_completed: boolean } | null;
+  if (currentProfile?.onboarding_completed) {
+    return { ok: false, message: 'Onboarding already completed' };
+  }
+
+  // RLS bloquea el cambio de rol desde el cliente → admin client (service role).
+  const admin = createAdminClient();
+  const roleUpdate: ProfileUpdate = { role: parsed.data.role };
+  const { error } = await admin
+    .from('profiles')
+    .update(roleUpdate as never)
+    .eq('id', user.id);
+
+  if (error) {
+    console.error('chooseRole failed:', error);
+    return { ok: false, message: error.message };
+  }
+
+  return { ok: true };
+}
