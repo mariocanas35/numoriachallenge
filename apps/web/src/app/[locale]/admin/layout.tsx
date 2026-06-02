@@ -44,6 +44,12 @@ export default async function AdminLayout({
             >
               Inicio
             </Link>
+            <Link
+              href="/admin/users"
+              className="rounded-md px-3 py-1.5 text-numoria-grafito transition hover:bg-numoria-cloud"
+            >
+              Usuarios
+            </Link>
           </nav>
         </div>
         <a
