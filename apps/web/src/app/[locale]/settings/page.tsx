@@ -48,25 +48,29 @@ export default async function SettingsPage({
     redirect(`/${locale}/auth-error`);
   }
 
-  // Solo teachers — students no tienen escuela ni billing
-  if (profile.role !== 'teacher') {
-    redirect(`/${locale}`);
+  // Teachers ven escuela + verificación + suscripción. Todos los roles (incl.
+  // students y parents) pueden editar su perfil (nombre + idioma) más abajo.
+  const isTeacher = profile.role === 'teacher';
+
+  type SettingsSchool = Pick<
+    School,
+    'id' | 'name' | 'country_code' | 'city' | 'logo_url' | 'verified'
+  > & {
+    address: string | null;
+    phone: string | null;
+    website: string | null;
+  };
+
+  // Fetch escuela solo para teachers
+  let school: SettingsSchool | null = null;
+  if (isTeacher) {
+    const { data: schoolRow } = await supabase
+      .from('schools')
+      .select('id, name, country_code, city, address, phone, website, logo_url, verified')
+      .eq('created_by', user.id)
+      .maybeSingle();
+    school = schoolRow as SettingsSchool | null;
   }
-
-  // Fetch escuela del teacher (asumimos 1 escuela por teacher MVP)
-  const { data: schoolRow } = await supabase
-    .from('schools')
-    .select('id, name, country_code, city, address, phone, website, logo_url, verified')
-    .eq('created_by', user.id)
-    .maybeSingle();
-
-  const school = schoolRow as
-    | (Pick<School, 'id' | 'name' | 'country_code' | 'city' | 'logo_url' | 'verified'> & {
-        address: string | null;
-        phone: string | null;
-        website: string | null;
-      })
-    | null;
 
   return (
     <div className="flex min-h-dvh flex-col bg-gradient-to-br from-numoria-crema via-white to-numoria-crema">
@@ -98,108 +102,118 @@ export default async function SettingsPage({
         </header>
 
         <div className="flex flex-col gap-6">
-          {/* === 🏫 ESCUELA === */}
-          <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
-            <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              {ts('school.sectionTitle')}
-            </h2>
-            <p className="mb-5 text-sm text-numoria-mid">{ts('school.sectionDescription')}</p>
-            {school ? (
-              <SchoolForm
-                initial={{
-                  name: school.name,
-                  country_code: school.country_code,
-                  city: school.city,
-                  address: school.address,
-                  phone: school.phone,
-                  website: school.website,
-                  logo_url: school.logo_url,
-                  verified: school.verified,
-                }}
-              />
-            ) : (
-              <p className="text-sm text-numoria-mid">{ts('school.noSchool')}</p>
-            )}
-          </section>
+          {isTeacher && (
+            <>
+              {/* === 🏫 ESCUELA === */}
+              <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
+                <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
+                  {ts('school.sectionTitle')}
+                </h2>
+                <p className="mb-5 text-sm text-numoria-mid">{ts('school.sectionDescription')}</p>
+                {school ? (
+                  <SchoolForm
+                    initial={{
+                      name: school.name,
+                      country_code: school.country_code,
+                      city: school.city,
+                      address: school.address,
+                      phone: school.phone,
+                      website: school.website,
+                      logo_url: school.logo_url,
+                      verified: school.verified,
+                    }}
+                  />
+                ) : (
+                  <p className="text-sm text-numoria-mid">{ts('school.noSchool')}</p>
+                )}
+              </section>
 
-          {/* === ✅ VERIFICACIÓN === */}
-          <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
-            <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              {ts('verification.sectionTitle')}
-            </h2>
-            {school?.verified ? (
-              <div className="mt-3 flex items-start gap-3 rounded-xl bg-numoria-teal/10 p-4">
-                <span className="text-2xl" aria-hidden>
-                  ✅
-                </span>
-                <div>
-                  <p className="font-bold text-numoria-teal">{ts('verification.verifiedTitle')}</p>
-                  <p className="mt-1 text-sm text-numoria-mid">
-                    {ts('verification.verifiedDescription')}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-3 flex items-start gap-3 rounded-xl bg-numoria-dorado/10 p-4">
-                <span className="text-2xl" aria-hidden>
-                  ⏳
-                </span>
-                <div className="flex-1">
-                  <p className="font-bold text-numoria-grafito">
-                    {ts('verification.pendingTitle')}
-                  </p>
-                  <p className="mt-1 text-sm text-numoria-mid">
-                    {ts('verification.pendingDescriptionBefore')}
-                    <a
-                      href="mailto:hola@numoria.app"
-                      className="font-bold text-numoria-orange underline-offset-2 hover:underline"
-                    >
-                      hola@numoria.app
-                    </a>
-                    {ts('verification.pendingDescriptionAfter')}
-                  </p>
-                </div>
-              </div>
-            )}
-          </section>
+              {/* === ✅ VERIFICACIÓN === */}
+              <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
+                <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
+                  {ts('verification.sectionTitle')}
+                </h2>
+                {school?.verified ? (
+                  <div className="mt-3 flex items-start gap-3 rounded-xl bg-numoria-teal/10 p-4">
+                    <span className="text-2xl" aria-hidden>
+                      ✅
+                    </span>
+                    <div>
+                      <p className="font-bold text-numoria-teal">
+                        {ts('verification.verifiedTitle')}
+                      </p>
+                      <p className="mt-1 text-sm text-numoria-mid">
+                        {ts('verification.verifiedDescription')}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-3 flex items-start gap-3 rounded-xl bg-numoria-dorado/10 p-4">
+                    <span className="text-2xl" aria-hidden>
+                      ⏳
+                    </span>
+                    <div className="flex-1">
+                      <p className="font-bold text-numoria-grafito">
+                        {ts('verification.pendingTitle')}
+                      </p>
+                      <p className="mt-1 text-sm text-numoria-mid">
+                        {ts('verification.pendingDescriptionBefore')}
+                        <a
+                          href="mailto:hola@numoria.app"
+                          className="font-bold text-numoria-orange underline-offset-2 hover:underline"
+                        >
+                          hola@numoria.app
+                        </a>
+                        {ts('verification.pendingDescriptionAfter')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </section>
 
-          {/* === 💳 SUSCRIPCIÓN === */}
-          <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
-            <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
-              {ts('subscription.sectionTitle')}
-            </h2>
-            <p className="mb-5 text-sm text-numoria-mid">{ts('subscription.sectionDescription')}</p>
-            <div className="rounded-xl bg-numoria-cloud p-5">
-              <div className="flex items-baseline justify-between gap-3">
-                <div>
-                  <p className="font-display text-2xl font-bold text-numoria-grafito">
-                    {ts('subscription.planName')}
-                  </p>
-                  <p className="mt-1 text-sm text-numoria-mid">{ts('subscription.planSubtitle')}</p>
+              {/* === 💳 SUSCRIPCIÓN === */}
+              <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
+                <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-bold text-numoria-grafito">
+                  {ts('subscription.sectionTitle')}
+                </h2>
+                <p className="mb-5 text-sm text-numoria-mid">
+                  {ts('subscription.sectionDescription')}
+                </p>
+                <div className="rounded-xl bg-numoria-cloud p-5">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <div>
+                      <p className="font-display text-2xl font-bold text-numoria-grafito">
+                        {ts('subscription.planName')}
+                      </p>
+                      <p className="mt-1 text-sm text-numoria-mid">
+                        {ts('subscription.planSubtitle')}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-numoria-teal/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-numoria-teal">
+                      {ts('subscription.priceBadge')}
+                    </span>
+                  </div>
+                  <ul className="mt-4 flex flex-col gap-1.5 text-sm text-numoria-mid">
+                    <li className="flex items-center gap-2">
+                      <span className="text-numoria-teal">✓</span> {ts('subscription.feature1')}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-numoria-teal">✓</span> {ts('subscription.feature2')}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-numoria-teal">✓</span> {ts('subscription.feature3')}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-numoria-teal">✓</span> {ts('subscription.feature4')}
+                    </li>
+                  </ul>
                 </div>
-                <span className="rounded-full bg-numoria-teal/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-numoria-teal">
-                  {ts('subscription.priceBadge')}
-                </span>
-              </div>
-              <ul className="mt-4 flex flex-col gap-1.5 text-sm text-numoria-mid">
-                <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature1')}
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature2')}
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature3')}
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-numoria-teal">✓</span> {ts('subscription.feature4')}
-                </li>
-              </ul>
-            </div>
-            <p className="mt-4 rounded-xl border border-dashed border-numoria-orange/40 bg-numoria-orange/5 p-3 text-xs text-numoria-mid">
-              {ts('subscription.comingSoonNote')}
-            </p>
-          </section>
+                <p className="mt-4 rounded-xl border border-dashed border-numoria-orange/40 bg-numoria-orange/5 p-3 text-xs text-numoria-mid">
+                  {ts('subscription.comingSoonNote')}
+                </p>
+              </section>
+            </>
+          )}
 
           {/* === 👤 MI PERFIL === */}
           <section className="rounded-2xl border-2 border-numoria-gray bg-white p-6">
