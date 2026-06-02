@@ -2,10 +2,15 @@
  * Numoria — detección de locale a partir de señales del request.
  *
  * Orden de prioridad:
- *   1. Cookie de preferencia explícita del usuario
- *   2. País detectado vía cf-ipcountry (Cloudflare) o request.geo (Vercel)
- *   3. Header Accept-Language
+ *   1. Cookie de preferencia explícita del usuario (override manual)
+ *   2. Header Accept-Language (idioma predeterminado del navegador de la persona)
+ *   3. País detectado vía cf-ipcountry (Cloudflare) o x-vercel-ip-country (Vercel)
  *   4. defaultLocale
+ *
+ * El idioma del navegador manda sobre el país: queremos mostrarle a cada
+ * visitante el sitio en SU idioma predeterminado (p.ej. alguien con el navegador
+ * en inglés ve inglés aunque su IP esté en un país hispanohablante). El país solo
+ * decide cuando el navegador pide un idioma que aún no soportamos.
  */
 
 import { type Locale, defaultLocale, isActiveLocale } from './config';
@@ -18,24 +23,25 @@ export interface DetectLocaleInput {
 }
 
 export function detectLocale(input: DetectLocaleInput): Locale {
-  // 1. Cookie preference (usuario eligió explícitamente)
+  // 1. Cookie preference (usuario eligió explícitamente vía LocaleSwitcher)
   if (input.cookieLocale && isActiveLocale(input.cookieLocale)) {
     return input.cookieLocale;
   }
 
-  // 2. País → locale por defecto del país
-  if (input.countryCode) {
-    const cfg = getCountryConfig(input.countryCode);
-    if (isActiveLocale(cfg.locale)) {
-      return cfg.locale;
-    }
-  }
-
-  // 3. Accept-Language del navegador
+  // 2. Accept-Language del navegador (idioma predeterminado de la persona)
   if (input.acceptLanguage) {
     const fromHeader = parseAcceptLanguage(input.acceptLanguage);
     if (fromHeader && isActiveLocale(fromHeader)) {
       return fromHeader;
+    }
+  }
+
+  // 3. País → locale del país (respaldo cuando el navegador pide un idioma que
+  //    aún no soportamos, p.ej. francés en México → es)
+  if (input.countryCode) {
+    const cfg = getCountryConfig(input.countryCode);
+    if (isActiveLocale(cfg.locale)) {
+      return cfg.locale;
     }
   }
 

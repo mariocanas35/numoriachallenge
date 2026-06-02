@@ -58,11 +58,53 @@ describe('detectLocale — prioridad de fuentes', () => {
     ).toBe('en'); // BR daría pt pero pt no está active todavía
   });
 
-  it('2. country code detecta locale cuando no hay cookie', () => {
+  it('2. accept-language (idioma del navegador) cuando no hay cookie', () => {
+    expect(detectLocale({ acceptLanguage: 'en-US' })).toBe('en');
+    expect(detectLocale({ acceptLanguage: 'es-HN' })).toBe('es');
+  });
+
+  it('el idioma del navegador gana sobre el país', () => {
+    // Navegador en inglés pero IP en país hispano → inglés (idioma de la persona)
+    expect(
+      detectLocale({
+        cookieLocale: null,
+        countryCode: 'HN',
+        acceptLanguage: 'en-US,en;q=0.9',
+      }),
+    ).toBe('en');
+
+    // Navegador en español pero IP en país anglófono → español
+    expect(
+      detectLocale({
+        cookieLocale: null,
+        countryCode: 'US',
+        acceptLanguage: 'es-419,es;q=0.9',
+      }),
+    ).toBe('es');
+  });
+
+  it('3. country code detecta locale cuando no hay cookie ni idioma de navegador', () => {
     expect(detectLocale({ countryCode: 'HN' })).toBe('es');
     expect(detectLocale({ countryCode: 'MX' })).toBe('es');
     expect(detectLocale({ countryCode: 'US' })).toBe('en');
     expect(detectLocale({ countryCode: 'GB' })).toBe('en');
+  });
+
+  it('country es respaldo cuando el navegador pide un idioma no soportado', () => {
+    // Navegador en francés (no soportado) + IP en US → en (por país)
+    expect(
+      detectLocale({
+        countryCode: 'US',
+        acceptLanguage: 'fr-FR,fr;q=0.9',
+      }),
+    ).toBe('en');
+    // Navegador en francés + IP en MX → es (por país)
+    expect(
+      detectLocale({
+        countryCode: 'MX',
+        acceptLanguage: 'fr',
+      }),
+    ).toBe('es');
   });
 
   it('country con locale inactivo (BR → pt) cae al siguiente nivel', () => {
@@ -75,11 +117,6 @@ describe('detectLocale — prioridad de fuentes', () => {
     ).toBe('en');
 
     expect(detectLocale({ countryCode: 'BR' })).toBe('es'); // default
-  });
-
-  it('3. accept-language cuando no hay cookie ni country', () => {
-    expect(detectLocale({ acceptLanguage: 'en-US' })).toBe('en');
-    expect(detectLocale({ acceptLanguage: 'es-HN' })).toBe('es');
   });
 
   it('accept-language con idioma inactivo cae al default', () => {
