@@ -13,6 +13,18 @@
       "ctaSecondary": "I'm a teacher"
     },
     "freeBadge": "Start the Summer Bowl Challenge for free",
+    "audience": {
+      "title": "Who is Numoria for?",
+      "studentTitle": "Students",
+      "studentBody": "Compete, earn medals and level up. Practice with Numa and measure up against students across Latin America.",
+      "studentCta": "Sign up free",
+      "teacherTitle": "Teachers",
+      "teacherBody": "Bring your class to the Summer Bowl: create teams, share a code, and track your students' results. Free.",
+      "teacherCta": "I'm a teacher",
+      "schoolTitle": "Schools",
+      "schoolBody": "Add your school to LatAm's math olympiad. Register multiple teams and showcase your top talent.",
+      "schoolCta": "Register your school"
+    },
     "howItWorks": {
       "title": "How does it work?",
       "step1": {

@@ -2,6 +2,7 @@ import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { ParentDashboard } from '@/components/dashboard/ParentDashboard';
 import { StudentDashboard } from '@/components/dashboard/StudentDashboard';
 import { TeacherDashboard } from '@/components/dashboard/TeacherDashboard';
+import { AudienceSection } from '@/components/landing/AudienceSection';
 import { Footer } from '@/components/landing/Footer';
 import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
@@ -19,6 +20,7 @@ function Landing() {
       <LandingHeader />
       <main className="min-h-dvh">
         <Hero />
+        <AudienceSection />
         <HowItWorks />
         <SchoolsSection />
       </main>
