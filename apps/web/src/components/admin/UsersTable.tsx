@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteUserAccount, renameUser, setUserBanned } from '@/lib/admin/actions';
+import { changeUserRole, deleteUserAccount, renameUser, setUserBanned } from '@/lib/admin/actions';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
@@ -101,7 +101,29 @@ export function UsersTable({
                 </td>
                 <td className="px-3 py-2 text-numoria-mid">{r.email}</td>
                 <td className="px-3 py-2">{r.confirmed ? '✓' : '⚠'}</td>
-                <td className="px-3 py-2">{r.role}</td>
+                <td className="px-3 py-2">
+                  {r.id !== currentAdminId && ['student', 'parent', 'teacher'].includes(r.role) ? (
+                    <select
+                      value={r.role}
+                      disabled={isPending}
+                      onChange={(e) => {
+                        const newRole = e.target.value;
+                        if (newRole === r.role) return;
+                        run(
+                          () => changeUserRole(r.id, newRole),
+                          `¿Cambiar a "${r.name}" al rol "${newRole}"? Tendrá que rehacer su configuración inicial (un maestro creará su escuela).`,
+                        );
+                      }}
+                      className="rounded border border-numoria-gray bg-white px-2 py-1 text-xs font-bold text-numoria-grafito disabled:opacity-50"
+                    >
+                      <option value="student">Estudiante</option>
+                      <option value="parent">Padre/Madre</option>
+                      <option value="teacher">Maestro</option>
+                    </select>
+                  ) : (
+                    r.role
+                  )}
+                </td>
                 <td className="px-3 py-2">{r.country ?? '—'}</td>
                 <td className="px-3 py-2">{r.school ?? '—'}</td>
                 <td className="px-3 py-2 text-numoria-mid">{fmtDate(r.lastSignIn)}</td>

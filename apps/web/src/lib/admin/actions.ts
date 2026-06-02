@@ -97,3 +97,34 @@ export async function renameUser(userId: string, displayName: string): Promise<A
   revalidatePath('/[locale]/admin/users', 'page');
   return { ok: true };
 }
+
+// ============================================================
+// Cambiar rol (corregir a quien se registró con el rol equivocado)
+//
+// Restringido a los 3 roles no-admin: conceder 'admin' es deliberado y se
+// hace solo por SQL. Reinicia el onboarding (onboarding_completed=false) para
+// que el usuario rehaga la configuración de su nuevo rol (ej. un maestro
+// nuevo crea su escuela).
+// ============================================================
+const changeRoleSchema = z.enum(['student', 'parent', 'teacher']);
+
+export async function changeUserRole(userId: string, role: string): Promise<AdminActionResult> {
+  const caller = await getAdminCaller();
+  if (!caller.ok) return { ok: false, message: 'No autorizado' };
+  if (!userIdSchema.safeParse(userId).success) return { ok: false, message: 'ID inválido' };
+  if (userId === caller.id) return { ok: false, message: 'No puedes cambiar tu propio rol aquí' };
+  const parsed = changeRoleSchema.safeParse(role);
+  if (!parsed.success) return { ok: false, message: 'Rol inválido' };
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from('profiles')
+    .update({ role: parsed.data, onboarding_completed: false } as never)
+    .eq('id', userId);
+  if (error) {
+    console.error('changeUserRole failed:', error);
+    return { ok: false, message: error.message };
+  }
+  revalidatePath('/[locale]/admin/users', 'page');
+  return { ok: true };
+}
