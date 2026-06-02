@@ -98,8 +98,7 @@ export default async function HomePage({
             href="/settings"
             className="inline-flex items-center gap-1.5 rounded-full border-2 border-numoria-gray bg-white px-4 py-2 text-sm font-bold text-numoria-grafito transition hover:border-numoria-indigo hover:text-numoria-indigo"
           >
-            <span aria-hidden>⚙️</span>
-            <span className="hidden sm:inline">{ts('title')}</span>
+            {ts('title')}
           </Link>
         }
       >
@@ -123,8 +122,7 @@ export default async function HomePage({
             href="/settings"
             className="inline-flex items-center gap-1.5 rounded-full border-2 border-numoria-gray bg-white px-4 py-2 text-sm font-bold text-numoria-grafito transition hover:border-numoria-indigo hover:text-numoria-indigo"
           >
-            <span aria-hidden>⚙️</span>
-            <span className="hidden sm:inline">{ts('title')}</span>
+            {ts('title')}
           </Link>
         }
       >
