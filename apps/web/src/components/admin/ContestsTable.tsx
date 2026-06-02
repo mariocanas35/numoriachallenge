@@ -1,5 +1,6 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import { setContestStatus, updateContestDate } from '@/lib/admin/actions';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
@@ -52,6 +53,7 @@ export function ContestsTable({ rows }: { rows: AdminContestRow[] }) {
               <th className="px-3 py-2">División</th>
               <th className="px-3 py-2">Fecha</th>
               <th className="px-3 py-2">Estado</th>
+              <th className="px-3 py-2">Revisar</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-numoria-gray/60">
@@ -83,6 +85,14 @@ export function ContestsTable({ rows }: { rows: AdminContestRow[] }) {
                     <option value="active">Activa (se puede tomar)</option>
                     <option value="closed">Cerrada</option>
                   </select>
+                </td>
+                <td className="px-3 py-2">
+                  <Link
+                    href={`/admin/contests/${c.id}`}
+                    className="whitespace-nowrap text-xs font-bold text-numoria-indigo hover:underline"
+                  >
+                    👁️ Ver / Imprimir
+                  </Link>
                 </td>
               </tr>
             ))}

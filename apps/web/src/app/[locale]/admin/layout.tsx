@@ -34,7 +34,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-dvh flex-col bg-numoria-cloud">
-      <header className="flex items-center justify-between border-b-2 border-numoria-gray bg-white px-6 py-3">
+      <header className="flex items-center justify-between border-b-2 border-numoria-gray bg-white px-6 py-3 print:hidden">
         <div className="flex items-center gap-6">
           <span className="font-display text-lg font-bold text-numoria-ink">Numoria · Admin 🛡️</span>
           <nav className="flex gap-1 text-sm font-bold">
