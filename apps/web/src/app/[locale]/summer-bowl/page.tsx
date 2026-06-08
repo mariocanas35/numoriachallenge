@@ -74,6 +74,15 @@ export default async function SummerBowlLandingPage({
                   <p className="mt-5 inline-block rounded-lg bg-white/95 px-4 py-2 text-xs font-semibold text-numoria-ink shadow-sm sm:text-sm">
                     {t('prize')}
                   </p>
+                  {/* CTA principal en el hero (visible sin hacer scroll). */}
+                  <div className="mt-7 flex justify-center sm:justify-start">
+                    <Link
+                      href="/register"
+                      className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-base font-bold text-numoria-ink shadow-lg transition hover:shadow-xl sm:text-lg"
+                    >
+                      🚀 {t('studentWayCta')}
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

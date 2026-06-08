@@ -50,94 +50,97 @@ export function RegisterForm({ defaultRole = 'student', next }: RegisterFormProp
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-      <input type="hidden" name="next" value={next ?? ''} />
+    <div className="flex flex-col gap-5">
+      {/* Opción rápida y recomendada: Google (un toque, sin código por correo). */}
+      <GoogleButton next={next} />
 
-      {/* Role selector */}
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium text-numoria-ink">{t('selectRole')}</legend>
-        <div className="grid grid-cols-3 gap-2">
-          {roles.map((role) => (
-            <label
-              key={role.value}
-              className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 p-3 text-center transition-colors ${
-                selectedRole === role.value
-                  ? 'border-numoria-blue bg-numoria-blue/5 ring-2 ring-numoria-blue/20'
-                  : 'border-numoria-gray bg-white hover:border-numoria-mid'
-              }`}
-            >
-              <input
-                type="radio"
-                name="role"
-                value={role.value}
-                checked={selectedRole === role.value}
-                onChange={() => setSelectedRole(role.value)}
-                className="sr-only"
-              />
-              <span className="text-2xl" aria-hidden="true">
-                {role.emoji}
-              </span>
-              <span className="text-xs font-medium text-numoria-ink">{t(role.labelKey)}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <label className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium text-numoria-ink">{t('name')}</span>
-        <input
-          type="text"
-          name="display_name"
-          required
-          minLength={1}
-          maxLength={100}
-          autoComplete="name"
-          placeholder={t('namePlaceholder')}
-          className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base text-numoria-ink placeholder:text-numoria-mid focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
-          aria-invalid={errors.display_name ? true : undefined}
-        />
-        {errors.display_name && (
-          <span role="alert" className="text-sm text-numoria-red">
-            {t('errors.nameRequired')}
-          </span>
-        )}
-      </label>
-
-      <label className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium text-numoria-ink">{t('email')}</span>
-        <input
-          type="email"
-          name="email"
-          required
-          autoComplete="email"
-          placeholder={t('emailPlaceholder')}
-          className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base text-numoria-ink placeholder:text-numoria-mid focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
-          aria-invalid={errors.email ? true : undefined}
-        />
-        {errors.email && (
-          <span role="alert" className="text-sm text-numoria-red">
-            {t('errors.invalidEmail')}
-          </span>
-        )}
-      </label>
-
-      <Button type="submit" variant="primary" size="lg" fullWidth disabled={isPending}>
-        {isPending ? '...' : t('continueWithEmail')}
-      </Button>
-
-      {serverError && (
-        <p role="alert" className="text-center text-sm text-numoria-red">
-          {serverError}
-        </p>
-      )}
-
-      <div className="my-2 flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-numoria-gray" />
         <span className="text-sm text-numoria-mid">{t('or')}</span>
         <div className="h-px flex-1 bg-numoria-gray" />
       </div>
 
-      <GoogleButton next={next} />
-    </form>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+        <input type="hidden" name="next" value={next ?? ''} />
+
+        {/* Role selector */}
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-2 text-sm font-medium text-numoria-ink">{t('selectRole')}</legend>
+          <div className="grid grid-cols-3 gap-2">
+            {roles.map((role) => (
+              <label
+                key={role.value}
+                className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 p-3 text-center transition-colors ${
+                  selectedRole === role.value
+                    ? 'border-numoria-blue bg-numoria-blue/5 ring-2 ring-numoria-blue/20'
+                    : 'border-numoria-gray bg-white hover:border-numoria-mid'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="role"
+                  value={role.value}
+                  checked={selectedRole === role.value}
+                  onChange={() => setSelectedRole(role.value)}
+                  className="sr-only"
+                />
+                <span className="text-2xl" aria-hidden="true">
+                  {role.emoji}
+                </span>
+                <span className="text-xs font-medium text-numoria-ink">{t(role.labelKey)}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-numoria-ink">{t('name')}</span>
+          <input
+            type="text"
+            name="display_name"
+            required
+            minLength={1}
+            maxLength={100}
+            autoComplete="name"
+            placeholder={t('namePlaceholder')}
+            className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base text-numoria-ink placeholder:text-numoria-mid focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
+            aria-invalid={errors.display_name ? true : undefined}
+          />
+          {errors.display_name && (
+            <span role="alert" className="text-sm text-numoria-red">
+              {t('errors.nameRequired')}
+            </span>
+          )}
+        </label>
+
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-numoria-ink">{t('email')}</span>
+          <input
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            placeholder={t('emailPlaceholder')}
+            className="rounded-md border-2 border-numoria-gray bg-white px-4 py-3 text-base text-numoria-ink placeholder:text-numoria-mid focus-visible:border-numoria-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-numoria-blue/30"
+            aria-invalid={errors.email ? true : undefined}
+          />
+          {errors.email && (
+            <span role="alert" className="text-sm text-numoria-red">
+              {t('errors.invalidEmail')}
+            </span>
+          )}
+        </label>
+
+        <Button type="submit" variant="primary" size="lg" fullWidth disabled={isPending}>
+          {isPending ? '...' : t('continueWithEmail')}
+        </Button>
+
+        {serverError && (
+          <p role="alert" className="text-center text-sm text-numoria-red">
+            {serverError}
+          </p>
+        )}
+      </form>
+    </div>
   );
 }
