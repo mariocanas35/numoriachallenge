@@ -11,7 +11,7 @@ export async function SummerBowlBanner() {
 
   return (
     <Link
-      href="/summer-bowl"
+      href="/contests/summer-bowl"
       className="group flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-numoria-orange to-numoria-coral p-5 text-white shadow-card transition hover:brightness-105 sm:p-6"
     >
       <div className="min-w-0">
