@@ -392,6 +392,34 @@ export async function TeacherDashboard({ userId, displayName, schoolId }: Teache
         </div>
       </section>
 
+      {/* === RESULTADOS DE MIS ESTUDIANTES === */}
+      <section className="relative">
+        <Link
+          href="/teacher/results"
+          className="group flex items-center justify-between gap-4 rounded-2xl border-2 border-numoria-indigo/30 bg-white p-5 shadow-card transition hover:border-numoria-indigo hover:shadow-md sm:p-6"
+        >
+          <div className="flex items-center gap-4">
+            <span className="text-3xl" aria-hidden="true">
+              📊
+            </span>
+            <div>
+              <p className="font-display text-lg font-bold text-numoria-ink">
+                Resultados de mis estudiantes
+              </p>
+              <p className="mt-0.5 text-sm text-numoria-mid">
+                Puntajes de tu clase en cada challenge
+              </p>
+            </div>
+          </div>
+          <span
+            className="shrink-0 text-numoria-indigo transition-transform group-hover:translate-x-0.5"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </Link>
+      </section>
+
       {/* === TUS EQUIPOS (tabla) === */}
       <section className="relative">
         <header className="mb-3 flex items-baseline justify-between">
