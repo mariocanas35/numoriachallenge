@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@numoria/config": "workspace:*",
-    "@types/node": "^22.10.0",
+    "@types/node": "^26.0.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }
