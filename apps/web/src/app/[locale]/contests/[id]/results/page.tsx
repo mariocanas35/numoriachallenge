@@ -1,6 +1,6 @@
 import { type ProblemResultData, ProblemResultRow } from '@/components/contests/ProblemResultRow';
 import { Link } from '@/i18n/navigation';
-import { createServerClient } from '@numoria/database/server';
+import { createAdminClient, createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { NumaAvatar } from '@numoria/ui';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -109,7 +109,10 @@ export default async function ContestResultsPage({
   }
 
   const problemIds = positions.map((p) => p.problem_id);
-  const { data: problemsRows } = await supabase
+  // Respuestas y explicaciones solo con la service role, y solo aquí: el attempt
+  // del usuario ya está enviado (validado arriba). Ver migración 20261104000002.
+  const admin = createAdminClient();
+  const { data: problemsRows } = await admin
     .from('problems')
     .select(
       'id, stars, points, title_es, title_en, body_es, body_en, expected_answer, explanation_es, explanation_en, has_diagram, diagram_svg_url, diagram_caption_es, diagram_caption_en',

@@ -1,7 +1,7 @@
 import { MathContent } from '@/components/contests/MathContent';
 import { PrintButton } from '@/components/contests/PrintButton';
 import { Link } from '@/i18n/navigation';
-import { createServerClient } from '@numoria/database/server';
+import { createAdminClient, createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound, redirect } from 'next/navigation';
@@ -90,7 +90,10 @@ export default async function ContestPrintPage({
   const positions = (cpRows ?? []) as Array<{ position: number; problem_id: string }>;
 
   const problemIds = positions.map((p) => p.problem_id);
-  const { data: problemRows } = await supabase
+  // La clave de respuestas solo se lee con la service role, después del control
+  // de rol de maestro de arriba. Ver migración 20261104000002.
+  const admin = createAdminClient();
+  const { data: problemRows } = await admin
     .from('problems')
     .select(
       'id, stars, title_es, title_en, body_es, body_en, expected_answer, explanation_es, explanation_en, has_diagram, diagram_svg_url, diagram_caption_es, diagram_caption_en, answer_type',

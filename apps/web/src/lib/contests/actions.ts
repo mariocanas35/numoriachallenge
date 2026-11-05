@@ -5,9 +5,15 @@ import {
   closeContestSession as closeSessionHelper,
   openContestSession as openSessionHelper,
 } from '@/lib/contests/sessions';
-import { createServerClient } from '@numoria/database/server';
+import { createAdminClient, createServerClient } from '@numoria/database/server';
 import type { Database } from '@numoria/database/types';
 import { revalidatePath } from 'next/cache';
+
+// Seguridad (migración 20261104000002): la sesión del usuario ya no puede leer
+// problems.expected_answer ni escribir contest_attempts / problem_attempts.
+// Estas acciones validan con la sesión del usuario (createServerClient) y
+// después leen respuestas o escriben puntajes con la service role
+// (createAdminClient). Nunca uses createAdminClient antes de validar.
 
 type ContestAttemptInsert = Database['public']['Tables']['contest_attempts']['Insert'];
 type ContestAttemptUpdate = Database['public']['Tables']['contest_attempts']['Update'];
@@ -163,7 +169,8 @@ export async function startContestAttempt(
     max_possible_score: maxScore,
     session_id: sessionId,
   };
-  const { data: newRow, error: insertErr } = await supabase
+  const admin = createAdminClient();
+  const { data: newRow, error: insertErr } = await admin
     .from('contest_attempts')
     .insert(insertData as never)
     .select('id')
@@ -233,8 +240,9 @@ export async function saveProblemAnswer(args: {
     return { ok: false, message: 'Problem does not belong to this contest' };
   }
 
-  // Fetch problem para scoring
-  const { data: problemRow } = await supabase
+  // Fetch problem para scoring (expected_answer solo se lee con la service role)
+  const admin = createAdminClient();
+  const { data: problemRow } = await admin
     .from('problems')
     .select('id, expected_answer, answer_type, points')
     .eq('id', args.problemId)
@@ -259,7 +267,7 @@ export async function saveProblemAnswer(args: {
 
   // Upsert problem_attempt
   // Primero buscar si existe
-  const { data: existingPA } = await supabase
+  const { data: existingPA } = await admin
     .from('problem_attempts')
     .select('id')
     .eq('contest_attempt_id', args.contestAttemptId)
@@ -274,7 +282,7 @@ export async function saveProblemAnswer(args: {
       points_earned: pointsEarned,
       answered_at: new Date().toISOString(),
     };
-    const { error: updateErr } = await supabase
+    const { error: updateErr } = await admin
       .from('problem_attempts')
       .update(updateData as never)
       .eq('id', (existingPA as { id: string }).id);
@@ -291,9 +299,7 @@ export async function saveProblemAnswer(args: {
       points_earned: pointsEarned,
       answered_at: new Date().toISOString(),
     };
-    const { error: insertErr } = await supabase
-      .from('problem_attempts')
-      .insert(insertData as never);
+    const { error: insertErr } = await admin.from('problem_attempts').insert(insertData as never);
     if (insertErr) {
       return { ok: false, message: insertErr.message };
     }
@@ -370,7 +376,8 @@ export async function submitContest(
     time_spent_seconds: timeSpentSeconds,
   };
 
-  const { error: updateErr } = await supabase
+  const admin = createAdminClient();
+  const { error: updateErr } = await admin
     .from('contest_attempts')
     .update(updateData as never)
     .eq('id', contestAttemptId);
@@ -635,7 +642,9 @@ export async function submitPaperBatch(input: {
     return { ok: false, message: 'Contest sin problems configurados' };
   }
 
-  const { data: problemRows } = await supabase
+  // Desde aquí la sesión ya está validada: respuestas y escrituras con la service role
+  const admin = createAdminClient();
+  const { data: problemRows } = await admin
     .from('problems')
     .select('id, expected_answer, answer_type, points')
     .in('id', problemIds);
@@ -716,7 +725,7 @@ export async function submitPaperBatch(input: {
       total_score: 0,
       total_correct: 0,
     };
-    const { data: attemptRow, error: insertErr } = await supabase
+    const { data: attemptRow, error: insertErr } = await admin
       .from('contest_attempts')
       .insert(attemptInsert as never)
       .select('id')
@@ -769,7 +778,7 @@ export async function submitPaperBatch(input: {
     }
 
     if (problemAttempts.length > 0) {
-      const { error: paErr } = await supabase
+      const { error: paErr } = await admin
         .from('problem_attempts')
         .insert(problemAttempts as never);
       if (paErr) {
@@ -793,7 +802,7 @@ export async function submitPaperBatch(input: {
       total_score: totalScore,
       total_correct: totalCorrect,
     };
-    await supabase
+    await admin
       .from('contest_attempts')
       .update(updateData as never)
       .eq('id', attemptId);
