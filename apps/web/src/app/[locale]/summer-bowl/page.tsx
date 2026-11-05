@@ -53,6 +53,18 @@ export default async function SummerBowlLandingPage({
         {/* === HERO === */}
         <section className="relative px-6 pt-28 pb-12 sm:px-10 sm:pt-32">
           <div className="mx-auto max-w-4xl">
+            {/* Resultados oficiales del Bowl #1 (ya terminó) */}
+            <Link
+              href={`/${locale}/summer-bowl/results`}
+              className="mb-5 flex flex-col gap-1 rounded-2xl border-2 border-numoria-dorado/60 bg-white px-5 py-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+            >
+              <span className="font-display text-base font-bold text-numoria-ink sm:text-lg">
+                🏆 {t('resultsBanner')}
+              </span>
+              <span className="shrink-0 text-sm font-bold text-numoria-orange">
+                {t('resultsBannerCta')} →
+              </span>
+            </Link>
             <div className="rounded-3xl bg-gradient-to-br from-numoria-orange via-numoria-coral to-numoria-indigo p-8 text-numoria-ink shadow-xl sm:p-14">
               <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:gap-6">
                 <div className="shrink-0">
