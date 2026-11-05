@@ -11,6 +11,7 @@ const STATUS_LABELS: Record<string, string> = {
   scheduled: 'Programada',
   active: 'Activa',
   closed: 'Cerrada',
+  archived: 'Archivada',
 };
 
 type Contest = {

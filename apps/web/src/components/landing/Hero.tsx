@@ -22,12 +22,12 @@ export async function Hero() {
       </div>
 
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 py-16 text-center sm:py-24">
-        {/* Free badge — enlace clickeable a la página del Summer Bowl */}
+        {/* Aviso — enlace a los resultados oficiales del Summer Bowl #1 */}
         <Link
-          href="/summer-bowl"
+          href="/summer-bowl/results"
           className="group inline-flex items-center gap-2 rounded-full bg-numoria-yellow/30 px-4 py-1.5 text-sm font-medium text-numoria-ink ring-1 ring-numoria-yellow/40 transition hover:bg-numoria-yellow/50 hover:ring-numoria-yellow/60"
         >
-          <span aria-hidden="true">🎉</span>
+          <span aria-hidden="true">🏆</span>
           <span>{tBadge('freeBadge')}</span>
           <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
             →

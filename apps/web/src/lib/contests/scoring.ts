@@ -72,6 +72,24 @@ export function normalizeAnswer(raw: string, type: AnswerType): string {
       // "A", "a", "A) X..." → "A"
       return trimmed.charAt(0).toUpperCase();
 
+    case 'integer_list': {
+      // "2, 5, 7" / "2;5;7" / "2 5 7" / "+2, 05, 7" → "2,5,7" (orden preservado)
+      return trimmed
+        .split(/[,;]\s*|\s+/)
+        .map((p) =>
+          p
+            .trim()
+            .replace(/^\+/, '')
+            .replace(/^([-]?)0+(\d)/, '$1$2'),
+        )
+        .filter(Boolean)
+        .join(',');
+    }
+
+    case 'text_options':
+      // "Miércoles." / "MIERCOLES" / " miercoles " → "miercoles"
+      return normalizeText(trimmed);
+
     default:
       return trimmed;
   }
@@ -82,6 +100,17 @@ export function normalizeAnswer(raw: string, type: AnswerType): string {
  * Type-aware: para algunos types acepta tolerancias razonables.
  */
 export function compareAnswers(submitted: string, expected: string, type: AnswerType): boolean {
+  if (type === 'text_options') {
+    // expected_answer lista variantes aceptadas separadas por "|":
+    // "wednesday|miercoles". Basta con coincidir con una.
+    const normalized = normalizeText(submitted);
+    if (!normalized) return false;
+    return expected
+      .split('|')
+      .map((option) => normalizeText(option))
+      .some((option) => option.length > 0 && option === normalized);
+  }
+
   const normalizedSubmitted = normalizeAnswer(submitted, type);
   const normalizedExpected = normalizeAnswer(expected, type);
 
@@ -106,6 +135,21 @@ export function compareAnswers(submitted: string, expected: string, type: Answer
     default:
       return normalizedSubmitted === normalizedExpected;
   }
+}
+
+/**
+ * Texto comparable: minúsculas, sin tildes, espacios colapsados y sin puntuación
+ * final. "  Miércoles. " → "miercoles".
+ */
+function normalizeText(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[.!?;:]+$/, '')
+    .trim();
 }
 
 /**

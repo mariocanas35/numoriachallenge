@@ -133,7 +133,7 @@ export async function changeUserRole(userId: string, role: string): Promise<Admi
 // Competencias — editar fecha y cambiar estado (activar)
 // ============================================================
 const contestIdSchema = z.string().uuid();
-const contestStatusSchema = z.enum(['draft', 'scheduled', 'active', 'closed']);
+const contestStatusSchema = z.enum(['draft', 'scheduled', 'active', 'closed', 'archived']);
 
 export async function setContestStatus(
   contestId: string,

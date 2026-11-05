@@ -84,6 +84,7 @@ export function ContestsTable({ rows }: { rows: AdminContestRow[] }) {
                     <option value="scheduled">Programada (visible)</option>
                     <option value="active">Activa (se puede tomar)</option>
                     <option value="closed">Cerrada</option>
+                    <option value="archived">Archivada (oculta)</option>
                   </select>
                 </td>
                 <td className="px-3 py-2">

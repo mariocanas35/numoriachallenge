@@ -7,7 +7,6 @@ import { Footer } from '@/components/landing/Footer';
 import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { LandingHeader } from '@/components/landing/LandingHeader';
-import { SchoolsSection } from '@/components/landing/SchoolsSection';
 import { Link } from '@/i18n/navigation';
 import { createServerClient } from '@numoria/database/server';
 import type { Tables } from '@numoria/database/types';
@@ -22,7 +21,6 @@ function Landing() {
         <Hero />
         <AudienceSection />
         <HowItWorks />
-        <SchoolsSection />
       </main>
       <Footer />
     </>

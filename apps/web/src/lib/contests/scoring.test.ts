@@ -219,3 +219,41 @@ describe('scoreProblemAttempt', () => {
     expect(result).toEqual({ isCorrect: true, pointsEarned: 2 });
   });
 });
+
+describe('integer_list', () => {
+  it('accepts commas, semicolons and spaces in the same order', () => {
+    expect(compareAnswers('2, 5, 7', '2,5,7', 'integer_list')).toBe(true);
+    expect(compareAnswers('2;5;7', '2,5,7', 'integer_list')).toBe(true);
+    expect(compareAnswers('2 5 7', '2,5,7', 'integer_list')).toBe(true);
+    expect(compareAnswers('+2, 05, 7', '2,5,7', 'integer_list')).toBe(true);
+  });
+
+  it('rejects a different order or a missing number', () => {
+    expect(compareAnswers('7, 5, 2', '2,5,7', 'integer_list')).toBe(false);
+    expect(compareAnswers('2, 5', '2,5,7', 'integer_list')).toBe(false);
+  });
+});
+
+describe('text_options', () => {
+  it('accepts any listed option ignoring case, accents and final period', () => {
+    expect(compareAnswers('Miércoles.', 'wednesday|miercoles', 'text_options')).toBe(true);
+    expect(compareAnswers('WEDNESDAY', 'wednesday|miercoles', 'text_options')).toBe(true);
+    expect(compareAnswers('  miercoles ', 'wednesday|miércoles', 'text_options')).toBe(true);
+  });
+
+  it('rejects answers that are not listed', () => {
+    expect(compareAnswers('Thursday', 'wednesday|miercoles', 'text_options')).toBe(false);
+    expect(compareAnswers('', 'wednesday|miercoles', 'text_options')).toBe(false);
+  });
+
+  it('scores through scoreProblemAttempt', () => {
+    expect(
+      scoreProblemAttempt({
+        submitted: 'Miercoles',
+        expected: 'wednesday|miercoles',
+        type: 'text_options',
+        problemPoints: 1,
+      }),
+    ).toEqual({ isCorrect: true, pointsEarned: 1 });
+  });
+});

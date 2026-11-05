@@ -975,7 +975,9 @@ export type Database = {
         | "symbolic_pi"
         | "with_units"
         | "multiple_choice"
-      contest_status: "draft" | "scheduled" | "active" | "closed"
+        | "integer_list"
+        | "text_options"
+      contest_status: "draft" | "scheduled" | "active" | "closed" | "archived"
       contest_type: "practice" | "official" | "summer_bowl"
       problem_category:
         | "algebra"
@@ -1136,8 +1138,10 @@ export const Constants = {
         "symbolic_pi",
         "with_units",
         "multiple_choice",
+        "integer_list",
+        "text_options",
       ],
-      contest_status: ["draft", "scheduled", "active", "closed"],
+      contest_status: ["draft", "scheduled", "active", "closed", "archived"],
       contest_type: ["practice", "official", "summer_bowl"],
       problem_category: [
         "algebra",
